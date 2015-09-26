@@ -101,7 +101,7 @@ public class ViewEvent {
         private View.OnClickListener _click;
 
         //exclusive 实现
-        private final static long MIN_CLICK_SPACE   = 500;
+        private final static long MIN_CLICK_SPACE   = 300;
         private static long _last_click_at = 0;
 
         private void onInnerClick(View var1) {

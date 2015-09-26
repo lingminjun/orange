@@ -227,6 +227,7 @@ public final class UITabBar extends LinearLayout {
     }
 
     private void init() {
+        this.setId(R.id.tab_bar);
         this.setOrientation(LinearLayout.VERTICAL);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_tab, this);

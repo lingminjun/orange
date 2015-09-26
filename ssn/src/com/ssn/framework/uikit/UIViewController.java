@@ -3,10 +3,12 @@ package com.ssn.framework.uikit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
+import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.inc.ViewController;
@@ -257,6 +259,12 @@ public class UIViewController extends Fragment implements ViewController {
         if (!_isViewDidLoad) {
             _isViewDidLoad = true;
             try {
+                //寻找导航栏
+                UINavigationBar navigationBar = (UINavigationBar) _containerView.findViewById(R.id.navigation_bar);
+                if (navigationBar != null) {
+                    navigationBar.pushItem(navigationItem());
+                }
+
                 onViewDidLoad();//此方法只被调用一次，后面不再触发
             }catch (Throwable e) {APPLog.error(e);}
         }

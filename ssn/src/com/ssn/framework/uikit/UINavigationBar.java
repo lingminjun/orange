@@ -328,6 +328,7 @@ public final class UINavigationBar extends RelativeLayout {
             if (view == null || leftContainer == null) {return;}
 
             leftContainer.removeAllViews();
+            if (backItem == null) {return;}
             if (backItem.view != null) {
                 backItem.loader = null;
                 leftContainer.addView(backItem.view);
@@ -358,6 +359,7 @@ public final class UINavigationBar extends RelativeLayout {
             }
 
             //最后加入右边按钮
+            if (rightItem == null) {return;}
             if (rightItem.view != null) {
                 rightItem.loader = null;
                 rightContainer.addView(rightItem.view);
@@ -392,6 +394,7 @@ public final class UINavigationBar extends RelativeLayout {
 
 
     private void init() {
+        this.setId(R.id.navigation_bar);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_navigation_bar, this);
 

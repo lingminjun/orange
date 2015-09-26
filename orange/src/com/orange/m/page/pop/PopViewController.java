@@ -1,6 +1,8 @@
 package com.orange.m.page.pop;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import com.orange.m.R;
 import com.ssn.framework.uikit.UIViewController;
 
@@ -16,6 +18,11 @@ public class PopViewController extends UIViewController {
         navigationItem().setTitle("泡泡");
         tabItem().setTabName("泡泡");
         tabItem().setTabImage(R.drawable.tab_selector_pop);
+    }
+
+    @Override
+    public View loadView(LayoutInflater inflater) {
+        return inflater.inflate(R.layout.pop_layout, null);
     }
 
     @Override
