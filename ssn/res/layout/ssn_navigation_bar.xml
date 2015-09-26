@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/top_menu_bar"
+                android:layout_width="match_parent"
+                android:background="@android:color/white"
+                android:layout_height="44dp">
+
+    <!--左边按钮-->
+    <LinearLayout android:layout_height="match_parent"
+                  android:layout_width="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center"
+                  android:layout_centerVertical="true"
+                  android:layout_alignParentLeft="true"
+                  android:paddingRight="15dp"
+                  android:paddingLeft="15dp"
+                  android:id="@+id/left_layout">
+    </LinearLayout>
+
+    <!--右边按钮-->
+    <LinearLayout android:layout_height="match_parent"
+                  android:layout_width="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center"
+                  android:layout_centerVertical="true"
+                  android:layout_alignParentRight="true"
+                  android:paddingRight="15dp"
+                  android:paddingLeft="15dp"
+                  android:id="@+id/right_layout">
+    </LinearLayout>
+
+    <!--中间的title-->
+    <TextView  android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:maxWidth="150dp"
+            android:textSize="18sp"
+            android:text="title"/>
+
+    <!--底部分割线-->
+    <TextView android:layout_width="match_parent"
+              android:layout_height="1px"
+              android:layout_alignParentBottom="true"
+              android:id="@+id/bottom_line"
+              android:background="@android:color/black"/>
+
+</RelativeLayout>

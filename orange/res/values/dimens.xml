@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 常用字号 -->
+    <dimen name="biggest_font">30sp</dimen>
+    <dimen name="bigger_font">18sp</dimen>
+    <dimen name="big_font">16sp</dimen>
+    <dimen name="mid_font">14sp</dimen>
+    <dimen name="normal_font">14sp</dimen>
+    <dimen name="normal_small_font">12sp</dimen>
+    <dimen name="normal_smaller_font">11sp</dimen>
+    <dimen name="small_font">10sp</dimen>
+    <dimen name="smaller_font">9sp</dimen>
+
+    <dimen name="top_menu_bar_height">45dp</dimen>
+    <dimen name="top_menu_img_max_size">20dp</dimen>
+    <dimen name="top_shop_cart_img_max_size">26dp</dimen>
+    <dimen name="top_menu_img_min_size">10dp</dimen>
+    <dimen name="top_menu_btn_textsize">13sp</dimen>
+    <dimen name="top_menu_center_textsize">@dimen/bigger_font</dimen>
+    <dimen name="login_reg_edt_height">40dp</dimen>
+    <dimen name="page_edg_mar">@dimen/big_padding</dimen>
+    <dimen name="page_edg_top_mar">10dp</dimen>
+    <dimen name="list_item_pad_tb">15dp</dimen>
+    <dimen name="pull_refresh_top_height">50dp</dimen>
+    <dimen name="_pull_refresh_top_height">-50dp</dimen>
+    <dimen name="lv_show_drop_view_trig">10dp</dimen>
+    <dimen name="lv_hide_drop_view_trig">15dp</dimen>
+    <dimen name="rb_line_height">1dp</dimen>
+    <dimen name="rb_tab_padding">11dp</dimen>
+
+    <dimen name="preview_img_del_size">30dp</dimen>
+    <dimen name="goods_img_size">80dp</dimen>
+    <dimen name="list_item_portrait_size">40dp</dimen>
+    <dimen name="min_sku_item_width">40dp</dimen>
+    <dimen name="input_comment_view_lr_padding">10dp</dimen>
+    <dimen name="input_comment_view_tb_padding">5dp</dimen>
+
+    <dimen name="big_padding">12dp</dimen>
+    <dimen name="bmid_padding">10dp</dimen>
+    <dimen name="mid_padding">8dp</dimen>
+    <dimen name="bsmall_padding">6dp</dimen>
+    <dimen name="small_padding">4dp</dimen>
+    <dimen name="line_max_width">4dp</dimen>
+
+    <dimen name="user_icon_size">22dp</dimen>
+
+    <dimen name="comment_quote_width">10dp</dimen>
+    <dimen name="comment_quote_height">8dp</dimen>
+
+    <dimen name="widget_dot_wh">7dp</dimen>
+    <dimen name="widget_dot_margin">5dp</dimen>
+    <dimen name="usual_avatar_size">76dp</dimen>
+    <!-- 购物车右上角数字右margin -->
+    <dimen name="bub_right_margin">4dp</dimen>
+    <dimen name="minus_bub_right_margin">-3dp</dimen>
+    <dimen name="normal_btn_corner">3dp</dimen>
+    <dimen name="big_btn_corner">20dp</dimen>
+    <dimen name="common_right_arrow_size">14dp</dimen>
+    <dimen name="dialog_corner">3dp</dimen>
+    <dimen name="img_content_icon_size">37dp</dimen>
+    <dimen name="product_active_prompt_size">45dp</dimen>
+    <dimen name="top_bar_edg_padding">14dp</dimen>
+</resources>

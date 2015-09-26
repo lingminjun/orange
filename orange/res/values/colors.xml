@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black_text">#000000</color>
+    <color name="hint_text">#C9C9C9</color>
+    <color name="normal_text">#333333</color>
+    <color name="app_style">#ff5e56</color>
+    <color name="normal_sub_info">#989898</color>
+    <color name="price">@color/app_style</color>
+    <color name="link_text">#748aa4</color>
+    <color name="red_gray_color">#ffadaa</color>
+    <color name="normal_line">#dcdcdc</color>
+    <color name="blue_text_color">#4bb8e4</color>
+
+    <!--button颜色定义-->
+    <color name="red_btn_normal">#ff5e56</color>
+    <color name="red_btn_press">#FF4E44</color>
+    <color name="red_btn_disable">#FFAFAB</color>
+    <color name="grey_btn_normal">#F2F2F2</color>
+    <color name="grey_btn_normal_alpha">#40F2F2F2</color>
+    <color name="grey_btn_press">#cccccc</color>
+    <color name="grey_btn_press_alpha">#40cccccc</color>
+    <color name="btn_disable">#dcdcdc</color>
+    <color name="orange_normal">#ff945a</color>
+    <color name="orange_press">#FF823E</color>
+    <color name="orange_disable">#FFCAAD</color>
+    <color name="yellow_bg">#fef3a1</color>
+    <color name="yellow_press_bg">#EBE093</color>
+
+    <color name="button_disable">#cccccc</color>
+    <color name="grey_cell_press">#eeeeee</color>
+    <color name="nav_button_disable">#FFADAA</color>
+    <color name="reply_comment_bg">#f0eff5</color>
+    <color name="divider_line">#eeeeee</color>
+    <color name="package_text">#e3981c</color>
+    <color name="page_bg">#F2F2F2</color>
+    <color name="gap_color">@color/page_bg</color>
+    <color name="grey_stroke">@color/btn_disable</color>
+    <color name="white">@android:color/white</color>
+
+    <color name="red_text">@color/app_style</color>
+    <color name="yellow_text">#e39828</color>
+    <color name="red_text_press">#FF4E44</color>
+    <color name="blue_tag">#02cb9d</color>
+    <color name="green_tag">#7cc576</color>
+    <color name="about_bg">#f6f8f7</color>
+    <color name="black_alpha">#18000000</color>
+    <color name="black_0_5_alpha">#80000000</color>
+    <color name="black_alpha_btn">#22000000</color>
+    <color name="white_alpha">#77ffffff</color>
+    <color name="white_0_9_alpha">#eeffffff</color>
+    <color name="black_0_2_alpha">#1A000000</color>
+
+
+    <color name="sku_tag_button_disable">#dcdcdc</color>
+    <color name="text_edit_bg">#f3f3f3</color>
+    <color name="little_blue">#4bb8e4</color>
+
+
+    <!-- 以下颜色待移除 -->
+    <color name="blue_text">#2790EB</color>
+    <color name="btn_red_press">#FF4E44</color>
+    <color name="btn_red">#ff5e56</color>
+    <color name="_orange_press">#B0420D</color>
+    <color name="orange">#DB5110</color>
+    <color name="green_btn_press">#7B9F00</color>
+    <color name="green_btn_normal">#9AC600</color>
+    <color name="grey_div_line">#999999</color>
+    <color name="deep_alpha_black">#CF000000</color>
+    <color name="province_line_border">#C7C7C7</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#b0000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+</resources>

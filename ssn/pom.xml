@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.orange.m.android</groupId>
+        <artifactId>android</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>com.ssn.framework</groupId>
+    <artifactId>ssn</artifactId>
+    <name>ssn</name>
+    <packaging>aar</packaging>
+    <version>1.0.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>5.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>r22</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <configuration>
+                    <!--<sdk>-->
+                    <!--<platform>14</platform>-->
+                    <!--</sdk>-->
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <manifest>
+                        <debuggable>true</debuggable>
+                    </manifest>
+                    <androidManifestFile>./AndroidManifest.xml</androidManifestFile>
+                    <resourceDirectory>./res</resourceDirectory>
+                    <nativeLibrariesDirectory>./libs</nativeLibrariesDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+        <sourceDirectory>./src</sourceDirectory>
+    </build>
+</project>

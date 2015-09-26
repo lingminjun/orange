@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+    <ImageView android:layout_width="wrap_content"
+               android:layout_height="match_parent"
+               android:scaleType="fitCenter"
+               android:src="@drawable/ssn_back_icon"
+               android:id="@+id/item_img"/>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:id="@+id/item_custom" />
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:text="test"
+              android:id="@+id/item_name"/>
+</LinearLayout>

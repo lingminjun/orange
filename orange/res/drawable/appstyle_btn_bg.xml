@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false" android:drawable="@drawable/wbg_grey_stroke_corner">
+    </item>
+    <item android:drawable="@drawable/wbg_app_stroke_corner">
+    </item>
+</selector>
