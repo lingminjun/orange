@@ -32,7 +32,14 @@
                   android:theme="@style/TabPageTheme"
                   android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name="com.ssn.framework.MainAcivity"
+        <activity android:name="com.ssn.framework.uikit.BaseActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.ssn.framework.uikit.BaseNavActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:screenOrientation="portrait">
             <intent-filter>

@@ -81,7 +81,7 @@ public class BaseTabActivity extends BaseActivity {
 
 
     protected final int getContentViewlayoutID() {
-        return R.layout.ssn_tab_item;
+        return R.layout.base_tab_activity;
     }
 
 //    private int __pid;//记录进程id
@@ -157,6 +157,11 @@ public class BaseTabActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
 //        outState.putInt("__pid",__pid);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void dismissViewController(ViewController vc) {
+        finish();
     }
 
     protected final int viewControllerCount() {

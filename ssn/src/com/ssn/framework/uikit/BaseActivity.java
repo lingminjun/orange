@@ -220,7 +220,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         _tvc = fragment;
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Log.e("test", "transaction=" + transaction.hashCode());
+//        Log.e("test", "transaction=" + transaction.hashCode());
         if (!exist) {//理论上FragmentManager应该不包含其实例
             transaction.add(R.id.view_container, fragment, Integer.toString(fragment.hashCode()));
         }
@@ -253,6 +253,24 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
      */
     protected final void displayFragment(Fragment fragment) {
         transitionToFragment(fragment,false);
+    }
+
+
+    /**
+     * 结束页面
+     * @param vc
+     */
+    @Override
+    public void dismissViewController(ViewController vc) {
+        if (vc == null) {finish();return;}
+
+        if (!_vcs.contains(vc)) {
+            return;
+        }
+
+        if (_vcs.size() <= 1) {finish();return;}
+
+        removeFragment((Fragment)vc);
     }
 
     /**
@@ -374,6 +392,9 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         if (fragment != null) {
             if (args != null) {
                 fragment.setArguments(args);
+            }
+            else {
+                fragment.setArguments(new Bundle());
             }
         }
         return fragment;

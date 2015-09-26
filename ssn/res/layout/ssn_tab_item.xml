@@ -2,8 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:background="@android:color/white"
-                android:paddingTop="8dp"
-                android:paddingBottom="11dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -34,6 +34,7 @@
               android:layout_height="wrap_content"
               android:layout_centerHorizontal="true"
               android:layout_alignParentBottom="true"
-              android:text="test"
+              android:textSize="10sp"
+              android:text="标题"
               android:id="@+id/tab_name"/>
 </RelativeLayout>

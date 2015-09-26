@@ -258,6 +258,22 @@ public class Navigator implements ActivityTracking {
         }
     }
 
+    public Class fragmentClassForURL(String url) {
+        VCNode node = pageRouter(url);
+        if (node == null) {
+            return null;
+        }
+        return node.fragmentClass;
+    }
+
+    public Class activityClassForURL(String url) {
+        VCNode node = pageRouter(url);
+        if (node == null) {
+            return null;
+        }
+        return node.activityClass;
+    }
+
     /**
      * 是否配置其
      * @param url

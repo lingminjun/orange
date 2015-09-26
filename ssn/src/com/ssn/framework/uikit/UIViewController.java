@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.*;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
@@ -17,39 +18,77 @@ import java.io.Serializable;
  */
 public class UIViewController extends Fragment implements ViewController {
 
-
     /**
      * 导航 bar 支持
      */
-    private UINavigationBar.NavigationItem _navigationItem = new UINavigationBar.NavigationItem();
-    public final UINavigationBar.NavigationItem navigationItem() {return _navigationItem;}
+    private View.OnClickListener _backListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onBackEvent();
+        }
+    };
+    private UINavigationBar.NavigationItem _navigationItem;
+    public final UINavigationBar.NavigationItem navigationItem() {
+        if (_navigationItem == null) {
+            _navigationItem = new UINavigationBar.NavigationItem();
+            _navigationItem.backItem().setOnClick(ViewEvent.click(_backListener));
+        }
+        return _navigationItem;
+    }
 
     /**
      * tab bar支持
      */
-    private UITabBar.TabItem _tabItem = new UITabBar.TabItem();
-    public final UITabBar.TabItem tabItem() {return _tabItem;}
+    private UITabBar.TabItem _tabItem;
+    public final UITabBar.TabItem tabItem() {
+        if (_tabItem == null) {
+            _tabItem = new UITabBar.TabItem();
+        }
+        return _tabItem;
+    }
 
 //    protected Bundle _attributes;
 //
 //    private void onInitAttributes(Bundle args) {
 //        //首先初始化_package
 //    }
+    private void onCheckInit(Bundle args) {
+        if (!_isInit) {
+            _isInit = true;
+            try {
+                onInit(args);
+            }catch (Throwable e) {APPLog.error(e);}
+        }
+    }
 //
-//    @Override
-//    public final void setArguments(Bundle args) {
-//        super.setArguments(args);
-//        if (!_isInit) {
-//            _isInit = true;
-//            _attributes = args;
-//        }
-//    }
+    @Override
+    public final void setArguments(Bundle args) {
+        super.setArguments(args);
+        if (!_isInit) {
+            _isInit = true;
+            onInit(args);
+        }
+    }
 
     /**
      * 返回事件
      * return 若处理返回事件则返回yes
      */
-    protected boolean onBackEvent() {return false;}
+    protected boolean onBackEvent() {
+        finish();
+        return true;
+    }
+
+    public final void finish() {
+        Activity activity = getActivity();
+        if (activity == null) {return;}
+        if (activity instanceof ContainerViewController) {
+            ((ContainerViewController) activity).dismissViewController(this);
+        }
+        else {
+            activity.finish();
+        }
+    }
 
     /**
      * 键盘触发事件
@@ -61,6 +100,11 @@ public class UIViewController extends Fragment implements ViewController {
     }
 
     //////////////////////////ViewController实现/////////////////////////////////////
+    /**
+     * 初始化方法
+     */
+    public void onInit(Bundle args) {}
+
     /**
      * 主view，可能返回未空
      * @return
@@ -175,9 +219,7 @@ public class UIViewController extends Fragment implements ViewController {
     @Override
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (!_isInit && savedInstanceState != null) {_isInit = true;
-//            _attributes = savedInstanceState;
-//        }
+        onCheckInit(savedInstanceState);
     }
 
     @Override
@@ -337,7 +379,7 @@ public class UIViewController extends Fragment implements ViewController {
 //        throw new RuntimeException("Stub!");
 //    }
 
-//    private boolean _isInit;
+    private boolean _isInit;
 
     private View _containerView;
     private boolean _loadViewStackFlag;

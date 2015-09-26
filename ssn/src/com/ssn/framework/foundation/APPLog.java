@@ -143,9 +143,9 @@ public class APPLog {
     private static boolean inited = false;
 
     public static boolean isDebug() {
-        if (inited)
-            return DEBUG;
-        inited = true;
+//        if (inited)
+//            return DEBUG;
+//        inited = true;
         return DEBUG;
     }
 }

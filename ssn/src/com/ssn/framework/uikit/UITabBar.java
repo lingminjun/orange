@@ -225,7 +225,7 @@ public final class UITabBar extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_tab, this);
 
-        _container = (LinearLayout)findViewById(R.id.view_container);
+        _container = (LinearLayout)findViewById(R.id.tab_container);
     }
 
     /**
@@ -247,7 +247,11 @@ public final class UITabBar extends LinearLayout {
 
             item.setView(inflater.inflate(R.layout.ssn_tab_item, null));
             _items.add(item);
+
             this._container.addView(item.view);
+
+            LinearLayout.LayoutParams params = (LayoutParams) item.view.getLayoutParams();
+            params.weight = 1;
 
             final int index = i;
             item.view.setOnClickListener(ViewEvent.click(new OnClickListener() {

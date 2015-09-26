@@ -69,6 +69,19 @@ public class BaseNavActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void dismissViewController(ViewController vc) {
+        if (!_stack.contains(vc)) {
+            return;
+        }
+        if (_stack.size() <= 1) {
+            finish();
+        }
+        else {
+            popToViewController((UIViewController)vc);
+        }
+    }
+
     /**
      * push一个view到activity中
      * @param vc
@@ -126,12 +139,13 @@ public class BaseNavActivity extends BaseActivity {
 
         UIViewController tem = _stack.lastElement();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Log.e("test","transaction="+transaction.hashCode());
+//        Log.e("test","transaction="+transaction.hashCode());
         while (tem != null && vc != tem) {
             _stack.pop();
             tem = _stack.lastElement();
             transaction.remove(tem);
         }
+        transaction.commit();
 
         transitionToFragment(vc, true);
     }

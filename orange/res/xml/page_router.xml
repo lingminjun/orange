@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items version="1.0">
+    <!--主页tab-->
+    <item url="http://m.orangestar.com/main.html"
+          fragmentclass=""
+          activityclass="com.orange.m.page.main.MainTabActivity"
+          description="主页"/>
+
+    <!--气泡-->
+    <item url="http://m.orangestar.com/pop.html"
+          fragmentclass="com.orange.m.page.pop.PopViewController"
+          activityclass=""
+          description="泡泡"/>
+
+    <!--邂逅-->
+    <item url="http://m.orangestar.com/chat.html"
+          fragmentclass="com.orange.m.page.chat.ChatViewController"
+          activityclass=""
+          description="邂逅"/>
+
+    <!--我-->
+    <item url="http://m.orangestar.com/me.html"
+          fragmentclass="com.orange.m.page.me.MeViewController"
+          activityclass=""
+          description="我"/>
+</items>

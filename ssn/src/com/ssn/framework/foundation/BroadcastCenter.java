@@ -77,7 +77,7 @@ public class BroadcastCenter {
      * 监听广播方法
      * @param observer 监听者，弱引用
      * @param notificationName 广播名称，一个通知名只能注册一个方法，若当前监听者尝试监听同一广播多次只有第一次有效，后面都将忽略
-     * @param method 必须被监听者所引用，否则被释放
+     * @param method 必须被监听者所引用，否则被释放 //TODO : 仅仅警告提示 method必须被observer所引用，否则被释放
      */
     public void addObserver(@NonNull Object observer,@NonNull String notificationName,@NonNull Method<?> method) {
         if (observer == null || TextUtils.isEmpty(notificationName) || method == null){

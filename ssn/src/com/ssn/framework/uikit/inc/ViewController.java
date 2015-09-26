@@ -1,6 +1,7 @@
 package com.ssn.framework.uikit.inc;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -13,9 +14,9 @@ import java.util.List;
 public interface ViewController {
 
     /**
-     * 初始化方法，此方法一般不建议重载
+     * 初始化方法，view还没有加载，切记不要再此方法中使用view，特殊场景使用
      */
-//    public void onInit();
+    public void onInit(Bundle args);
 
     /**
      * 页面创建，此方法只调用一次，初始化时，不能加载view的内容
@@ -98,6 +99,12 @@ public interface ViewController {
      * 容器控制必须实现接口
      */
     public static interface ContainerViewController {
+        /**
+         * 结束子页面
+         * @param child
+         */
+        public void dismissViewController(ViewController child);
+
         /**
          * 当前显示的viewController
          * @return
