@@ -153,14 +153,20 @@ public final class UITabBar extends LinearLayout {
             int size = Density.dipTopx(10);
             params.height = size;
             params.width = size;
+            if (params instanceof ViewGroup.MarginLayoutParams) {
+                ((MarginLayoutParams) params).topMargin = 0;
+            }
         }
 
         private static void setBadgeContent(TextView tv,String content){
-            tv.setBackgroundResource(R.drawable.red_circle_bg);
+            tv.setBackgroundResource(R.drawable.white_stroke_red_bg);
             ViewGroup.LayoutParams params = tv.getLayoutParams();
             tv.setText(content);
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if (params instanceof ViewGroup.MarginLayoutParams) {
+                ((MarginLayoutParams) params).topMargin = Density.dipTopx(-4);
+            }
         }
 
         private static Drawable getDrawable(boolean isSelected, int imageID) {

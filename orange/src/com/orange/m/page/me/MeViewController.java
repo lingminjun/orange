@@ -9,6 +9,8 @@ import com.ssn.framework.uikit.UIViewController;
  */
 public class MeViewController extends UIViewController {
 
+    private int count = 0;
+
     @Override
     public void onInit(Bundle args) {
         super.onInit(args);
@@ -23,5 +25,12 @@ public class MeViewController extends UIViewController {
         super.onViewDidLoad();
 
 
+    }
+
+    @Override
+    public void onViewDidAppear() {
+        super.onViewDidAppear();
+
+        tabItem().setBadgeValue(Integer.toString(count++));
     }
 }

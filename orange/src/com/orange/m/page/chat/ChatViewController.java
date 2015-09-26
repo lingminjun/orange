@@ -23,5 +23,6 @@ public class ChatViewController extends UIViewController {
         super.onViewDidLoad();
 
 
+        tabItem().setBadgeValue(".");
     }
 }
