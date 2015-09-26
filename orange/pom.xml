@@ -27,16 +27,16 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>5.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>r22</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>android</artifactId>-->
+            <!--<version>5.1.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>support-v4</artifactId>-->
+            <!--<version>r22</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.ssn.framework</groupId>
             <artifactId>ssn</artifactId>

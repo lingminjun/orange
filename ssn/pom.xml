@@ -11,9 +11,10 @@
 
     <groupId>com.ssn.framework</groupId>
     <artifactId>ssn</artifactId>
-    <name>ssn</name>
-    <packaging>aar</packaging>
     <version>1.0.0</version>
+    <packaging>aar</packaging>
+    <name>ssn</name>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -11,10 +11,7 @@ import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.URLHelper;
 import com.ssn.framework.uikit.inc.ActivityTracking;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by lingminjun on 15/9/13.
