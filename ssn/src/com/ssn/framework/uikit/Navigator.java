@@ -19,8 +19,9 @@ import java.util.*;
 public class Navigator implements ActivityTracking {
 
     public static final String NAVIGATOR_URL_KEY = "navigator_router_url_key";
-    public static final String NAVIGATOR_FRAGMENT_CLASS_KEY = "navigator_router_fragment_class_key";
-    public static final String NAVIGATOR_FRAGMENT_CLASS_LIST_KEY = "navigator_router_fragment_class_list_key";
+    public static final String NAVIGATOR_FRAGMENT_CLASS_KEY = "__fragment_class_key";
+    public static final String NAVIGATOR_ROOT_FRAGMENT_CLASS_KEY = "__root_fragment_class_key";
+    public static final String NAVIGATOR_FRAGMENT_CLASS_LIST_KEY = "__tab_fragment_class_list_key";
 
     /**
      * 页面委托协议，暂时还没用到

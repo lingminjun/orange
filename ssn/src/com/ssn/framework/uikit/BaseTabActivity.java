@@ -17,6 +17,9 @@ import java.util.List;
  * Tab 基类
  */
 public class BaseTabActivity extends BaseActivity {
+
+    public static final String TAB_FRAGMENT_CLASS_LIST_KEY = "__tab_fragment_class_list_key";
+
     /**
      * 用于生产 tab vc 的intent
      */
@@ -101,7 +104,7 @@ public class BaseTabActivity extends BaseActivity {
         _tabbar = (UITabBar) findViewById(R.id.tab_bar);
         _tabbar.setTabSelectedListener(changeListener);
 
-        ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(Navigator.NAVIGATOR_FRAGMENT_CLASS_LIST_KEY);
+        ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(this.TAB_FRAGMENT_CLASS_LIST_KEY);
         if (list != null) {
             List<UITabBar.TabItem> tabs = new ArrayList<UITabBar.TabItem>();
             for (IntentTabItem item : list) {

@@ -478,11 +478,11 @@ public final class UINavigationBar extends RelativeLayout {
         if (item == old) {return;}
         old.popView();
 
-        NavigationItem tem;
-        do {
+        NavigationItem tem = stack.lastElement();
+        while (tem != null && item != tem) {
             stack.pop();
             tem = stack.lastElement();
-        } while (tem != null && item != tem);
+        }
 
         if (item != null) {
             item.pushView(this);

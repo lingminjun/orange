@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,13 +33,16 @@ import java.util.*;
  */
 public class BaseActivity extends FragmentActivity implements ViewController.ContainerViewController {
 
+    /**
+     * 加载的fragmentkey
+     */
+    public static final String FRAGMENT_CLASS_KEY = "__fragment_class_key";
+
     private static final String VCS_TAGS_KEY = "_fragment_tags";
 
     private ArrayList<Integer> _vcs_tags = new ArrayList<Integer>();
     private List<Fragment> _vcs = new ArrayList<Fragment>();
     private Fragment _tvc;
-
-    private UINavigationBar _navigationBar;
 
     //activity状态
     private boolean _isPause;
@@ -88,12 +92,9 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         //设置view布局
         setContentView(getContentViewlayoutID());
 
-        //导航
-        _navigationBar = (UINavigationBar) findViewById(R.id.navigation_bar);
-
         //加载第一个fragment
         if (intent != null) {
-            Serializable fragmentClass = intent.getSerializableExtra(Navigator.NAVIGATOR_FRAGMENT_CLASS_KEY);
+            Serializable fragmentClass = intent.getSerializableExtra(this.FRAGMENT_CLASS_KEY);
             if (fragmentClass != null) {
                 startFragment((Class)fragmentClass,intent.getExtras());
             }
@@ -196,7 +197,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
      * 切换到对应的fragment
      * @param fragment
      */
-    protected final void transitionToFragment(Fragment fragment,boolean removeOld) {
+    protected void transitionToFragment(Fragment fragment,boolean removeOld) {
         if (fragment == null) {return;}
 
         //当前已经是现实的fragment
@@ -219,7 +220,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         _tvc = fragment;
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+        Log.e("test", "transaction=" + transaction.hashCode());
         if (!exist) {//理论上FragmentManager应该不包含其实例
             transaction.add(R.id.view_container, fragment, Integer.toString(fragment.hashCode()));
         }
@@ -239,12 +240,6 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         //出现时机通知，此方法多次调用，没有什么坏处
         if (/*exist && */fragment instanceof UIViewController) {
             try {((UIViewController) fragment).onViewDidAppear();} catch (Throwable e) {APPLog.error(e);}
-        }
-
-        if (fragment instanceof UIViewController) {
-            if (_navigationBar != null) {//暂时不做压站处理，以后再想想，先让其重置栈方式呈现即可
-                _navigationBar.resetItemStack(((UIViewController) fragment).navigationItem());
-            }
         }
     }
 

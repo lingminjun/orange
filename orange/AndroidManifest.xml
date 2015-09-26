@@ -26,7 +26,18 @@
             </intent-filter>
         </activity>
 
+        <activity android:launchMode="singleTask"
+                  android:name=".page.main.MainTabActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/TabPageTheme"
+                  android:windowSoftInputMode="adjustPan"/>
 
-
+        <activity android:name="com.ssn.framework.MainAcivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
