@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MainAcivity</string>
+
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+    <string name="ok">好的</string>
+    <string name="saving_image">Saving image</string>
+    <string name="preparing_card">Preparing card</string>
+    <string name="no_storage_card">No storage card</string>
+    <string name="not_enough_space">Not enough space</string>
+    <string name="pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="pull_to_refresh_release_label">释放刷新</string>
+    <string name="pull_to_refresh_refreshing_label">努力加载中…</string>
+
+    <!-- Just use standard Pull Down String when pulling up. These can be set for languages which require it -->
+    <string name="pull_to_refresh_from_bottom_pull_label">上拉显示更多</string>
+    <string name="pull_to_refresh_from_bottom_release_label">松开显示更多</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">载入中...</string>
 </resources>

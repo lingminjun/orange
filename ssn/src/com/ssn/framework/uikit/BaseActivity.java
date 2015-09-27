@@ -24,12 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * 一句话功能简述<br>
- * 功能详细描述
- *
- * @version 1.0
- * @author： RWJ
- * @date：202014/10/27 17:41
+ * 基本activity框架
  */
 public class BaseActivity extends FragmentActivity implements ViewController.ContainerViewController {
 
@@ -227,6 +222,9 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
 
         if (removeOld) {
             transaction.remove(old);
+        }
+        else if (old != null) {
+            transaction.hide(old);
         }
 
         transaction.show(fragment);

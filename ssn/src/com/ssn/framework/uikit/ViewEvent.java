@@ -100,10 +100,6 @@ public class ViewEvent {
     public final static class Click extends UT implements View.OnClickListener {
         private View.OnClickListener _click;
 
-        //exclusive 实现
-        private final static long MIN_CLICK_SPACE   = 300;
-        private static long _last_click_at = 0;
-
         private void onInnerClick(View var1) {
             try {
                 if (_click != null) _click.onClick(var1);
@@ -121,9 +117,7 @@ public class ViewEvent {
                 ((Click) _click).onInnerClick(var1);
             }
             else {
-                long at = System.currentTimeMillis();
-                if (_last_click_at == 0 || at > _last_click_at + MIN_CLICK_SPACE || _last_click_at > at + MIN_CLICK_SPACE) {
-                    _last_click_at = at;
+                if (checkExclusive()) {
                     onInnerClick(var1);
                 }
             }
@@ -384,6 +378,16 @@ public class ViewEvent {
     public final static class ItemClick extends UT implements AdapterView.OnItemClickListener {
         private AdapterView.OnItemClickListener _click;
 
+        private void onInnerItemClick(AdapterView<?> var1, View var2, int var3, long var4) {
+            try {
+                if (_click != null) _click.onItemClick(var1, var2, var3, var4);
+                track(var2);//打点
+            }
+            catch (Throwable e) {
+                APPLog.error(e);
+            }
+        }
+
         public void onItemClick(AdapterView<?> var1, View var2, int var3, long var4) {
             try {
                 if (_click != null) _click.onItemClick(var1, var2, var3, var4);
@@ -391,6 +395,17 @@ public class ViewEvent {
             }
             catch (Throwable e) {
                 APPLog.error(e);
+            }
+
+            if (_click == null) {return;}
+
+            if (_click instanceof ItemClick) {
+                ((ItemClick) _click).onInnerItemClick(var1, var2, var3, var4);
+            }
+            else {
+                if (checkExclusive()) {
+                    onInnerItemClick(var1, var2, var3, var4);
+                }
             }
         }
 
@@ -421,6 +436,24 @@ public class ViewEvent {
      * 打点基类
      */
     public static class UT {
+
+        //exclusive 实现
+        private final static long MIN_CLICK_SPACE   = 300;
+        private static long _last_click_at = 0;
+
+        /**
+         * 排他校验
+         * @return 返回yes表示有效，返回no表示无效
+         */
+        protected final static boolean checkExclusive() {
+            long at = System.currentTimeMillis();
+            if (_last_click_at == 0 || at > _last_click_at + MIN_CLICK_SPACE || _last_click_at > at + MIN_CLICK_SPACE) {
+                _last_click_at = at;
+                return true;
+            }
+            return false;
+        }
+
         private ViewEvent.UTEvent _ut;
         private String _utid;
         public UT(){}

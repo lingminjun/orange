@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tab 基类
+ * Tab activity 基类
  */
 public class BaseTabActivity extends BaseActivity {
 

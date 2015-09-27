@@ -2,12 +2,13 @@ package com.orange.m.page.me;
 
 import android.os.Bundle;
 import com.orange.m.R;
+import com.ssn.framework.uikit.UITableViewController;
 import com.ssn.framework.uikit.UIViewController;
 
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class MeViewController extends UIViewController {
+public class MeViewController extends UITableViewController {
 
     private int count = 0;
 

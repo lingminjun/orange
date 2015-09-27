@@ -14,6 +14,7 @@ import com.ssn.framework.uikit.inc.ActivityTracking;
 import java.util.*;
 
 /**
+ * 页面切换导航中心
  * Created by lingminjun on 15/9/13.
  */
 public class Navigator implements ActivityTracking {
