@@ -3,24 +3,31 @@ package com.ssn.framework.uikit;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import com.ssn.framework.R;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.pullview.PullToRefreshBase;
 import com.ssn.framework.uikit.pullview.PullToRefreshListView;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by lingminjun on 15/9/27.
  */
 public class UITableView extends PullToRefreshListView {
+
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public static class TableViewAdapter extends BaseAdapter implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener,AbsListView.OnScrollListener,PullToRefreshBase.OnRefreshListener2<ListView> {
 
@@ -39,7 +46,10 @@ public class UITableView extends PullToRefreshListView {
         public void setDelegate(TableViewDelegate delegate) {_delegate = delegate;}
 
         public TableViewAdapter(UITableView tableView){
-            this._tableView = tableView;
+            _tableView = tableView;
+            _tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
+            _tableView.setAdapter(this);
+            updateRefreshLabel();
             setListeners();
         }
 
@@ -145,14 +155,28 @@ public class UITableView extends PullToRefreshListView {
             this._items.clear();
         }
 
+        /**
+         * 停止加载
+         */
+        public void completedLoad() {
+            _tableView.onRefreshComplete();
+            updateRefreshLabel();
+        }
+
+        private void updateRefreshLabel() {
+            String dateStr = dateFormat.format(new Date());
+            _tableView.getLoadingLayoutProxy().setLastUpdatedLabel(Res.localized(R.string.header_last_time) + dateStr);
+        }
+
         @Override
         public int getCount() {
+//            Log.e("size",""+_items.size());
             return _items.size();
         }
 
         @Override
         public UITableViewCell.CellModel getItem(int i) {
-            if (i < 0 && i >= _items.size()) {return null;}
+            if (i < 0 || i >= _items.size()) {return null;}
             return _items.get(i);
         }
 
@@ -179,13 +203,22 @@ public class UITableView extends PullToRefreshListView {
             UITableViewCell.CellModel cellModel = this.getItem(i);
 
             if (cellModel == null) {
+                if (view == null) {
+                    return new View(viewGroup.getContext());
+                }
                 return view;
             }
 
-            UITableViewCell cell = (UITableViewCell)view;
-            if (cell != null) {
+            UITableViewCell cell = null;
+            if (view != null && view instanceof UITableViewCell) {
+                cell = (UITableViewCell)view;
+            }
+            else {
                 cell = UITableViewCell.newInstance(cellModel,_tableView.getContext());
             }
+
+            //展示内容
+            UITableViewCell.displayCell(cell,cellModel,i);
 
             return cell;
         }
@@ -194,11 +227,12 @@ public class UITableView extends PullToRefreshListView {
          * 刷新数据
          */
         public void reload() {
+            _items.clear();
+
             List<UITableViewCell.CellModel> items = null;
             if (_delegate != null) {
                 items = _delegate.tableViewAdapterLoadData(this);
             }
-            _items.clear();
             if (items != null && items.size() > 0) {
                 _items.addAll(items);
             }

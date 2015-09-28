@@ -52,7 +52,7 @@ public abstract class UITableViewCell extends RelativeLayout {
          */
         public final int getCellType() {
             int code = getClass().hashCode();
-            Log.e("xxx","code="+code+",class:"+getClass().getSimpleName());
+//            Log.e("xxx","code="+code+",class:"+getClass().getSimpleName());
             return code;
         }
 
@@ -147,6 +147,7 @@ public abstract class UITableViewCell extends RelativeLayout {
             if (_customView != null) {
                 _container.removeView(_customView);
             }
+            _customView = displayView;
             _container.addView(displayView);
         }
     }
@@ -170,13 +171,13 @@ public abstract class UITableViewCell extends RelativeLayout {
     protected void onDisplay(CellModel cellModel, int row) {
         this._cellModel = cellModel;
 
-        LayoutParams params = (LayoutParams)this.getLayoutParams();
-        if (cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
-            params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
-        }
-        else {
-            params.height = Density.dipTopx(cellModel.height);
-        }
+//        LayoutParams params = (LayoutParams)this.getLayoutParams();
+//        if (cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
+//            params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
+//        }
+//        else {
+//            params.height = Density.dipTopx(cellModel.height);
+//        }
 
         if (!cellModel.hiddenSeparateLine) {
             _separateLine.setVisibility(VISIBLE);

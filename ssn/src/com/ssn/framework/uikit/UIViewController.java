@@ -66,10 +66,7 @@ public class UIViewController extends Fragment implements ViewController {
     @Override
     public final void setArguments(Bundle args) {
         super.setArguments(args);
-        if (!_isInit) {
-            _isInit = true;
-            onInit(args);
-        }
+        onCheckInit(args);
     }
 
     /**

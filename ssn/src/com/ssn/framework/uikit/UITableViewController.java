@@ -20,10 +20,19 @@ public class UITableViewController extends UIViewController implements UITableVi
 
     @Override
     public View loadView(LayoutInflater inflater) {
-        _tableView =  (UITableView)inflater.inflate(R.layout.ssn_table_view_controller, null);
+        View view = inflater.inflate(R.layout.ssn_table_view_controller, null);
+        setTableView((UITableView)view);
+        return view;
+    }
+
+    /**
+     * 务必在load view中调用
+     * @param tableView
+     */
+    protected void setTableView(UITableView tableView) {
+        _tableView = tableView;
         _adapter = new UITableView.TableViewAdapter(_tableView);
         _adapter.setDelegate(this);
-        return _tableView;
     }
 
     @Override
@@ -45,12 +54,8 @@ public class UITableViewController extends UIViewController implements UITableVi
     }
 
     @Override
-    public void tableViewAdapterPullDownRefresh(UITableView.TableViewAdapter adapter) {
-
-    }
+    public void tableViewAdapterPullDownRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
 
     @Override
-    public void tableViewAdapterPullUpRefresh(UITableView.TableViewAdapter adapter) {
-
-    }
+    public void tableViewAdapterPullUpRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
 }

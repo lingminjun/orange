@@ -17,4 +17,7 @@
     <string name="pull_to_refresh_from_bottom_pull_label">上拉显示更多</string>
     <string name="pull_to_refresh_from_bottom_release_label">松开显示更多</string>
     <string name="pull_to_refresh_from_bottom_refreshing_label">载入中...</string>
+    <string name="header_last_time">最后更新:</string>
+
+
 </resources>
