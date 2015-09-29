@@ -9,7 +9,6 @@ import android.util.Log;
 import com.ssn.framework.R;
 import com.ssn.framework.uikit.inc.ViewController;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class BaseTabActivity extends BaseActivity {
 
 
     protected final int getContentViewlayoutID() {
-        return R.layout.base_tab_activity;
+        return R.layout.ssn_base_tab_activity;
     }
 
 //    private int __pid;//记录进程id
@@ -101,7 +100,7 @@ public class BaseTabActivity extends BaseActivity {
 //            }
 //        }
 
-        _tabbar = (UITabBar) findViewById(R.id.tab_bar);
+        _tabbar = (UITabBar) findViewById(R.id.ssn_tab_bar);
         _tabbar.setTabSelectedListener(changeListener);
 
         ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(this.TAB_FRAGMENT_CLASS_LIST_KEY);

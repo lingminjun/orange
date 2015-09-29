@@ -29,7 +29,7 @@ public class BaseNavActivity extends BaseActivity {
 
     @Override
     protected int getContentViewlayoutID() {
-        return R.layout.base_nav_activity;
+        return R.layout.ssn_base_nav_activity;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BaseNavActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         //导航
-        _navigationBar = (UINavigationBar) findViewById(R.id.navigation_bar);
+        _navigationBar = (UINavigationBar) findViewById(R.id.ssn_navigation_bar);
 
         //加载root fregment
         Intent intent = getIntent();

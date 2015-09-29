@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.orange.m.R;
@@ -27,8 +28,8 @@ public class IconTitleCell extends UITableViewCell {
     }
 
     @Override
-    protected View loadCustomDisplayView(LayoutInflater inflate) {
-        view = LayoutInflater.from(this.getContext()).inflate(R.layout.icon_title_cell, null);
+    protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
+        view = inflate.inflate(R.layout.icon_title_cell, containerView);
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         prompt_tv = (TextView) view.findViewById(R.id.prompt_tv);

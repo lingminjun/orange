@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/top_menu_bar"
                 android:layout_width="match_parent"
-                android:background="@android:color/white"
-                android:layout_height="44dp">
+                android:layout_height="44dp"
+                android:background="@android:color/white">
 
     <!--左边按钮-->
     <LinearLayout android:layout_height="match_parent"

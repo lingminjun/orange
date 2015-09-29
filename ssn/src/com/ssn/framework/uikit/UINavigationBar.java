@@ -78,9 +78,9 @@ public final class UINavigationBar extends RelativeLayout {
             protected void setView(View view) {
                 this.view = view;
 
-                this.textView = (TextView) view.findViewById(R.id.item_name);
-                this.container = (LinearLayout) view.findViewById(R.id.item_custom);
-                this.imageView = (ImageView) view.findViewById(R.id.item_img);
+                this.textView = (TextView) view.findViewById(R.id.ssn_item_name);
+                this.container = (LinearLayout) view.findViewById(R.id.ssn_item_custom);
+                this.imageView = (ImageView) view.findViewById(R.id.ssn_item_img);
 
                 display();
                 eventCheck();
@@ -394,11 +394,9 @@ public final class UINavigationBar extends RelativeLayout {
 
 
     private void init() {
-        this.setId(R.id.navigation_bar);
+        this.setId(R.id.ssn_navigation_bar);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_navigation_bar, this);
-
-//        _container = (LinearLayout)findViewById(R.id.view_container);
     }
 
     private Stack<NavigationItem> stack = new Stack<NavigationItem>();

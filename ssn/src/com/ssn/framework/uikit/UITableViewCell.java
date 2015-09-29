@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -86,9 +87,9 @@ public abstract class UITableViewCell extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.ssn_table_view_cell, this);
-        _container = (LinearLayout)this.findViewById(R.id.view_container);
-        _rightArrow = (ImageView)this.findViewById(R.id.right_arrow_icon);
-        _separateLine = (TextView)this.findViewById(R.id.separate_line);
+        _container = (LinearLayout)this.findViewById(R.id.ssn_view_container);
+        _rightArrow = (ImageView)this.findViewById(R.id.ssn_right_arrow_icon);
+        _separateLine = (TextView)this.findViewById(R.id.ssn_separate_line);
     }
 
     /**
@@ -98,9 +99,13 @@ public abstract class UITableViewCell extends RelativeLayout {
     private void derivedInit(Context context) {
         if (_customView == null) {
             try {
-                _customView = loadCustomDisplayView(LayoutInflater.from(context));
+                ViewGroup viewGroup = _container;
+                if (_container == null) {
+                    viewGroup = this;
+                }
+                _customView = loadCustomDisplayView(LayoutInflater.from(context),viewGroup);
             } catch (Throwable e) {APPLog.error(e);}
-            if (_customView != null) {
+            if (_customView != null && _container != _customView && _container != null) {
                 _container.addView(_customView);
             }
         }
@@ -134,23 +139,10 @@ public abstract class UITableViewCell extends RelativeLayout {
     /**
      * 你需要展示的view，仅仅在此view第一次创建时调用，务必将所有subview都记录下来，提高复用效率
      * @param inflate
-     * @return inflate.inflate(R.layout.custom_cell, null);
+     * @param containerView
+     * @return inflate.inflate(R.layout.custom_cell, containerView);
      */
-    protected abstract View loadCustomDisplayView(LayoutInflater inflate);
-
-    /**
-     * 增加custom显示
-     * @param displayView
-     */
-    protected void addCustomDisplayView(View displayView) {
-        if (displayView != null) {
-            if (_customView != null) {
-                _container.removeView(_customView);
-            }
-            _customView = displayView;
-            _container.addView(displayView);
-        }
-    }
+    protected abstract View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView);
 
     /**
      * 所适配的数据

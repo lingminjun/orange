@@ -14,19 +14,19 @@
                android:layout_alignWithParentIfMissing="true"
                android:layout_marginTop="4dp"
                android:layout_marginBottom="2dp"
-               android:layout_above="@+id/tab_name"
+               android:layout_above="@+id/ssn_tab_name"
                android:src="@drawable/ic_launcher"
-               android:id="@+id/tab_img"/>
+               android:id="@+id/ssn_tab_img"/>
     <TextView   android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@android:color/white"
-                android:id="@+id/tab_badge"
+                android:id="@+id/ssn_tab_badge"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:textSize="10sp"
-                android:layout_alignTop="@+id/tab_img"
-                android:layout_alignRight="@+id/tab_img"
+                android:layout_alignTop="@+id/ssn_tab_img"
+                android:layout_alignRight="@+id/ssn_tab_img"
                 android:visibility="visible"
                 android:background="@drawable/red_circle_bg"
                 android:text="3"/>
@@ -36,5 +36,5 @@
               android:layout_alignParentBottom="true"
               android:textSize="10sp"
               android:text="标题"
-              android:id="@+id/tab_name"/>
+              android:id="@+id/ssn_tab_name"/>
 </RelativeLayout>

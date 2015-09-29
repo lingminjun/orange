@@ -12,14 +12,14 @@
                android:layout_height="match_parent"
                android:scaleType="fitCenter"
                android:src="@drawable/ssn_back_icon"
-               android:id="@+id/item_img"/>
+               android:id="@+id/ssn_item_img"/>
     <LinearLayout android:orientation="horizontal"
                   android:layout_width="wrap_content"
                   android:layout_height="match_parent"
-                  android:id="@+id/item_custom" />
+                  android:id="@+id/ssn_item_custom" />
     <TextView android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:gravity="center"
               android:text="test"
-              android:id="@+id/item_name"/>
+              android:id="@+id/ssn_item_name"/>
 </LinearLayout>

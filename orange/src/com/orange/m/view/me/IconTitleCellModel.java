@@ -30,6 +30,10 @@ public class IconTitleCellModel extends UITableViewCell.CellModel {
     //新功能提示
     public boolean isNewFunc;
 
+    public IconTitleCellModel() {
+        mHiddenRightArrow = true;
+    }
+
     @Override
     protected UITableViewCell createCell(Context context) {
         return new IconTitleCell(context);

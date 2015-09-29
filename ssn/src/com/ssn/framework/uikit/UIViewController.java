@@ -257,7 +257,7 @@ public class UIViewController extends Fragment implements ViewController {
             _isViewDidLoad = true;
             try {
                 //寻找导航栏
-                UINavigationBar navigationBar = (UINavigationBar) _containerView.findViewById(R.id.navigation_bar);
+                UINavigationBar navigationBar = (UINavigationBar) _containerView.findViewById(R.id.ssn_navigation_bar);
                 if (navigationBar != null) {
                     navigationBar.pushItem(navigationItem());
                 }

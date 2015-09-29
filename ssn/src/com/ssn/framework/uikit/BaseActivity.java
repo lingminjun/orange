@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +48,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
      * @return
      */
     protected int getContentViewlayoutID() {
-        return R.layout.base_activity;
+        return R.layout.ssn_base_activity;
     }
 
     @Override
@@ -217,7 +216,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        Log.e("test", "transaction=" + transaction.hashCode());
         if (!exist) {//理论上FragmentManager应该不包含其实例
-            transaction.add(R.id.view_container, fragment, Integer.toString(fragment.hashCode()));
+            transaction.add(R.id.ssn_view_container, fragment, Integer.toString(fragment.hashCode()));
         }
 
         if (removeOld) {

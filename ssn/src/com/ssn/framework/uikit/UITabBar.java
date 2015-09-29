@@ -75,9 +75,9 @@ public final class UITabBar extends LinearLayout {
         private void setView(View view) {
             this.view = view;
 
-            this.textView = (TextView) view.findViewById(R.id.tab_name);
-            this.badgeView = (TextView) view.findViewById(R.id.tab_badge);
-            this.imageView = (ImageView) view.findViewById(R.id.tab_img);
+            this.textView = (TextView) view.findViewById(R.id.ssn_tab_name);
+            this.badgeView = (TextView) view.findViewById(R.id.ssn_tab_badge);
+            this.imageView = (ImageView) view.findViewById(R.id.ssn_tab_img);
 
             displayTabName();
             displayTabImage();
@@ -227,12 +227,12 @@ public final class UITabBar extends LinearLayout {
     }
 
     private void init() {
-        this.setId(R.id.tab_bar);
+        this.setId(R.id.ssn_tab_bar);
         this.setOrientation(LinearLayout.VERTICAL);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_tab, this);
 
-        _container = (LinearLayout)findViewById(R.id.tab_container);
+        _container = (LinearLayout)findViewById(R.id.ssn_tab_container);
     }
 
     /**

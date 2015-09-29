@@ -2,13 +2,13 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:id="@+id/horizontal_line"
+              android:id="@+id/ssn_horizontal_line"
               android:paddingLeft="16dp"
               android:background="@android:color/white"
               android:layout_height="wrap_content">
     <TextView android:layout_width="match_parent"
-              android:id="@+id/split_line"
+              android:id="@+id/ssn_split_line"
               android:layout_height="1dp"
-              android:background="@android:color/black"/>
+              android:background="@android:color/darker_gray"/>
 </LinearLayout>
 
