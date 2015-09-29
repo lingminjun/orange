@@ -3,13 +3,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:background="@android:color/white"
                 android:layout_width="match_parent"
-                android:layout_height="44dp">
+                android:layout_height="wrap_content">
 
     <!--cell container view-->
     <LinearLayout android:layout_gravity="center"
                   android:orientation="horizontal"
                   android:layout_width="match_parent"
-                  android:layout_height="match_parent"
+                  android:layout_height="44dp"
                   android:id="@+id/ssn_view_container">
     </LinearLayout>
 

@@ -163,43 +163,44 @@ public abstract class UITableViewCell extends RelativeLayout {
     protected void onDisplay(CellModel cellModel, int row) {
         this._cellModel = cellModel;
 
-//        LayoutParams params = (LayoutParams)this.getLayoutParams();
-//        if (cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
-//            params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
-//        }
-//        else {
-//            params.height = Density.dipTopx(cellModel.height);
-//        }
-
-        if (!cellModel.hiddenSeparateLine) {
-            _separateLine.setVisibility(VISIBLE);
-
-            //设置边距
-            LayoutParams separate_params = (LayoutParams) _separateLine.getLayoutParams();
-            if (cellModel.separateLineLeftPadding > 0) {
-                separate_params.leftMargin = Density.dipTopx(cellModel.separateLineLeftPadding);
-            }
-            else {
-                separate_params.leftMargin = 0;
-            }
-
-            //设置颜色
-            if (cellModel.separateLineColor > 0) {
-                _separateLine.setBackgroundColor(Res.color(cellModel.separateLineColor));
-            }
-            else {
-                _separateLine.setBackgroundColor(Res.color(android.R.color.darker_gray));
+        if (_container != null) {
+            LayoutParams params = (LayoutParams) _container.getLayoutParams();
+            if (cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
+                params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
+            } else {
+                params.height = Density.dipTopx(cellModel.height);
             }
         }
-        else {
-            _separateLine.setVisibility(GONE);
+
+        if (_separateLine != null) {
+            if (!cellModel.hiddenSeparateLine) {
+                _separateLine.setVisibility(VISIBLE);
+
+                //设置边距
+                LayoutParams separate_params = (LayoutParams) _separateLine.getLayoutParams();
+                if (cellModel.separateLineLeftPadding > 0) {
+                    separate_params.leftMargin = Density.dipTopx(cellModel.separateLineLeftPadding);
+                } else {
+                    separate_params.leftMargin = 0;
+                }
+
+                //设置颜色
+                if (cellModel.separateLineColor > 0) {
+                    _separateLine.setBackgroundColor(Res.color(cellModel.separateLineColor));
+                } else {
+                    _separateLine.setBackgroundColor(Res.color(android.R.color.darker_gray));
+                }
+            } else {
+                _separateLine.setVisibility(GONE);
+            }
         }
 
-        if (cellModel.hiddenRightArrow) {
-            _rightArrow.setVisibility(GONE);
-        }
-        else {
-            _rightArrow.setVisibility(VISIBLE);
+        if (_rightArrow != null) {
+            if (cellModel.hiddenRightArrow) {
+                _rightArrow.setVisibility(GONE);
+            } else {
+                _rightArrow.setVisibility(VISIBLE);
+            }
         }
     }
 
