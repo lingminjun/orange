@@ -66,6 +66,7 @@ public class MeViewController extends UITableViewController {
             IconTitleCellModel model = new IconTitleCellModel();
             model.mIconId = R.drawable.icon_me_normal;
             model.mTitle = "这仅仅只为测试";
+            model.height = 44;
             list.add(model);
         }
 

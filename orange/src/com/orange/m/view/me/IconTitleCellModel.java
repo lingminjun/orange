@@ -32,7 +32,6 @@ public class IconTitleCellModel extends UITableViewCell.CellModel {
 
     public IconTitleCellModel() {
         mHiddenRightArrow = true;
-        height = 60;
     }
 
     @Override

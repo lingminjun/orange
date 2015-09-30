@@ -165,10 +165,13 @@ public abstract class UITableViewCell extends RelativeLayout {
 
         if (_container != null) {
             LayoutParams params = (LayoutParams) _container.getLayoutParams();
-            if (cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
+            if (cellModel.height > 0 && cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
                 params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
-            } else {
+            } else if (cellModel.height >= TABLE_VIEW_CELL_MIN_HEIGHT) {
                 params.height = Density.dipTopx(cellModel.height);
+            }
+            else {
+                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
             }
         }
 
