@@ -39,5 +39,4 @@ public class IconTitleCellModel extends UITableViewCell.CellModel {
         return new IconTitleCell(context);
     }
 
-    public void paseCusTextView(TextView prompt_tv){}
 }

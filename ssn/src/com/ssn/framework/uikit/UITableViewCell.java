@@ -6,12 +6,11 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Density;
@@ -51,11 +50,15 @@ public abstract class UITableViewCell extends RelativeLayout {
          * 返回当前cell type
          * @return
          */
-        public final int getCellType() {
-            int code = getClass().hashCode();
+        public final String cellIdentifier() {
+            if (_id != null) {
+                return _id;
+            }
+            _id = getClass().getName();
 //            Log.e("xxx","code="+code+",class:"+getClass().getSimpleName());
-            return code;
+            return _id;
         }
+        private String _id;
 
         public int getModelID() {
             return this.hashCode();
@@ -106,9 +109,32 @@ public abstract class UITableViewCell extends RelativeLayout {
                 _customView = loadCustomDisplayView(LayoutInflater.from(context),viewGroup);
             } catch (Throwable e) {APPLog.error(e);}
             if (_customView != null && _container != _customView && _container != null) {
-                _container.addView(_customView);
+                if (_container.indexOfChild(_customView) >= _container.getChildCount()) {
+                    _container.addView(_customView);
+                }
+            }
+
+            //检查是否存在出入框
+            if (checkContainedEditText(_container)) {
+                _container.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);//还原到默认值
             }
         }
+    }
+
+    public static boolean checkContainedEditText(ViewGroup group) {
+        int count = group.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View v = group.getChildAt(i);
+            if (v instanceof EditText) {
+                return true;
+            }
+            else if (v instanceof ViewGroup) {
+                if (checkContainedEditText((ViewGroup)v)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static UITableViewCell newInstance(CellModel cellModel,Context context) {
@@ -137,12 +163,37 @@ public abstract class UITableViewCell extends RelativeLayout {
     }
 
     /**
+     * 展示的custom display view
+     * @return
+     */
+    protected final View displayView() {return _container;}
+
+    /**
      * 你需要展示的view，仅仅在此view第一次创建时调用，务必将所有subview都记录下来，提高复用效率
      * @param inflate
      * @param containerView
-     * @return inflate.inflate(R.layout.custom_cell, containerView);
+     * @return inflate(inflate, R.layout.custom_cell, containerView);
+     *         或者 inflate.inflate(R.layout.custom_cell, containerView);
      */
     protected abstract View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView);
+
+    /**
+     * 仅仅用于loadCustomDisplayView实现
+     * @param inflate
+     * @param layout
+     * @param root
+     * @return
+     */
+    protected static View inflate(LayoutInflater inflate,int layout, ViewGroup root) {
+        View view = inflate.inflate(layout, root);
+        if (view != root) {
+            return view;
+        }
+        if (view == null) {
+            return null;
+        }
+        return root.getChildAt(root.getChildCount() - 1);
+    }
 
     /**
      * 所适配的数据
@@ -241,4 +292,46 @@ public abstract class UITableViewCell extends RelativeLayout {
             _rightArrow.setVisibility(VISIBLE);
         }
     }
+
+    /*//touch 事件分发，下面是点击非edit隐藏键盘实现思路，
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        // 必不可少，否则所有的组件都不会有TouchEvent了
+        if (getWindow().superDispatchTouchEvent(ev)) {
+            return true;
+        }
+        return onTouchEvent(ev);
+    }
+
+    public  boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = { 0, 0 };
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 点击的是输入框区域，保留点击EditText的事件
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+    */
 }

@@ -389,14 +389,6 @@ public class ViewEvent {
         }
 
         public void onItemClick(AdapterView<?> var1, View var2, int var3, long var4) {
-            try {
-                if (_click != null) _click.onItemClick(var1, var2, var3, var4);
-                track(var2);//打点
-            }
-            catch (Throwable e) {
-                APPLog.error(e);
-            }
-
             if (_click == null) {return;}
 
             if (_click instanceof ItemClick) {

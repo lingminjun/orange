@@ -29,7 +29,7 @@ public class IconTitleCell extends UITableViewCell {
 
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
-        view = inflate.inflate(R.layout.icon_title_cell, containerView);
+        View view = inflate(inflate,R.layout.icon_title_cell, containerView);
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         prompt_tv = (TextView) view.findViewById(R.id.prompt_tv);
@@ -70,7 +70,6 @@ public class IconTitleCell extends UITableViewCell {
         int promptTvVisible = TextUtils.isEmpty(mEntity.mPrompt) ? View.GONE : View.VISIBLE;
         prompt_tv.setVisibility(promptTvVisible);
         prompt_tv.setText(mEntity.mPrompt);
-        mEntity.paseCusTextView(prompt_tv);
 
         if (mEntity.isNewFunc) {
             newFuncIcon.setVisibility(VISIBLE);

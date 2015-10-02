@@ -44,18 +44,18 @@ public class UITableViewController extends UIViewController implements UITableVi
     }
 
     @Override
-    public List<UITableViewCell.CellModel> tableViewAdapterLoadData(UITableView.TableViewAdapter adapter) {
+    public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         return null;
     }
 
     @Override
-    public void tableViewAdapterItemClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
+    public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
 
     }
 
     @Override
-    public void tableViewAdapterPullDownRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
+    public void onTableViewPullDownRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
 
     @Override
-    public void tableViewAdapterPullUpRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
+    public void onTableViewPullUpRefresh(UITableView.TableViewAdapter adapter) {adapter.completedLoad();}
 }

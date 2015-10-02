@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import com.orange.m.R;
 import com.orange.m.view.me.IconTitleCellModel;
+import com.orange.m.view.me.TestCell;
+import com.orange.m.view.me.TestCellModel;
 import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.UITableView;
 import com.ssn.framework.uikit.UITableViewCell;
@@ -27,6 +29,7 @@ public class MeViewController extends UITableViewController {
 
         navigationItem().setTitle("我");
         tabItem().setTabName("我");
+        navigationItem().setHidden(true);
         tabItem().setTabImage(R.drawable.tab_selector_me);
     }
 
@@ -52,36 +55,78 @@ public class MeViewController extends UITableViewController {
     }
 
     @Override
-    public List<UITableViewCell.CellModel> tableViewAdapterLoadData(UITableView.TableViewAdapter adapter) {
+    public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
-        {
-            IconTitleCellModel model = new IconTitleCellModel();
-            model.mIconId = R.drawable.icon_me_normal;
-            model.mTitle = "这仅仅只为测试";
-            list.add(model);
+        for (int i = 0; i< 100;i++) {
+            {
+                IconTitleCellModel model = new IconTitleCellModel();
+                model.mIconId = R.drawable.icon_me_normal;
+                model.mTitle = "这仅仅只为测试";
+                list.add(model);
+            }
+            {
+                TestCellModel model = new TestCellModel();
+                list.add(model);
+            }
         }
-
-        {
-            IconTitleCellModel model = new IconTitleCellModel();
-            model.mIconId = R.drawable.icon_me_normal;
-            model.mTitle = "这仅仅只为测试";
-            model.height = 44;
-            list.add(model);
-        }
-
-        {
-            IconTitleCellModel model = new IconTitleCellModel();
-            model.mIconId = R.drawable.icon_me_normal;
-            model.mTitle = "这仅仅只为测试";
-            list.add(model);
-        }
+//        {
+//            IconTitleCellModel model = new IconTitleCellModel();
+//            model.mIconId = R.drawable.icon_me_normal;
+//            model.mTitle = "这仅仅只为测试";
+//            list.add(model);
+//        }
+//
+//        {
+//            TestCellModel model = new TestCellModel();
+//            list.add(model);
+//        }
+//
+//        {
+//            IconTitleCellModel model = new IconTitleCellModel();
+//            model.mIconId = R.drawable.icon_me_normal;
+//            model.mTitle = "这仅仅只为测试";
+//            list.add(model);
+//        }
+//        {
+//            TestCellModel model = new TestCellModel();
+//            list.add(model);
+//        }
+//
+//        {
+//            IconTitleCellModel model = new IconTitleCellModel();
+//            model.mIconId = R.drawable.icon_me_normal;
+//            model.mTitle = "这仅仅只为测试";
+//            list.add(model);
+//        }
+//        {
+//            TestCellModel model = new TestCellModel();
+//            list.add(model);
+//        }
+//
+//        {
+//            IconTitleCellModel model = new IconTitleCellModel();
+//            model.mIconId = R.drawable.icon_me_normal;
+//            model.mTitle = "这仅仅只为测试";
+//            list.add(model);
+//        }
+//        {
+//            TestCellModel model = new TestCellModel();
+//            list.add(model);
+//        }
+//
+//        {
+//            IconTitleCellModel model = new IconTitleCellModel();
+//            model.mIconId = R.drawable.icon_me_normal;
+//            model.mTitle = "这仅仅只为测试";
+//            list.add(model);
+//        }
 
         return list;
     }
 
     @Override
-    public void tableViewAdapterPullDownRefresh(final UITableView.TableViewAdapter adapter) {
+    public void onTableViewPullDownRefresh(final UITableView.TableViewAdapter adapter) {
         TaskQueue.mainQueue().executeDelayed(new Runnable() {
             @Override
             public void run() {
