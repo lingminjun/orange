@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
@@ -68,6 +69,39 @@ public class Res {
     }
 
     /**
+     * 构造颜色，主要用于控件颜色赋值
+     * @param normal
+     * @param pressed
+     * @param unable
+     * @return
+     */
+    public static ColorStateList colorState(int normal, int pressed, int unable) {
+        return colorState(normal, pressed,pressed,unable);
+    }
+
+    /**
+     * 构造颜色，主要用于控件颜色赋值
+     * @param normal
+     * @param pressed
+     * @param focused
+     * @param unable
+     * @return
+     */
+    public static ColorStateList colorState(int normal, int pressed, int focused, int unable) {
+        int[] colors = new int[] { pressed, focused, normal, focused, unable, normal };
+        int[][] states = new int[6][];
+        states[0] = new int[] { android.R.attr.state_pressed, android.R.attr.state_enabled };
+        states[1] = new int[] { android.R.attr.state_enabled, android.R.attr.state_focused };
+        states[2] = new int[] { android.R.attr.state_enabled };
+        states[3] = new int[] { android.R.attr.state_focused };
+        states[4] = new int[] { android.R.attr.state_window_focused };
+        states[5] = new int[] {};
+        ColorStateList colorList = new ColorStateList(states, colors);
+        return colorList;
+    }
+
+
+    /**
      * 获取图片
      * @param id
      * @return
@@ -78,6 +112,50 @@ public class Res {
         } else {
             return application().getResources().getDrawable(id);
         }
+    }
+
+    /**
+     * 按钮状态背景列表
+     * btn.setBackgroundDrawable(imageState(R.drawable.btn_normal, R.drawable.btn_selected));
+     * @param idNormal
+     * @param idPressed
+     * @param idUnable
+     * @return
+     */
+    public static StateListDrawable imageState(int idNormal, int idPressed,int idUnable) {
+        return imageState(idNormal,idPressed,idPressed,idUnable);
+    }
+
+    /**
+     * 按钮状态背景列表
+     * btn.setBackgroundDrawable(imageState(R.drawable.btn_normal, R.drawable.btn_selected));
+     * @param idNormal
+     * @param idPressed
+     * @param idFocused
+     * @param idUnable
+     * @return
+     */
+    public static StateListDrawable imageState(int idNormal, int idPressed, int idFocused, int idUnable) {
+        Context context = Res.context();
+        StateListDrawable bg = new StateListDrawable();
+        Drawable normal = idNormal == -1 ? null : context.getResources().getDrawable(idNormal);
+        Drawable pressed = idPressed == -1 ? null : context.getResources().getDrawable(idPressed);
+        Drawable focused = idFocused == -1 ? null : context.getResources().getDrawable(idFocused);
+        Drawable unable = idUnable == -1 ? null : context.getResources().getDrawable(idUnable);
+
+        // View.PRESSED_ENABLED_STATE_SET
+        bg.addState(new int[] { android.R.attr.state_pressed, android.R.attr.state_enabled }, pressed);
+        // View.ENABLED_FOCUSED_STATE_SET
+        bg.addState(new int[] { android.R.attr.state_enabled, android.R.attr.state_focused }, focused);
+        // View.ENABLED_STATE_SET
+        bg.addState(new int[] { android.R.attr.state_enabled }, normal);
+        // View.FOCUSED_STATE_SET
+        bg.addState(new int[] { android.R.attr.state_focused }, focused);
+        // View.WINDOW_FOCUSED_STATE_SET
+        bg.addState(new int[] { android.R.attr.state_window_focused }, unable);
+        // View.EMPTY_STATE_SET
+        bg.addState(new int[] {}, normal);
+        return bg;
     }
 
     /**

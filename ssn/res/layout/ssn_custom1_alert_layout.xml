@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/ssn_view_container"
+                  android:paddingTop="20dp"
+                  android:paddingBottom="15dp"
+                  android:gravity="center"
+                  android:orientation="vertical">
+    </LinearLayout>
+
+    <include layout="@layout/ssn_horizontal_line"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/ssn_view_container"/>
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:gravity="center"
+              android:textColor="@color/ssn_blue"
+              android:textSize="16sp"
+              android:layout_below="@+id/ssn_horizontal_line"
+              android:layout_marginLeft="5dp"
+              android:layout_marginRight="5dp"
+              android:paddingTop="12dp"
+              android:paddingBottom="12dp"
+              android:layout_weight="1"
+              android:text="确定"
+              android:layout_centerHorizontal="true"
+              android:id="@+id/right_btn"/>
+</LinearLayout>

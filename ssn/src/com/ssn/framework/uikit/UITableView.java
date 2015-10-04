@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by lingminjun on 15/9/27.
  */
-public class UITableView extends PullToRefreshListView {
+public class UITableView extends /*ListView */PullToRefreshListView {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -96,7 +96,10 @@ public class UITableView extends PullToRefreshListView {
             }
 
             if (cellModel.click != null) {
+                boolean exclusive = cellModel.click.isExclusive();
+                cellModel.click.setExclusive(false);
                 cellModel.click.onClick(view);
+                cellModel.click.setExclusive(exclusive);
             }
 
             if (_delegate != null) {

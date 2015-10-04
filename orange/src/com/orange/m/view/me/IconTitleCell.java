@@ -1,6 +1,8 @@
 package com.orange.m.view.me;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
@@ -29,7 +32,7 @@ public class IconTitleCell extends UITableViewCell {
 
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
-        View view = inflate(inflate,R.layout.icon_title_cell, containerView);
+        view = inflate(inflate,R.layout.icon_title_cell, containerView);
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         prompt_tv = (TextView) view.findViewById(R.id.prompt_tv);
@@ -43,11 +46,15 @@ public class IconTitleCell extends UITableViewCell {
         newFuncIcon.setVisibility(GONE);
     }
 
+
     @Override
     protected void onDisplay(CellModel cellModel, int row) {
         super.onDisplay(cellModel, row);
 
         IconTitleCellModel mEntity = (IconTitleCellModel)cellModel;
+
+//        if (Build.VERSION_CODES >= Build.VERSION_CODES.JELLY_BEAN)
+        view.setBackground(Res.imageState(R.color.white, R.color.app_style, R.color.white));
 
         if (mEntity.mIconId > 0) {
             mIconView.setVisibility(View.VISIBLE);

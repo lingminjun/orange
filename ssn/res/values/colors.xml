@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ssn_normal_text">#333333</color>
+    <color name="ssn_assist_text">#989898</color>
+    <color name="ssn_hint_text">#C9C9C9</color>
+
+    <color name="ssn_link_text">#4bb8e4</color>
+
+    <color name="ssn_white">@android:color/white</color>
+    <color name="ssn_white_light">#cccccc</color>
+    <color name="ssn_blue">#2790EB</color>
+    <color name="ssn_blue_light">#2790D1</color>
+    <color name="ssn_red">#ff5e56</color>
+    <color name="ssn_red_light">#FF4E44</color>
+    <color name="ssn_orange">#ff945a</color>
+    <color name="ssn_orange_light">#FF823E</color>
+    <color name="ssn_yellow">#fef3a1</color>
+    <color name="ssn_yellow_light">#EBE093</color>
+    <color name="ssn_green">#9AC600</color>
+    <color name="ssn_green_light">#7B9F00</color>
+</resources>

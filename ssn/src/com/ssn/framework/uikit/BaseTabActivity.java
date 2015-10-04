@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import com.ssn.framework.R;
+import com.ssn.framework.uikit.inc.UIWrapperView;
 import com.ssn.framework.uikit.inc.ViewController;
 
 import java.util.ArrayList;
@@ -102,6 +103,10 @@ public class BaseTabActivity extends BaseActivity {
 
         _tabbar = (UITabBar) findViewById(R.id.ssn_tab_bar);
         _tabbar.setTabSelectedListener(changeListener);
+        UIWrapperView wrapperView = (UIWrapperView)findViewById(R.id.ssn_wrap_view);
+        if (wrapperView != null) {
+//            wrapperView.setBottomDockView(_tabbar);
+        }
 
         ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(this.TAB_FRAGMENT_CLASS_LIST_KEY);
         if (list != null) {

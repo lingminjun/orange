@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:paddingTop="20dp"
+                  android:paddingBottom="15dp"
+                  android:gravity="center"
+                  android:id="@+id/ssn_view_container">
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:gravity="center"
+                  android:textColor="@color/ssn_normal_text"
+                  android:textSize="@dimen/big_font"
+                  android:layout_marginLeft="14dp"
+                  android:layout_marginRight="14dp"
+                  android:layout_marginBottom="6dp"
+                  android:text="标题"
+                  android:id="@+id/title_label"/>
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:gravity="center"
+                  android:textColor="@color/ssn_normal_text"
+                  android:textSize="14sp"
+                  android:layout_marginLeft="14dp"
+                  android:layout_marginRight="14dp"
+                  android:text="消息体"
+                  android:id="@+id/message_label"/>
+    </LinearLayout>
+
+    <include layout="@layout/ssn_horizontal_line"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/ssn_view_container"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/ssn_horizontal_line"
+                  android:orientation="horizontal"
+                  android:gravity="center">
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:gravity="center"
+                  android:textColor="@color/ssn_blue"
+                  android:textSize="16sp"
+                  android:paddingTop="12dp"
+                  android:paddingBottom="12dp"
+                  android:layout_weight="1"
+                  android:text="取消"
+                  android:id="@+id/left_btn"/>
+        <TextView android:layout_width="1px"
+                  android:layout_height="match_parent"
+                  android:background="@android:color/darker_gray"/>
+        <TextView android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:gravity="center"
+                  android:textColor="@color/ssn_blue"
+                  android:textSize="16sp"
+                  android:text="确定"
+                  android:paddingTop="12dp"
+                  android:paddingBottom="12dp"
+                  android:layout_weight="1"
+                  android:id="@+id/right_btn"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -2,7 +2,15 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@android:color/transparent"
-             android:id="@+id/ssn_view_container" >
+             android:layout_height="match_parent">
+    <com.ssn.framework.uikit.inc.UIWrapperView
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/ssn_wrap_view">
+        <FrameLayout android:id="@+id/ssn_view_container"
+                     android:layout_width="fill_parent"
+                     android:layout_height="0.0dip"
+                     android:layout_weight="1.0"/>
+    </com.ssn.framework.uikit.inc.UIWrapperView>
 </FrameLayout>

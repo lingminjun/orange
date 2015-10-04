@@ -8,10 +8,7 @@ import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCell;
 import com.orange.m.view.me.TestCellModel;
 import com.ssn.framework.foundation.TaskQueue;
-import com.ssn.framework.uikit.UITableView;
-import com.ssn.framework.uikit.UITableViewCell;
-import com.ssn.framework.uikit.UITableViewController;
-import com.ssn.framework.uikit.UIViewController;
+import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +59,14 @@ public class MeViewController extends UITableViewController {
             {
                 IconTitleCellModel model = new IconTitleCellModel();
                 model.mIconId = R.drawable.icon_me_normal;
-                model.mTitle = "这仅仅只为测试";
+                model.mTitle = "这仅仅只为测试"+i;
+//                model.disabled = true;
+//                model.click = ViewEvent.click(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        UIAlert.showAlert(getActivity(),"这是标题","随便写点啥，看看换行的效果，可能还不够长，必须凑个字数","确定","取消",null);
+//                    }
+//                });
                 list.add(model);
             }
             {

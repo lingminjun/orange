@@ -28,6 +28,8 @@ public abstract class UITableViewCell extends RelativeLayout {
 
         public int height;//高度
 
+        public boolean disabled;//不可点击的
+
         public int separateLineLeftPadding;//分割线左边距，(dp)
         public boolean hiddenSeparateLine;//分割线是否隐藏
         public int separateLineColor;//分割线颜色
@@ -291,6 +293,14 @@ public abstract class UITableViewCell extends RelativeLayout {
         else {
             _rightArrow.setVisibility(VISIBLE);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (_cellModel != null && _cellModel.disabled) {
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     /*//touch 事件分发，下面是点击非edit隐藏键盘实现思路，

@@ -30,18 +30,20 @@
                   android:name=".page.main.MainTabActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/TabPageTheme"
-                  android:windowSoftInputMode="adjustPan"/>
-
+                  android:windowSoftInputMode="adjustResize|stateHidden"/>
+<!--adjustPan-->
         <activity android:name="com.ssn.framework.uikit.BaseActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name="com.ssn.framework.uikit.BaseNavActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

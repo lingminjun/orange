@@ -429,6 +429,13 @@ public class ViewEvent {
      */
     public static class UT {
 
+        /**
+         * 排他属性
+         */
+        private boolean _nonExclusive;
+        public boolean isExclusive() {return !_nonExclusive;}
+        public void setExclusive(boolean exclusive) {_nonExclusive = !exclusive;}
+
         //exclusive 实现
         private final static long MIN_CLICK_SPACE   = 300;
         private static long _last_click_at = 0;
@@ -437,7 +444,10 @@ public class ViewEvent {
          * 排他校验
          * @return 返回yes表示有效，返回no表示无效
          */
-        protected final static boolean checkExclusive() {
+        protected final boolean checkExclusive() {
+            //非排他属性时，立即响应
+            if (_nonExclusive) {return true;}
+
             long at = System.currentTimeMillis();
             if (_last_click_at == 0 || at > _last_click_at + MIN_CLICK_SPACE || _last_click_at > at + MIN_CLICK_SPACE) {
                 _last_click_at = at;
