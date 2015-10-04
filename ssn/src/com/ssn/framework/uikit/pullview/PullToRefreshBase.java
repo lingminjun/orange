@@ -834,7 +834,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	}
 
 	@Override
-	protected final void onSizeChanged(int w, int h, int oldw, int oldh) {
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		if (DEBUG) {
 			Log.d(LOG_TAG, String.format("onSizeChanged. W: %d, H: %d", w, h));
 		}

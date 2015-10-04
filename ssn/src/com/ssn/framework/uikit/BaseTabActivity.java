@@ -105,7 +105,7 @@ public class BaseTabActivity extends BaseActivity {
         _tabbar.setTabSelectedListener(changeListener);
         UIWrapperView wrapperView = (UIWrapperView)findViewById(R.id.ssn_wrap_view);
         if (wrapperView != null) {
-//            wrapperView.setBottomDockView(_tabbar);
+            wrapperView.setBottomDockView(_tabbar);
         }
 
         ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(this.TAB_FRAGMENT_CLASS_LIST_KEY);

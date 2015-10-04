@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.ssn.framework.foundation.Density;
+import com.ssn.framework.foundation.TaskQueue;
 
 /**
  * Created by lingminjun on 15/10/4.
@@ -34,14 +36,21 @@ public class UIWrapperView extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         int changed = oldh - h;
-        if (changed >= KEYBOARD_MIN_HEIGHT && changed < oldh) {
+        if (changed >= getKeyboardMinHeight() && changed < oldh) {
             _showingKeyboard = true;
 
-            if (_bottomView != null) {
-                _bottomView.setVisibility(GONE);
+            if (_bottomView != null) {//键盘弹出将tool bar弹出问题修改
+                TaskQueue.mainQueue().executeDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (_showingKeyboard) {
+                            _bottomView.setVisibility(GONE);
+                        }
+                    }
+                }, 100);
             }
         }
-        else if (changed <= KEYBOARD_MIN_HEIGHT && -changed < h) {
+        else if (changed <= getKeyboardMinHeight() && -changed < h) {
             _showingKeyboard = false;
 
             if (_bottomView != null) {
@@ -53,9 +62,14 @@ public class UIWrapperView extends LinearLayout {
 //        Log.e("tabbar", "yyyyyyy"+h+"old"+oldh);
     }
 
-    private static int KEYBOARD_MIN_HEIGHT = 100;
+    private static int KEYBOARD_MIN_HEIGHT = 100;//纯粹是经验值
     private boolean _showingKeyboard;
-
+    private int _keyboardMinHeight;
+    private int getKeyboardMinHeight() {
+        if (_keyboardMinHeight > 0) {return _keyboardMinHeight;}
+        _keyboardMinHeight = Density.dipTopx(KEYBOARD_MIN_HEIGHT);
+        return _keyboardMinHeight;
+    }
     public boolean isShowingKeyboard() {return _showingKeyboard;}
 
     private View _bottomView;

@@ -3,6 +3,7 @@ package com.ssn.framework.uikit;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.foundation.TaskQueue;
 
 /**
  * Created by lingminjun on 15/9/27.
@@ -34,6 +36,7 @@ public abstract class UITableViewCell extends RelativeLayout {
         public boolean hiddenSeparateLine;//分割线是否隐藏
         public int separateLineColor;//分割线颜色
         public boolean hiddenRightArrow;//隐藏右边箭头
+
 
         /**
          * 一些事件支持
@@ -65,6 +68,12 @@ public abstract class UITableViewCell extends RelativeLayout {
         public int getModelID() {
             return this.hashCode();
         }
+
+        /**
+         * EditText支持
+         */
+        private int _editID;
+        private boolean _showKeyboard;
     }
 
     private LinearLayout _container;
@@ -151,7 +160,54 @@ public abstract class UITableViewCell extends RelativeLayout {
         return cell;
     }
 
-    public static void displayCell(UITableViewCell cell, CellModel cellModel, int row) {
+    /**
+     * 获取焦点时处理
+     * @param cell
+     * @param editTextID
+     */
+    public static void prepareFocus(final UITableViewCell cell, int editTextID) {
+        UITableViewCell.CellModel cellModel = cell.cellModel();
+        cellModel._editID = editTextID;
+        cellModel._showKeyboard = true;
+    }
+
+    private static void afreshFocus(final UITableViewCell cell, final CellModel cellModel) {
+        cellModel._showKeyboard = false;
+        TaskQueue.mainQueue().executeDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (cell._cellModel != cellModel) {
+                    return;
+                }
+
+                View parentView = cell._customView;
+                if (parentView == null) {
+                    parentView = cell._container;
+                }
+
+                if (cellModel._editID <= 0 || parentView == null) {
+                    return;
+                }
+
+                EditText editText = (EditText)parentView.findViewById(cellModel._editID);
+                if (editText != null) {
+                    InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(editText, 0);
+                    editText.requestFocus();
+                    Editable editable = editText.getText();
+                    if (editable != null) {
+                        editText.setSelection(editable.length());
+                    }
+                    else {
+                        editText.setSelection(0);
+                    }
+//                    Log.e("reshow","txt"+editText.hashCode());
+                }
+            }
+        },200);
+    }
+
+    public static void displayCell(final UITableViewCell cell, final CellModel cellModel, int row) {
         cell._cellModel = null;
         try {
             cell.onPrepareForReuse();
@@ -162,6 +218,10 @@ public abstract class UITableViewCell extends RelativeLayout {
         } catch (Throwable e) {APPLog.error(e);}
 
         cell._cellModel = cellModel;//防止子类替换
+
+        if (cellModel._showKeyboard) {
+            afreshFocus(cell,cellModel);
+        }
     }
 
     /**

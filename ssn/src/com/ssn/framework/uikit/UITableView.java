@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.ssn.framework.R;
+import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.pullview.PullToRefreshBase;
 import com.ssn.framework.uikit.pullview.PullToRefreshListView;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -431,4 +434,62 @@ public class UITableView extends /*ListView */PullToRefreshListView {
         super(context, mode, style);
     }
 
+    private UITableViewCell targetCellWithEditText(ViewGroup group,EditText editText) {
+        int id = editText.getId();
+
+        int count = group.getChildCount();
+
+        UITableViewCell cell = null;
+
+        for (int i = 0; i < count; i++) {
+            View v = group.getChildAt(i);
+            if (v instanceof UITableViewCell) {
+                View target = v.findViewById(id);
+                if (target == editText) {
+                    cell = (UITableViewCell)v;
+                    break;
+                }
+            }
+            else if (v instanceof ViewGroup) {
+                cell = targetCellWithEditText((ViewGroup)v,editText);
+                if (cell != null) {
+                    break;
+                }
+            }
+        }
+
+        return cell;
+    }
+
+    private void findCellFromEditText(EditText editText) {
+        if (editText.getId() <= 0) {
+            Log.e("UITableViewCell","请务必保证cell上的EditText的id被设置");
+            return;
+        }
+
+        UITableViewCell cell = targetCellWithEditText(this,editText);
+
+        if (cell != null && cell.cellModel() != null) {
+            UITableViewCell.prepareFocus(cell,editText.getId());
+        }
+    }
+
+    @Override
+    protected final void onSizeChanged(int w, int h, int oldw, int oldh) {
+
+        /*
+        当触发键盘出现，造成光标无法聚焦问题修改
+         */
+        int changed = oldh - h;
+        if (changed >= Density.dipTopx(100) && changed < oldh) {
+            InputMethodManager imm = (InputMethodManager)Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+            View txt = this.findFocus();
+            if (imm != null && imm.isAcceptingText() && txt != null) {
+//                Log.e("show","txt"+txt.hashCode());
+                findCellFromEditText((EditText)txt);
+            }
+        }
+
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
 }
