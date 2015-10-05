@@ -32,12 +32,18 @@ public class BaseNavActivity extends BaseActivity {
         return R.layout.ssn_base_nav_activity;
     }
 
+    private UINavigationBar getNavigationBar() {
+        if (_navigationBar != null) {return _navigationBar;}
+        _navigationBar = (UINavigationBar) findViewById(R.id.ssn_navigation_bar);
+        return _navigationBar;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //导航
-        _navigationBar = (UINavigationBar) findViewById(R.id.ssn_navigation_bar);
+        getNavigationBar();
 
         //加载root fregment
         Intent intent = getIntent();
@@ -63,8 +69,8 @@ public class BaseNavActivity extends BaseActivity {
         super.transitionToFragment(fragment, removeOld);
 
         if (fragment instanceof UIViewController) {
-            if (_navigationBar != null) {//暂时不做压站处理，以后再想想，先让其重置栈方式呈现即可
-                _navigationBar.resetItemStack(((UIViewController) fragment).navigationItem());
+            if (getNavigationBar() != null) {//暂时不做压站处理，以后再想想，先让其重置栈方式呈现即可
+                getNavigationBar().resetItemStack(((UIViewController) fragment).navigationItem());
             }
         }
     }

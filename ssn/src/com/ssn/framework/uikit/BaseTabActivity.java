@@ -79,6 +79,11 @@ public class BaseTabActivity extends BaseActivity {
         }
     };
 
+    private UITabBar getTabbar() {
+        if (_tabbar != null) {return _tabbar;}
+        _tabbar = (UITabBar) findViewById(R.id.ssn_tab_bar);
+        return _tabbar;
+    }
 
     protected final int getContentViewlayoutID() {
         return R.layout.ssn_base_tab_activity;
@@ -101,11 +106,11 @@ public class BaseTabActivity extends BaseActivity {
 //            }
 //        }
 
-        _tabbar = (UITabBar) findViewById(R.id.ssn_tab_bar);
-        _tabbar.setTabSelectedListener(changeListener);
+        UITabBar tabBar = getTabbar();
+        tabBar.setTabSelectedListener(changeListener);
         UIWrapperView wrapperView = (UIWrapperView)findViewById(R.id.ssn_wrap_view);
         if (wrapperView != null) {
-            wrapperView.setBottomDockView(_tabbar);
+            wrapperView.setBottomDockView(tabBar);
         }
 
         ArrayList<IntentTabItem> list = intent.getParcelableArrayListExtra(this.TAB_FRAGMENT_CLASS_LIST_KEY);
@@ -137,7 +142,7 @@ public class BaseTabActivity extends BaseActivity {
                 tabs.add(vc.tabItem());//取vc的tab
             }
 
-            _tabbar.setTabItems(tabs);
+            tabBar.setTabItems(tabs);
 
             //默认选第一个
             if (tabs.size() > 0) {

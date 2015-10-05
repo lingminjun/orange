@@ -362,13 +362,7 @@ public class Navigator implements ActivityTracking {
 
         intent.putExtra(NAVIGATOR_URL_KEY,url);
         if (node.fragmentClass != null) {
-            if (BaseNavActivity.class.isAssignableFrom(activityClass)) {
-                intent.removeExtra(NAVIGATOR_FRAGMENT_CLASS_KEY);
-                intent.putExtra(NAVIGATOR_ROOT_FRAGMENT_CLASS_KEY, node.fragmentClass);
-            }
-            else {
-                intent.putExtra(NAVIGATOR_FRAGMENT_CLASS_KEY, node.fragmentClass);
-            }
+            intent.putExtra(NAVIGATOR_FRAGMENT_CLASS_KEY, node.fragmentClass);
         }
 
         //防止 service 直接 open url，其他Activity都不需要重新开启一个栈
