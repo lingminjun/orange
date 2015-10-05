@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.URLHelper;
@@ -23,6 +24,9 @@ public class Navigator implements ActivityTracking {
     public static final String NAVIGATOR_FRAGMENT_CLASS_KEY = "__fragment_class_key";
     public static final String NAVIGATOR_ROOT_FRAGMENT_CLASS_KEY = "__root_fragment_class_key";
     public static final String NAVIGATOR_FRAGMENT_CLASS_LIST_KEY = "__tab_fragment_class_list_key";
+
+    public static final String NAVIGATOR_VC_CLOSE_KEY = "__vc_close_key";
+    public static final String NAVIGATOR_VC_BACK_KEY = "__vc_back_key";
 
     /**
      * 页面委托协议，暂时还没用到
@@ -318,17 +322,28 @@ public class Navigator implements ActivityTracking {
             return false;
         }
 
+        //返回按钮的设定
+        if (context instanceof Activity) {
+            if (isModal) {
+                intent.putExtra(NAVIGATOR_VC_CLOSE_KEY,Res.localized(R.string.cancel));
+            }
+            else {
+                intent.putExtra(NAVIGATOR_VC_BACK_KEY,Res.localized(R.string.back));
+            }
+        }
+
         //打开页面，动画是否需要控制
         context.startActivity(intent);
 
+
         //动画设置
-        if (context instanceof Activity) {
-            if (isModal) {
-                ((Activity)context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            } else {
-                ((Activity)context).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            }
-        }
+//        if (context instanceof Activity) {
+//            if (isModal) {
+//                ((Activity)context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//            } else {
+//                ((Activity)context).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//            }
+//        }
 
         return true;
     }
@@ -342,11 +357,18 @@ public class Navigator implements ActivityTracking {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
 
-        intent.setClass(context,node.activityClass != null ? node.activityClass : BaseActivity.class);
+        Class activityClass = node.activityClass != null ? node.activityClass : BaseActivity.class;
+        intent.setClass(context,activityClass);
 
         intent.putExtra(NAVIGATOR_URL_KEY,url);
         if (node.fragmentClass != null) {
-            intent.putExtra(NAVIGATOR_FRAGMENT_CLASS_KEY, node.fragmentClass);
+            if (BaseNavActivity.class.isAssignableFrom(activityClass)) {
+                intent.removeExtra(NAVIGATOR_FRAGMENT_CLASS_KEY);
+                intent.putExtra(NAVIGATOR_ROOT_FRAGMENT_CLASS_KEY, node.fragmentClass);
+            }
+            else {
+                intent.putExtra(NAVIGATOR_FRAGMENT_CLASS_KEY, node.fragmentClass);
+            }
         }
 
         //防止 service 直接 open url，其他Activity都不需要重新开启一个栈
@@ -355,7 +377,7 @@ public class Navigator implements ActivityTracking {
         }
 
         //参数带上
-        if (args.size() > 0) {
+        if (args != null && args.size() > 0) {
             intent.putExtras(args);
         }
 

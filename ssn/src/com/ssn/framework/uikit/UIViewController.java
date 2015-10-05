@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
+import android.widget.LinearLayout;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
@@ -33,7 +35,6 @@ public class UIViewController extends Fragment implements ViewController {
     public final UINavigationBar.NavigationItem navigationItem() {
         if (_navigationItem == null) {
             _navigationItem = new UINavigationBar.NavigationItem();
-            _navigationItem.backItem().setOnClick(ViewEvent.click(_backListener));
         }
         return _navigationItem;
     }
@@ -149,7 +150,27 @@ public class UIViewController extends Fragment implements ViewController {
      * 当此页面的containerView被成功加载后回调，方法只会调用一次
      * @return 返回当前此视图主要的view
      */
-    public void onViewDidLoad() {}
+    public void onViewDidLoad() {
+
+        //返回按钮设置
+        String back = getArguments().getString(Navigator.NAVIGATOR_VC_BACK_KEY);
+        if (!TextUtils.isEmpty(back)) {
+            navigationItem().backItem().setOnClick(ViewEvent.click(_backListener));
+            navigationItem().backItem().setTitle("    ");
+            navigationItem().backItem().setHidden(false);
+            navigationItem().backItem().setView(UINavigationBar.NavigationItem.ButtonItem.createButtonItemView(Res.context()));
+        }
+        else {
+            String close = getArguments().getString(Navigator.NAVIGATOR_VC_CLOSE_KEY);
+            if (!TextUtils.isEmpty(close)) {
+                navigationItem().backItem().setOnClick(ViewEvent.click(_backListener));
+                navigationItem().backItem().setTitle("取消");
+                navigationItem().backItem().setImage(0);
+                navigationItem().backItem().setHidden(false);
+                navigationItem().backItem().setView(UINavigationBar.NavigationItem.ButtonItem.createButtonItemView(Res.context()));
+            }
+        }
+    }
 
     /**
      * 页面将要被展示

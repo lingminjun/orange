@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,6 +44,15 @@ public final class UINavigationBar extends RelativeLayout {
          * Navigation Button Item
          */
         public final static class ButtonItem {
+
+            public static View createButtonItemView(Context context) {
+                LayoutInflater inflater = LayoutInflater.from(Res.context());
+                View view = inflater.inflate(R.layout.ssn_bar_item,null);
+//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+//                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                params.weight = ViewGroup.LayoutParams.WRAP_CONTENT;
+                return view;
+            }
 
             public static ButtonItem BackButtonItem() {
                 return new ButtonItem(R.drawable.ssn_back_icon);
@@ -132,7 +142,7 @@ public final class UINavigationBar extends RelativeLayout {
                 }
 
                 //设置自定义View
-                if (container != null) {
+                if (customView != null) {
                     container.removeAllViews();
                     if (container != null) {
                         container.setVisibility(VISIBLE);
@@ -197,7 +207,7 @@ public final class UINavigationBar extends RelativeLayout {
 
         public ButtonItem rightItem() {
             if (rightItem == null) {
-                rightItem = ButtonItem.BackButtonItem();
+                rightItem = new ButtonItem();
                 displayRightButtons();
             }
             return rightItem;
@@ -325,11 +335,13 @@ public final class UINavigationBar extends RelativeLayout {
         }
 
         private void displayBackButton() {
-            if (view == null || leftContainer == null) {return;}
+//            if (view == null || leftContainer == null) {return;}
 
-            leftContainer.removeAllViews();
+            if (leftContainer != null) {
+                leftContainer.removeAllViews();
+            }
             if (backItem == null) {return;}
-            if (backItem.view != null) {
+            if (backItem.view != null && leftContainer != null) {
                 backItem.loader = null;
                 leftContainer.addView(backItem.view);
             }
@@ -339,16 +351,18 @@ public final class UINavigationBar extends RelativeLayout {
         }
 
         private void displayRightButtons() {
-            if (view == null || rightContainer == null) {return;}
+//            if (view == null || rightContainer == null) {return;}
 
-            rightContainer.removeAllViews();
+            if (rightContainer != null) {
+                rightContainer.removeAllViews();
+            }
 
             //需要反过来加
             int size = rigthItems.size();
             if (size > 0) {
                 for (int i = size -1; i >= 0; i++) {
                     ButtonItem item = rigthItems.get(i);
-                    if (item.view != null) {
+                    if (item.view != null && rightContainer != null) {
                         item.loader = null;
                         rightContainer.addView(item.view);
                     }
@@ -360,7 +374,7 @@ public final class UINavigationBar extends RelativeLayout {
 
             //最后加入右边按钮
             if (rightItem == null) {return;}
-            if (rightItem.view != null) {
+            if (rightItem.view != null && rightContainer != null) {
                 rightItem.loader = null;
                 rightContainer.addView(rightItem.view);
             }

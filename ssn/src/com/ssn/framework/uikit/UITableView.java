@@ -72,6 +72,40 @@ public class UITableView extends /*ListView */PullToRefreshListView {
             _tableView.setOnRefreshListener(this);
         }
 
+        public void setPullRefreshEnabled(boolean enable) {
+            Mode mode = _tableView.getMode();
+            if (enable) {
+                if (mode == Mode.PULL_FROM_END) {
+                    _tableView.setMode(Mode.BOTH);
+                } else if (mode == Mode.DISABLED) {
+                    _tableView.setMode(Mode.PULL_FROM_START);
+                }
+            } else if (!enable) {
+                if (mode == Mode.BOTH) {
+                    _tableView.setMode(Mode.PULL_FROM_END);
+                } else if (mode == Mode.PULL_FROM_START) {
+                    _tableView.setMode(Mode.DISABLED);
+                }
+            }
+        }
+
+        public void setPullLoadMoreEnabled(boolean enable) {
+            Mode mode = _tableView.getMode();
+            if (enable) {
+                if (mode == Mode.PULL_FROM_START) {
+                    _tableView.setMode(Mode.BOTH);
+                } else if (mode == Mode.DISABLED) {
+                    _tableView.setMode(Mode.PULL_FROM_END);
+                }
+            } else {
+                if (mode == Mode.BOTH) {
+                    _tableView.setMode(Mode.PULL_FROM_START);
+                } else if (mode == Mode.PULL_FROM_END) {
+                    _tableView.setMode(Mode.DISABLED);
+                }
+            }
+        }
+
         /**
          * AdapterView.OnItemClickListener
          */

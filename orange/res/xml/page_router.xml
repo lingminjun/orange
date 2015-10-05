@@ -23,4 +23,11 @@
           fragmentclass="com.orange.m.page.me.MeViewController"
           activityclass=""
           description="我"/>
+
+    <!--关于页面-->
+    <item url="http://m.orangestar.com/about.html"
+          fragmentclass="com.orange.m.page.about.AboutViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="我"/>
+
 </items>

@@ -3,6 +3,7 @@
     <string name="app_name">MainAcivity</string>
 
     <string name="cancel">取消</string>
+    <string name="back">返回</string>
     <string name="save">保存</string>
     <string name="ok">好的</string>
     <string name="saving_image">Saving image</string>
