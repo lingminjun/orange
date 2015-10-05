@@ -21,7 +21,7 @@
         <item name="android:windowAnimationStyle">@style/LoginPageAnimation</item>
     </style>
     <style name="LoginPageAnimation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:activityOpenEnterAnimation">@anim/action_sheet_show</item>
         <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
         <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>

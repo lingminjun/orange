@@ -22,7 +22,7 @@ public final class UIAlert {
      * @param click   按钮回调，可为空
      * @return
      */
-    public static Dialog showAlert(@NonNull Context context, @NonNull final String msg, @NonNull final String ok, @Nullable final AlertButtonClick click) {
+    public static Dialog showAlert(@NonNull Context context, @NonNull final String msg, @NonNull final String ok, @Nullable final UIAlertButtonClick click) {
         return showAlert(context,null,msg,ok,null,click);
     }
 
@@ -34,7 +34,7 @@ public final class UIAlert {
      * @param click   按钮回调，可为空
      * @return
      */
-    public static Dialog showAlert(@NonNull Context context, @NonNull final String msg, @NonNull final String ok, @Nullable final String cancel, @Nullable final AlertButtonClick click) {
+    public static Dialog showAlert(@NonNull Context context, @NonNull final String msg, @NonNull final String ok, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
         return showAlert(context,null,msg,ok,cancel,click);
     }
 
@@ -47,7 +47,7 @@ public final class UIAlert {
      * @param click   按钮回调，可为空
      * @return
      */
-    public static Dialog showAlert(@NonNull Context context, @Nullable final String title, @NonNull final String msg, @NonNull final String ok, @Nullable final String cancel, @Nullable final AlertButtonClick click) {
+    public static Dialog showAlert(@NonNull Context context, @Nullable final String title, @NonNull final String msg, @NonNull final String ok, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
         final Dialog dialog = new Dialog(context, R.style.ui_alert_style);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -124,7 +124,7 @@ public final class UIAlert {
      * @param click
      * @return
      */
-    public static Dialog showCustomAlert(@NonNull Context context, @NonNull View contentView, @NonNull final String ok, @Nullable final String cancel, @Nullable final AlertButtonClick click) {
+    public static Dialog showCustomAlert(@NonNull Context context, @NonNull View contentView, @NonNull final String ok, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
         final Dialog dialog = new Dialog(context, R.style.ui_alert_style);
         dialog.setCanceledOnTouchOutside(false);
 
@@ -178,12 +178,5 @@ public final class UIAlert {
         dialog.show();
 
         return dialog;
-    }
-
-    /**
-     * alert按钮点击事件
-     */
-    public interface AlertButtonClick {
-        public void onClick(Dialog dialog, String btnTitle);
     }
 }

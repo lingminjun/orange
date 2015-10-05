@@ -11,4 +11,20 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
+
+    <!--action sheet 样式-->
+    <style name="ui_action_sheet_style">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/ui_action_sheet_animation</item>
+    </style>
+    <style name="ui_action_sheet_animation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/action_sheet_show</item>
+        <item name="android:windowExitAnimation">@anim/action_sheet_dismiss</item>
+    </style>
 </resources>

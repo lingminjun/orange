@@ -1,6 +1,8 @@
 package com.orange.m.page.me;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.orange.m.R;
@@ -61,12 +63,21 @@ public class MeViewController extends UITableViewController {
                 model.mIconId = R.drawable.icon_me_normal;
                 model.mTitle = "这仅仅只为测试"+i;
 //                model.disabled = true;
-//                model.click = ViewEvent.click(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
+                model.click = ViewEvent.click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 //                        UIAlert.showAlert(getActivity(),"这是标题","随便写点啥，看看换行的效果，可能还不够长，必须凑个字数","确定","取消",null);
-//                    }
-//                });
+                        UIActionSheet.showActionSheet(getActivity(), new String[]{"随便写写", "看着办", "还写一个"}, null, new UIAlertButtonClick() {
+                            @Override
+                            public void onClick(Dialog dialog, String btnTitle) {
+                                Log.e("action sheet","action="+btnTitle);
+                            }
+                        });
+                    }
+                });
+
+
+
                 list.add(model);
             }
             {
