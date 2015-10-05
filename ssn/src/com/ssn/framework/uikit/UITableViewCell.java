@@ -204,7 +204,7 @@ public abstract class UITableViewCell extends RelativeLayout {
 //                    Log.e("reshow","txt"+editText.hashCode());
                 }
             }
-        },200);
+        },100);
     }
 
     public static void displayCell(final UITableViewCell cell, final CellModel cellModel, int row) {
