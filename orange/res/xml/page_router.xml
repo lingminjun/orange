@@ -30,4 +30,11 @@
           activityclass="com.ssn.framework.uikit.BaseNavActivity"
           description="我"/>
 
+    <!--启动页，新手指导页-->
+    <item url="http://m.orangestar.com/welcome.html"
+          fragmentclass="com.orange.m.page.splash.WelcomeViewController"
+          activityclass="com.orange.m.page.splash.WelcomeActivity"
+          description="我"/>
+
+
 </items>

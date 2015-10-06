@@ -1,6 +1,7 @@
 package com.ssn.framework.foundation.inc;
 
 import android.app.Application;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Res;
 
@@ -17,5 +18,8 @@ public class AApplication extends Application {
 
         //启动通知中心
         BroadcastCenter.shareInstance().applicationDidLaunch(this);
+
+        //仅仅防止app状态判断没有被设置
+        App.isFirstInstall();
     }
 }

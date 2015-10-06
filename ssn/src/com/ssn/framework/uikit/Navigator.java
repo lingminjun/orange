@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.URLHelper;
 import com.ssn.framework.uikit.inc.ActivityTracking;
@@ -148,8 +149,14 @@ public class Navigator implements ActivityTracking {
         _stack.add(activity);
         APPLog.info("Activity:" + activity.hashCode() + "被创建");
     }
-    public void onActivityResume(Activity activity) {APPLog.info("Activity:" + activity.hashCode() + " Resume");}
-    public void onActivityPause(Activity activity) {APPLog.info("Activity:" + activity.hashCode() + " Pause");}
+    public void onActivityResume(Activity activity) {
+        App.checkEnterFront();
+        APPLog.info("Activity:" + activity.hashCode() + " Resume");
+    }
+    public void onActivityPause(Activity activity) {
+        App.checkEnterBackground(false);
+        APPLog.info("Activity:" + activity.hashCode() + " Pause");
+    }
     public void onActivityDestroy(Activity activity) {
         _stack.remove(activity);
         APPLog.info("Activity:"+activity.hashCode()+"被销毁");
@@ -181,14 +188,27 @@ public class Navigator implements ActivityTracking {
     }
 
     public void finishToRoot() {
-        while (_stack.size() <= 1) {
+        while (_stack.size() > 1) {
             Activity last = _stack.lastElement();
+            _stack.remove(last);
             last.finish();
         }
     }
 
     public Activity topActivity() {
         return _stack.lastElement();
+    }
+
+    /**
+     * 结束应用
+     */
+    public void finishApplication() {
+        App.terminate();
+        while (_stack.size() > 0) {
+            Activity last = _stack.lastElement();
+            _stack.remove(last);
+            last.finish();
+        }
     }
 
     ///////////////////////////////////////////////////////

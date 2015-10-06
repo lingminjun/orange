@@ -26,6 +26,17 @@
             </intent-filter>
         </activity>
 
+        <!--进入无动画-->
+        <activity android:name=".page.splash.WelcomeActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
         <activity android:launchMode="singleTask"
                   android:name=".page.main.MainTabActivity"
                   android:screenOrientation="portrait"

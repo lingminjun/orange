@@ -4,6 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -101,6 +105,10 @@ public final class TaskQueue {
                     pool.execute(r);
                 }
                 else {
+
+                    final Integer code = r.hashCode();
+                    _dRuns.add(code);
+
                     pool.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -109,14 +117,31 @@ public final class TaskQueue {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-
-                            r.run();
+                            if (_dRuns.contains(code)) {
+                                r.run();
+                            }
+                            _dRuns.remove(code);
                         }
                     });
                 }
             }
             else {
-                mainHandler.postDelayed(r,delayMillis);
+                mainHandler.postDelayed(r, delayMillis);
+            }
+        }
+    }
+
+    /**
+     * 只有延迟的runnable可以被cancel
+     * @param r
+     */
+    public void cancel(final Runnable r) {
+        if (r != null) {
+            if (pool != null) {
+                _dRuns.remove(r.hashCode());
+            }
+            else {
+                mainHandler.removeCallbacks(r);
             }
         }
     }
@@ -168,6 +193,7 @@ public final class TaskQueue {
     private BlockingQueue<Runnable> queue;
     private RejectedExecutionHandler rejectedHanlder;
     private ThreadPoolExecutor pool;
+    private Set<Integer> _dRuns = Collections.synchronizedSet(new HashSet<Integer>());
 
     private Handler mainHandler;
 }

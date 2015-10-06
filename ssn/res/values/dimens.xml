@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 常用字号 -->
+    <dimen name="ssn_header_font">22sp</dimen>
+    <dimen name="ssn_title_font">18sp</dimen>
+    <dimen name="ssn_state_font">16sp</dimen>
+    <dimen name="ssn_normal_font">14sp</dimen>
+    <dimen name="ssn_assist_text">12sp</dimen>
+    <dimen name="ssn_hint_text">10sp</dimen>
+
+
     <dimen name="indicator_right_padding">10dp</dimen>
     <dimen name="indicator_corner_radius">12dp</dimen>
     <dimen name="indicator_internal_padding">4dp</dimen>

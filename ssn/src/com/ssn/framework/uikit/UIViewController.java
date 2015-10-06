@@ -396,6 +396,11 @@ public class UIViewController extends Fragment implements ViewController {
         super.onAttach(activity);
     }
 
+
+    protected final View findViewById(int id) {
+        return containerView().findViewById(id);
+    }
+
     //
 //    @Override
 //    public void onDetach() {

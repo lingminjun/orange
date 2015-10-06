@@ -176,14 +176,6 @@ public class Res {
 
 
     /**
-     * 当前进程id
-     * @return
-     */
-    public static int pid() {
-       return android.os.Process.myPid();//获取当前进程
-    }
-
-    /**
      * 取 version name
      * @return
      */
