@@ -119,7 +119,7 @@ public class PopViewController extends UITableViewController {
                     public void run() {
                         tableView().resizeFooterViewHeight();
                     }
-                },100);
+                },50);
             }
         };
 
