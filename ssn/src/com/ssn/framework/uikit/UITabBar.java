@@ -156,6 +156,7 @@ public final class UITabBar extends LinearLayout {
             if (params instanceof ViewGroup.MarginLayoutParams) {
                 ((MarginLayoutParams) params).topMargin = 0;
             }
+            tv.setLayoutParams(params);
         }
 
         private static void setBadgeContent(TextView tv,String content){
@@ -167,6 +168,7 @@ public final class UITabBar extends LinearLayout {
             if (params instanceof ViewGroup.MarginLayoutParams) {
                 ((MarginLayoutParams) params).topMargin = Density.dipTopx(-4);
             }
+            tv.setLayoutParams(params);
         }
 
         private static Drawable getDrawable(boolean isSelected, int imageID) {

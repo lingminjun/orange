@@ -120,8 +120,13 @@ public final class Keyboard {
                 inputCommentEdit.requestFocus();
                 InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(inputCommentEdit, InputMethodManager.SHOW_IMPLICIT);
-//                InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(inputCommentEdit.getWindowToken(), 0);
+                Editable editable = inputCommentEdit.getText();
+                if (editable != null) {
+                    inputCommentEdit.setSelection(editable.length());
+                }
+                else {
+                    inputCommentEdit.setSelection(0);
+                }
             }
         }
     }
