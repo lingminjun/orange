@@ -3,4 +3,8 @@
     <string name="app_name">桔子星球</string>
     <string name="press_again_exit">再按一次退出</string>
     <string name="open_start">开启新世界</string>
+    <string name="bubble_title">泡泡</string>
+    <string name="sel_pic">选择图片</string>
+    <string name="please_input_content">请输入内容</string>
+    <string name="publish">发送</string>
 </resources>

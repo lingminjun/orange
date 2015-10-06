@@ -1,10 +1,12 @@
 package com.orange.m.page.splash;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.orange.m.R;
 import com.orange.m.page.PageCenter;
 import com.ssn.framework.foundation.App;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIViewController;

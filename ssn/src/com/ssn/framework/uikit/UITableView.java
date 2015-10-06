@@ -1,9 +1,12 @@
 package com.ssn.framework.uikit;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -11,8 +14,7 @@ import android.widget.*;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
-import com.ssn.framework.uikit.pullview.PullToRefreshBase;
-import com.ssn.framework.uikit.pullview.PullToRefreshListView;
+import com.ssn.framework.uikit.pullview.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,7 +22,7 @@ import java.util.*;
 /**
  * Created by lingminjun on 15/9/27.
  */
-public class UITableView extends /*ListView */PullToRefreshListView {
+public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -48,8 +50,8 @@ public class UITableView extends /*ListView */PullToRefreshListView {
         public TableViewAdapter(UITableView tableView){
             _tableView = tableView;
             _viewTypeCount = 8;//默认支持八种
-            _tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
-            _tableView.setAdapter(this);
+            _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
+            _tableView._tableView.setAdapter(this);
             updateRefreshLabel();
             setListeners();
         }
@@ -57,49 +59,49 @@ public class UITableView extends /*ListView */PullToRefreshListView {
         public TableViewAdapter(UITableView tableView,int cellTypeCount){
             _tableView = tableView;
             _viewTypeCount = cellTypeCount < 8 ? 8 : cellTypeCount;
-            _tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
-            _tableView.setAdapter(this);
+            _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
+            _tableView._tableView.setAdapter(this);
             updateRefreshLabel();
             setListeners();
         }
 
         private void setListeners() {
-            _tableView.setOnItemLongClickListener(UIEvent.itemLongClick(this));
-            _tableView.setOnItemClickListener(UIEvent.itemClick(this));
-            _tableView.setOnScrollListener(this);
-            _tableView.setOnRefreshListener(this);
+            _tableView._tableView.setOnItemLongClickListener(UIEvent.itemLongClick(this));
+            _tableView._tableView.setOnItemClickListener(UIEvent.itemClick(this));
+            _tableView._tableView.setOnScrollListener(this);
+            _tableView._tableView.setOnRefreshListener(this);
         }
 
         public void setPullRefreshEnabled(boolean enable) {
-            Mode mode = _tableView.getMode();
+            PullToRefreshBase.Mode mode = _tableView._tableView.getMode();
             if (enable) {
-                if (mode == Mode.PULL_FROM_END) {
-                    _tableView.setMode(Mode.BOTH);
-                } else if (mode == Mode.DISABLED) {
-                    _tableView.setMode(Mode.PULL_FROM_START);
+                if (mode == PullToRefreshBase.Mode.PULL_FROM_END) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.BOTH);
+                } else if (mode == PullToRefreshBase.Mode.DISABLED) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 }
             } else if (!enable) {
-                if (mode == Mode.BOTH) {
-                    _tableView.setMode(Mode.PULL_FROM_END);
-                } else if (mode == Mode.PULL_FROM_START) {
-                    _tableView.setMode(Mode.DISABLED);
+                if (mode == PullToRefreshBase.Mode.BOTH) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                } else if (mode == PullToRefreshBase.Mode.PULL_FROM_START) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);
                 }
             }
         }
 
         public void setPullLoadMoreEnabled(boolean enable) {
-            Mode mode = _tableView.getMode();
+            PullToRefreshBase.Mode mode = _tableView._tableView.getMode();
             if (enable) {
-                if (mode == Mode.PULL_FROM_START) {
-                    _tableView.setMode(Mode.BOTH);
-                } else if (mode == Mode.DISABLED) {
-                    _tableView.setMode(Mode.PULL_FROM_END);
+                if (mode == PullToRefreshBase.Mode.PULL_FROM_START) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.BOTH);
+                } else if (mode == PullToRefreshBase.Mode.DISABLED) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                 }
             } else {
-                if (mode == Mode.BOTH) {
-                    _tableView.setMode(Mode.PULL_FROM_START);
-                } else if (mode == Mode.PULL_FROM_END) {
-                    _tableView.setMode(Mode.DISABLED);
+                if (mode == PullToRefreshBase.Mode.BOTH) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                } else if (mode == PullToRefreshBase.Mode.PULL_FROM_END) {
+                    _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);
                 }
             }
         }
@@ -339,13 +341,13 @@ public class UITableView extends /*ListView */PullToRefreshListView {
          * 停止加载
          */
         public void completedLoad() {
-            _tableView.onRefreshComplete();
+            _tableView._tableView.onRefreshComplete();
             updateRefreshLabel();
         }
 
         private void updateRefreshLabel() {
             String dateStr = dateFormat.format(new Date());
-            _tableView.getLoadingLayoutProxy().setLastUpdatedLabel(Res.localized(R.string.header_last_time) + dateStr);
+            _tableView._tableView.getLoadingLayoutProxy().setLastUpdatedLabel(Res.localized(R.string.header_last_time) + dateStr);
         }
 
         @Override
@@ -452,19 +454,31 @@ public class UITableView extends /*ListView */PullToRefreshListView {
 
     public UITableView(Context context) {
         super(context);
+        init();
     }
 
     public UITableView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
-    public UITableView(Context context, Mode mode) {
-        super(context, mode);
+    public UITableView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
     }
 
-    public UITableView(Context context, Mode mode, AnimationStyle style) {
-        super(context, mode, style);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public UITableView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
+
+    private void init() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        inflater.inflate(R.layout.ssn_table_view_layout, this);
+        _tableView = (PullToRefreshListView)findViewById(R.id.ssn_list_view);
+    }
+
 
     private UITableViewCell targetCellWithEditText(ViewGroup group,EditText editText) {
         int id = editText.getId();
@@ -512,16 +526,135 @@ public class UITableView extends /*ListView */PullToRefreshListView {
         /*
         当触发键盘出现，造成光标无法聚焦问题修改
          */
-        int changed = oldh - h;
-        if (changed >= Density.dipTopx(100) && changed < oldh) {
-            InputMethodManager imm = (InputMethodManager)Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
-            View txt = this.findFocus();
-            if (imm != null && imm.isAcceptingText() && txt != null) {
+        try {
+            int changed = oldh - h;
+            if (changed >= Density.dipTopx(100) && changed < oldh) {
+                InputMethodManager imm = (InputMethodManager)Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+                View txt = this.findFocus();
+                if (imm != null && imm.isAcceptingText() && txt != null) {
 //                Log.e("show","txt"+txt.hashCode());
-                findCellFromEditText((EditText)txt);
+                    findCellFromEditText((EditText)txt);
+                }
             }
-        }
+        }catch (Throwable e){}
+
 
         super.onSizeChanged(w, h, oldw, oldh);
     }
+
+    /**
+     * listview添加底部view
+     *
+     * @param view
+     */
+    public void setFooterView(View view) {
+        addExtraView(view, RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+    }
+
+    /**
+     * listview添加底部view
+     *
+     * @param view
+     */
+    public void setFooterView(View view, int height) {
+        addExtraView(view, RelativeLayout.ALIGN_PARENT_BOTTOM, height);
+    }
+
+    /**
+     * listview添加顶部view
+     *
+     * @param view
+     */
+    public void setHeaderView(View view) {
+        addExtraView(view, RelativeLayout.ALIGN_PARENT_TOP, -1);
+    }
+
+    /**
+     * listview添加顶部view
+     *
+     * @param view
+     */
+    public void setHeaderView(View view, int height) {
+        addExtraView(view, RelativeLayout.ALIGN_PARENT_TOP, height);
+    }
+
+
+    private View _headerView;
+    private View _footerView;
+
+    /**
+     * 页面添加额外的view
+     *
+     * @param view
+     * @param position       比如顶部、底部
+     * @param moveLvDistance listview需要为view空出的位置大小，如小于0则默认为view的高度
+     */
+    private void addExtraView(View view, int position, int moveLvDistance) {
+        RelativeLayout layout = (RelativeLayout) this;
+
+        if (position == RelativeLayout.ALIGN_PARENT_TOP) {
+            if (_headerView != null) {
+                layout.removeView(_headerView);
+            }
+            _headerView = view;
+        } else if (position == RelativeLayout.ALIGN_PARENT_BOTTOM) {
+            if (_footerView != null) {
+                layout.removeView(_footerView);
+            }
+            _footerView = view;
+        }
+
+        layout.addView(view);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        if (position == RelativeLayout.ALIGN_PARENT_BOTTOM) {
+            params.addRule(position, RelativeLayout.TRUE);//align top 不用该方式
+        } else {
+            params.addRule(position, RelativeLayout.TRUE);//align top 不用该方式
+//            params.addRule(RelativeLayout.BELOW, R.id.top_menu_bar);
+        }
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        RelativeLayout.LayoutParams listParams = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
+        int viewHeight = view.getHeight();
+        if (viewHeight <= 0) {
+            int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            view.measure(w, h);
+            viewHeight = view.getMeasuredHeight();
+        }
+        switch (position) {
+            case RelativeLayout.ALIGN_PARENT_TOP:
+                listParams.topMargin += moveLvDistance < 0 ? viewHeight : moveLvDistance;
+                break;
+            case RelativeLayout.ALIGN_PARENT_BOTTOM:
+                listParams.bottomMargin = moveLvDistance < 0 ? viewHeight : moveLvDistance;
+                break;
+        }
+        _tableView.setLayoutParams(listParams);
+    }
+
+    /**
+     * 调整底部高度
+     */
+    public void resizeHeaderViewHeight() {
+        if (_headerView == null) {return;}
+        if (_tableView != null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
+            params.topMargin = _headerView.getHeight();
+            _tableView.setLayoutParams(params);
+        }
+    }
+
+    public void resizeFooterViewHeight() {
+        if (_tableView != null) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
+            params.bottomMargin = _footerView.getHeight();
+            _tableView.setLayoutParams(params);
+        }
+    }
+
+
+
+    private PullToRefreshListView _tableView;
 }

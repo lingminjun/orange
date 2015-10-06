@@ -2,6 +2,8 @@ package com.ssn.framework.uikit;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import com.ssn.framework.R;
 
 import java.util.List;

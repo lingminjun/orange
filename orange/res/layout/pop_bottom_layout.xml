@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <include layout="@layout/ssn_horizontal_line"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="100dp"
+                  android:orientation="horizontal"
+                  android:paddingBottom="60dp"
+                  android:id="@+id/button_bar">
+        <TextView android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:textSize="@dimen/ssn_state_font"
+                  android:textColor="@color/ssn_normal_text"
+                  android:background="@drawable/press_white_bg"
+                  android:layout_weight="1"
+                  android:layout_marginRight="50dp"
+                  android:id="@+id/close_pop_btn"
+                  android:gravity="center"
+                  android:text="关"/>
+        <TextView android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:textSize="@dimen/ssn_state_font"
+                  android:textColor="@color/ssn_normal_text"
+                  android:background="@drawable/press_white_bg"
+                  android:layout_marginLeft="50dp"
+                  android:layout_weight="1"
+                  android:id="@+id/send_pop_btn"
+                  android:gravity="center"
+                  android:text="写"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:id="@+id/bottom_input_bar">
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--主要显示title等内容 -->
+    <style name="tv_title" parent="wh_ww">
+        <item name="android:textColor">@color/normal_text</item>
+        <item name="android:textSize">@dimen/mid_font</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <!--最多两行，显示发现主题标题等 -->
+    <style name="tv_title_maxline" parent="tv_title">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!--主要显示主题正文、商品详情等内容 -->
+    <style name="tv_main_content" parent="wh_ww">
+        <item name="android:textColor">@color/normal_sub_info</item>
+        <item name="android:textSize">@dimen/mid_font</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <!--最多两行, 主要显示主题列表item的正文 商品详情正文等-->
+    <style name="tv_main_content_maxline" parent="tv_main_content">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!--小文字灰显，例如订单号 -->
+    <style name="tv_small_size_desc" parent="wh_ww">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/normal_sub_info</item>
+        <item name="android:textSize">@dimen/normal_font</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!--中文字红色显示，例如金额 -->
+    <style name="tv_big_size_price" parent="wh_ww">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/price</item>
+        <item name="android:textSize">@dimen/big_font</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="ww_black_smallSize_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/normal_text</item>
+        <item name="android:textSize">@dimen/normal_small_font</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ww_grey_smallSize_text" parent="ww_black_smallSize_text">
+        <item name="android:textColor">@color/normal_sub_info</item>
+    </style>
+
+    <style name="ww_red_smallSize_text" parent="ww_black_smallSize_text">
+        <item name="android:textColor">@color/red_text</item>
+    </style>
+
+    <style name="tv_normal_bigSize_text" parent="ww_black_smallSize_text">
+        <item name="android:textColor">@color/normal_text</item>
+        <item name="android:textSize">@dimen/big_font</item>
+    </style>
+
+    <style name="DividerPromptTv" parent="ww_black_smallSize_text">
+        <item name="android:textSize">@dimen/normal_small_font</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+    </style>
+    <style name="ww_black_midSize_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">@color/normal_text</item>
+        <item name="android:textSize">@dimen/mid_font</item>
+        <item name="android:gravity">left</item>
+    </style>
+    <style name="BlackMidSizeBoldTv" parent="ww_black_midSize_text">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

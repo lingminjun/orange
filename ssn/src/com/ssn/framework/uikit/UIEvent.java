@@ -470,4 +470,11 @@ public class UIEvent {
     public static interface UTEvent {
         void onTrack(View var1, String var2);
     }
+
+    /**
+     * 系统事件通知定义
+     */
+    public static final String UIKeyboardWillShowNotification = "_keyboard_will_show_notification";
+    public static final String UIKeyboardWillHideNotification = "_keyboard_will_hide_notification";
+    public static final String UIKeyboardHeightKey            = "_keyboard_height_key";//高度像素
 }

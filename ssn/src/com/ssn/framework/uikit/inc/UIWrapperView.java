@@ -2,13 +2,16 @@ package com.ssn.framework.uikit.inc;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.TaskQueue;
+import com.ssn.framework.uikit.UIEvent;
 
 /**
  * Created by lingminjun on 15/10/4.
@@ -49,6 +52,10 @@ public class UIWrapperView extends LinearLayout {
                     }
                 }, 100);
             }
+
+            Intent intent = new Intent(UIEvent.UIKeyboardWillShowNotification);
+            intent.putExtra(UIEvent.UIKeyboardHeightKey,changed);
+            BroadcastCenter.shareInstance().postBroadcast(intent);
         }
         else if (changed <= getKeyboardMinHeight() && -changed < h) {
             _showingKeyboard = false;
@@ -56,6 +63,10 @@ public class UIWrapperView extends LinearLayout {
             if (_bottomView != null) {
                 _bottomView.setVisibility(VISIBLE);
             }
+
+            Intent intent = new Intent(UIEvent.UIKeyboardWillHideNotification);
+            intent.putExtra(UIEvent.UIKeyboardHeightKey,-changed);
+            BroadcastCenter.shareInstance().postBroadcast(intent);
         }
 
 //        1860-1080=780

@@ -1,0 +1,64 @@
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <view
+            class="com.orange.m.Utils.cropimg.CropImageView"
+            android:id="@+id/image"
+            android:background="@android:color/black"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_x="0dip"
+            android:layout_y="0dip"
+            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:padding="10dp"
+                  android:background="@color/crop_bottom_bg"
+                  android:layout_alignParentBottom="true"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal">
+        <Button
+                android:id="@+id/discard"
+                style="@style/CropButton"
+                android:background="@null"
+                android:paddingRight="30dp"
+                android:text="@string/cancel"
+                />
+
+        <ImageButton
+                android:id="@+id/rotateLeft"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/discard"
+                style="@style/CropButton"
+                android:visibility="gone"
+                android:src="@drawable/ic_rotate_left"
+                />
+
+        <TextView android:layout_width="0dp"
+                  android:layout_height="1dp"
+                  android:visibility="invisible"
+                  android:layout_weight="1"/>
+
+        <ImageButton
+                android:id="@+id/rotateRight"
+                android:layout_width="50dp"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@id/rotateLeft"
+                style="@style/CropButton"
+                android:visibility="gone"
+                android:src="@drawable/ic_rotate_right"
+                />
+        <Button
+                android:id="@+id/save"
+                android:background="@null"
+                android:paddingLeft="30dp"
+                android:layout_toRightOf="@id/rotateRight"
+                style="@style/CropButton"
+                android:text="@string/save"
+                />
+    </LinearLayout>
+</RelativeLayout>
