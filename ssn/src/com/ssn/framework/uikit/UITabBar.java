@@ -8,7 +8,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -262,7 +261,7 @@ public final class UITabBar extends LinearLayout {
             params.weight = 1;
 
             final int index = i;
-            item.view.setOnClickListener(ViewEvent.click(new OnClickListener() {
+            item.view.setOnClickListener(UIEvent.click(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     checkIndex(index);

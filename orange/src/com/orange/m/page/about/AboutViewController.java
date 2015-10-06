@@ -38,7 +38,7 @@ public class AboutViewController extends UITableViewController {
             IconTitleCellModel model = new IconTitleCellModel();
             model.mIconId = R.drawable.icon_me_normal;
             model.mTitle = "抛通知";
-            model.click = ViewEvent.click(new View.OnClickListener() {
+            model.click = UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     BroadcastCenter.shareInstance().postBroadcast(new Intent("TestTTTT"));
@@ -52,7 +52,7 @@ public class AboutViewController extends UITableViewController {
             IconTitleCellModel model = new IconTitleCellModel();
             model.mIconId = R.drawable.icon_me_normal;
             model.mTitle = "通知注册";
-            model.click = ViewEvent.click(new View.OnClickListener() {
+            model.click = UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     BroadcastCenter.shareInstance().addObserver(AboutViewController.this, "TestTTTT", new BroadcastCenter.Method<AboutViewController>() {
@@ -70,7 +70,7 @@ public class AboutViewController extends UITableViewController {
             IconTitleCellModel model = new IconTitleCellModel();
             model.mIconId = R.drawable.icon_me_normal;
             model.mTitle = "弱通知注册";
-            model.click = ViewEvent.click(new View.OnClickListener() {
+            model.click = UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     BroadcastCenter.shareInstance().softAddObserver(AboutViewController.this, "TestTTTT", new BroadcastCenter.Method<AboutViewController>() {
@@ -88,7 +88,7 @@ public class AboutViewController extends UITableViewController {
             IconTitleCellModel model = new IconTitleCellModel();
             model.mIconId = R.drawable.icon_me_normal;
             model.mTitle = "菊花";
-            model.click = ViewEvent.click(new View.OnClickListener() {
+            model.click = UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     UILoading.show(AboutViewController.this.getActivity());
@@ -97,7 +97,7 @@ public class AboutViewController extends UITableViewController {
                         public void run() {
                             UILoading.dismiss(AboutViewController.this.getActivity());
                         }
-                    },5000);
+                    }, 5000);
                 }
             });
             list.add(model);
@@ -109,7 +109,7 @@ public class AboutViewController extends UITableViewController {
                 model.mIconId = R.drawable.icon_me_normal;
                 model.mTitle = "这仅仅只为测试"+i;
 //                model.disabled = true;
-                model.click = ViewEvent.click(new View.OnClickListener() {
+                model.click = UIEvent.click(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 //                        UIAlert.showAlert(getActivity(),"这是标题","随便写点啥，看看换行的效果，可能还不够长，必须凑个字数","确定","取消",null);

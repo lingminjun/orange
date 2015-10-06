@@ -11,16 +11,16 @@ import com.ssn.framework.foundation.APPLog;
 /**
  * Created by lingminjun on 15/7/9.
  */
-public class ViewEvent {
+public class UIEvent {
 
     /**
      * 点击事件工厂方法
      */
     public static Click click(View.OnClickListener listener) {
-        return new ViewEvent.Click(listener);
+        return new UIEvent.Click(listener);
     }
     public static Click click(View.OnClickListener listener, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.Click(listener,utid,ut);
+        return new UIEvent.Click(listener,utid,ut);
     }
 
 
@@ -28,70 +28,70 @@ public class ViewEvent {
      * 焦点事件工厂方法
      */
     public static FocusChange focus(View.OnFocusChangeListener listener) {
-        return new ViewEvent.FocusChange(listener);
+        return new UIEvent.FocusChange(listener);
     }
     public static FocusChange focus(View.OnFocusChangeListener listener, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.FocusChange(listener,utid,ut);
+        return new UIEvent.FocusChange(listener,utid,ut);
     }
 
     /**
      * 长按事件工厂方法
      */
     public static LongClick longClick(View.OnLongClickListener listener) {
-        return new ViewEvent.LongClick(listener);
+        return new UIEvent.LongClick(listener);
     }
     public static LongClick longClick(View.OnLongClickListener listener, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.LongClick(listener,utid,ut);
+        return new UIEvent.LongClick(listener,utid,ut);
     }
 
     /**
      * touch事件工厂方法
      */
     public static Touch touch(View.OnTouchListener listener) {
-        return new ViewEvent.Touch(listener);
+        return new UIEvent.Touch(listener);
     }
     public static Touch touch(View.OnTouchListener listener, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.Touch(listener,utid,ut);
+        return new UIEvent.Touch(listener,utid,ut);
     }
 
     /**
      * Watcher工厂方法
      */
     public static Watcher watcher(TextWatcher watcher) {
-        return new ViewEvent.Watcher(watcher);
+        return new UIEvent.Watcher(watcher);
     }
     public static Watcher watcher(TextWatcher watcher, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.Watcher(watcher,utid,ut);
+        return new UIEvent.Watcher(watcher,utid,ut);
     }
 
     /**
      * Selected工厂方法
      */
     public static Selected select(AdapterView.OnItemSelectedListener select) {
-        return new ViewEvent.Selected(select);
+        return new UIEvent.Selected(select);
     }
     public static Selected select(AdapterView.OnItemSelectedListener select, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.Selected(select,utid,ut);
+        return new UIEvent.Selected(select,utid,ut);
     }
 
     /**
      * Item Long Click工厂方法
      */
     public static ItemLongClick itemLongClick(AdapterView.OnItemLongClickListener click) {
-        return new ViewEvent.ItemLongClick(click);
+        return new UIEvent.ItemLongClick(click);
     }
     public static ItemLongClick itemLongClick(AdapterView.OnItemLongClickListener click, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.ItemLongClick(click,utid,ut);
+        return new UIEvent.ItemLongClick(click,utid,ut);
     }
 
     /**
      * Item Click工厂方法
      */
     public static ItemClick itemClick(AdapterView.OnItemClickListener click) {
-        return new ViewEvent.ItemClick(click);
+        return new UIEvent.ItemClick(click);
     }
     public static ItemClick itemClick(AdapterView.OnItemClickListener click, @Nullable UTEvent ut, @Nullable String utid) {
-        return new ViewEvent.ItemClick(click,utid,ut);
+        return new UIEvent.ItemClick(click,utid,ut);
     }
 
     /**
@@ -128,12 +128,12 @@ public class ViewEvent {
             _click = click;
         }
 
-        public Click(View.OnClickListener click, @Nullable ViewEvent.UTEvent ut) {
+        public Click(View.OnClickListener click, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _click = click;
         }
 
-        public Click(View.OnClickListener click, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public Click(View.OnClickListener click, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _click = click;
         }
@@ -158,12 +158,12 @@ public class ViewEvent {
             _listener = click;
         }
 
-        public FocusChange(View.OnFocusChangeListener click, @Nullable ViewEvent.UTEvent ut) {
+        public FocusChange(View.OnFocusChangeListener click, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _listener = click;
         }
 
-        public FocusChange(View.OnFocusChangeListener click, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public FocusChange(View.OnFocusChangeListener click, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _listener = click;
         }
@@ -197,12 +197,12 @@ public class ViewEvent {
             _click = click;
         }
 
-        public LongClick(View.OnLongClickListener click, @Nullable ViewEvent.UTEvent ut) {
+        public LongClick(View.OnLongClickListener click, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _click = click;
         }
 
-        public LongClick(View.OnLongClickListener click, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public LongClick(View.OnLongClickListener click, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _click = click;
         }
@@ -240,12 +240,12 @@ public class ViewEvent {
             _touch = touch;
         }
 
-        public Touch(View.OnTouchListener touch, @Nullable ViewEvent.UTEvent ut) {
+        public Touch(View.OnTouchListener touch, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _touch = touch;
         }
 
-        public Touch(View.OnTouchListener touch, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public Touch(View.OnTouchListener touch, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _touch = touch;
         }
@@ -290,12 +290,12 @@ public class ViewEvent {
             _watcher = watcher;
         }
 
-        public Watcher(TextWatcher watcher, @Nullable ViewEvent.UTEvent ut) {
+        public Watcher(TextWatcher watcher, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _watcher = watcher;
         }
 
-        public Watcher(TextWatcher watcher, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public Watcher(TextWatcher watcher, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _watcher = watcher;
         }
@@ -333,12 +333,12 @@ public class ViewEvent {
             _selected = selected;
         }
 
-        public Selected(AdapterView.OnItemSelectedListener selected, @Nullable ViewEvent.UTEvent ut) {
+        public Selected(AdapterView.OnItemSelectedListener selected, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _selected = selected;
         }
 
-        public Selected(AdapterView.OnItemSelectedListener selected, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public Selected(AdapterView.OnItemSelectedListener selected, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _selected = selected;
         }
@@ -364,12 +364,12 @@ public class ViewEvent {
             _click = click;
         }
 
-        public ItemLongClick(AdapterView.OnItemLongClickListener click, @Nullable ViewEvent.UTEvent ut) {
+        public ItemLongClick(AdapterView.OnItemLongClickListener click, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _click = click;
         }
 
-        public ItemLongClick(AdapterView.OnItemLongClickListener click, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public ItemLongClick(AdapterView.OnItemLongClickListener click, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _click = click;
         }
@@ -406,12 +406,12 @@ public class ViewEvent {
             _click = click;
         }
 
-        public ItemClick(AdapterView.OnItemClickListener click, @Nullable ViewEvent.UTEvent ut) {
+        public ItemClick(AdapterView.OnItemClickListener click, @Nullable UIEvent.UTEvent ut) {
             super(ut);
             _click = click;
         }
 
-        public ItemClick(AdapterView.OnItemClickListener click, @Nullable String utid, @Nullable ViewEvent.UTEvent ut) {
+        public ItemClick(AdapterView.OnItemClickListener click, @Nullable String utid, @Nullable UIEvent.UTEvent ut) {
             super(ut,utid);
             _click = click;
         }
@@ -456,7 +456,7 @@ public class ViewEvent {
             return false;
         }
 
-        private ViewEvent.UTEvent _ut;
+        private UIEvent.UTEvent _ut;
         private String _utid;
         public UT(){}
         public UT(@Nullable UTEvent ut) {_ut = ut;}

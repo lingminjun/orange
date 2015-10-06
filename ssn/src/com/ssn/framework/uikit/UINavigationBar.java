@@ -3,14 +3,12 @@ package com.ssn.framework.uikit;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -157,7 +155,7 @@ public final class UINavigationBar extends RelativeLayout {
             private void eventCheck() {
                 if (view != null) {
                     if (listener != null) {
-                        view.setOnClickListener(ViewEvent.click(listener));
+                        view.setOnClickListener(UIEvent.click(listener));
                     }
                     else {
                         view.setOnClickListener(null);

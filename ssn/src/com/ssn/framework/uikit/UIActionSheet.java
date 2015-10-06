@@ -9,13 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.Res;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lingminjun on 15/7/17.
@@ -47,7 +42,7 @@ public final class UIActionSheet {
         LayoutInflater inflater = LayoutInflater.from(context);
         View layout = inflater.inflate(R.layout.ssn_action_sheet_layout, null);
 
-        layout.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+        layout.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
@@ -62,7 +57,7 @@ public final class UIActionSheet {
         }
 
 
-        cancelBtn.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
@@ -90,7 +85,7 @@ public final class UIActionSheet {
 
             Button btn = (Button)container.getChildAt(container.getChildCount() - 1);
             btn.setText(btnTitle);
-            btn.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+            btn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialog.dismiss();

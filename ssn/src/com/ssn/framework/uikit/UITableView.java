@@ -11,11 +11,9 @@ import android.widget.*;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
-import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.pullview.PullToRefreshBase;
 import com.ssn.framework.uikit.pullview.PullToRefreshListView;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -66,8 +64,8 @@ public class UITableView extends /*ListView */PullToRefreshListView {
         }
 
         private void setListeners() {
-            _tableView.setOnItemLongClickListener(ViewEvent.itemLongClick(this));
-            _tableView.setOnItemClickListener(ViewEvent.itemClick(this));
+            _tableView.setOnItemLongClickListener(UIEvent.itemLongClick(this));
+            _tableView.setOnItemClickListener(UIEvent.itemClick(this));
             _tableView.setOnScrollListener(this);
             _tableView.setOnRefreshListener(this);
         }

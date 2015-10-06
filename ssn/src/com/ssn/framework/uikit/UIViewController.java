@@ -3,20 +3,15 @@ package com.ssn.framework.uikit;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.*;
-import android.widget.LinearLayout;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.inc.ViewController;
-
-import java.io.Serializable;
 
 /**
  * Created by lingminjun on 15/7/9.
@@ -156,7 +151,7 @@ public class UIViewController extends Fragment implements ViewController {
         //返回按钮设置
         String back = getArguments().getString(Navigator.NAVIGATOR_VC_BACK_KEY);
         if (!TextUtils.isEmpty(back)) {
-            navigationItem().backItem().setOnClick(ViewEvent.click(_backListener));
+            navigationItem().backItem().setOnClick(UIEvent.click(_backListener));
             navigationItem().backItem().setTitle("    ");
             navigationItem().backItem().setHidden(false);
             navigationItem().backItem().setView(UINavigationBar.NavigationItem.ButtonItem.createButtonItemView(Res.context()));
@@ -164,7 +159,7 @@ public class UIViewController extends Fragment implements ViewController {
         else {
             String close = getArguments().getString(Navigator.NAVIGATOR_VC_CLOSE_KEY);
             if (!TextUtils.isEmpty(close)) {
-                navigationItem().backItem().setOnClick(ViewEvent.click(_backListener));
+                navigationItem().backItem().setOnClick(UIEvent.click(_backListener));
                 navigationItem().backItem().setTitle("取消");
                 navigationItem().backItem().setImage(0);
                 navigationItem().backItem().setHidden(false);

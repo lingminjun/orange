@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,8 +40,8 @@ public abstract class UITableViewCell extends RelativeLayout {
         /**
          * 一些事件支持
          */
-        public ViewEvent.LongClick longClick;
-        public ViewEvent.Click     click;
+        public UIEvent.LongClick longClick;
+        public UIEvent.Click     click;
 
         /**
          * 子类需要实现此方法，返回其对应的实例方法

@@ -84,7 +84,7 @@ public final class UIAlert {
 
         //right button
         rightTv.setText(ok);
-        rightTv.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+        rightTv.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -98,7 +98,7 @@ public final class UIAlert {
         //left button
         if (!TextUtils.isEmpty(cancel)) {
             leftTv.setText(cancel);
-            leftTv.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+            leftTv.setOnClickListener(UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
@@ -149,7 +149,7 @@ public final class UIAlert {
 
         //right button
         rightTv.setText(ok);
-        rightTv.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+        rightTv.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
@@ -163,7 +163,7 @@ public final class UIAlert {
         //left button
         if (!TextUtils.isEmpty(cancel)) {
             leftTv.setText(cancel);
-            leftTv.setOnClickListener(ViewEvent.click(new View.OnClickListener() {
+            leftTv.setOnClickListener(UIEvent.click(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
