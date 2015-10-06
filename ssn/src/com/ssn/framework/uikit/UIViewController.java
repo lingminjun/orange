@@ -12,6 +12,7 @@ import android.view.*;
 import android.widget.LinearLayout;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
+import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.inc.ViewController;
 
@@ -380,6 +381,7 @@ public class UIViewController extends Fragment implements ViewController {
         catch (Throwable e) {
             APPLog.error(e);
         }
+        BroadcastCenter.shareInstance().removeObserver(this);
         super.onDestroy();
     }
 

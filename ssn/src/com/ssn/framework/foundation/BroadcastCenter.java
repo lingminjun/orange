@@ -77,9 +77,27 @@ public class BroadcastCenter {
      * 监听广播方法
      * @param observer 监听者，弱引用
      * @param notificationName 广播名称，一个通知名只能注册一个方法，若当前监听者尝试监听同一广播多次只有第一次有效，后面都将忽略
-     * @param method 必须被监听者所引用，否则被释放 //TODO : 仅仅警告提示 method必须被observer所引用，否则被释放
+     * @param method 监听回调方法
      */
     public void addObserver(@NonNull Object observer,@NonNull String notificationName,@NonNull Method<?> method) {
+        paddObserver(observer,notificationName,method);
+    }
+
+    /**
+     * 监听广播方法，可以不显示移除通知，当observer释放后，通知将自动解除
+     * 使用此方法特别要注意的是，其method必须由observer的直接或间接引用，否则此注册将会失效
+     * @param observer 监听者，弱引用
+     * @param notificationName 广播名称，一个通知名只能注册一个方法，若当前监听者尝试监听同一广播多次只有第一次有效，后面都将忽略
+     * @param weakMethod 必须被监听者所引用，否则被释放 TODO : method必须被observer所引用，否则被释放 (仅仅警告提示)
+     */
+    public void softAddObserver(@NonNull Object observer,@NonNull String notificationName,@NonNull Method<?> weakMethod) {
+        if (observer == null || TextUtils.isEmpty(notificationName) || weakMethod == null){
+            return ;
+        }
+        paddObserver(observer,notificationName,new WeakReference<Method<?>>(weakMethod));
+    }
+
+    private void paddObserver(@NonNull Object observer,@NonNull String notificationName,@NonNull Object method) {
         if (observer == null || TextUtils.isEmpty(notificationName) || method == null){
             return ;
         }
@@ -204,7 +222,8 @@ public class BroadcastCenter {
     private class WeakObserver extends WeakReference<Object> {
 
         private int _key;                       //key
-        private Map<String, WeakReference<Method<?> > > _methods;//注册的方法
+//        private Map<String, WeakReference<Method<?> > > _methods;//注册的方法
+        private Map<String, Object> _methods;//注册的方法，兼容两套
 
         public int getKey() {
             return _key;
@@ -213,25 +232,29 @@ public class BroadcastCenter {
         public WeakObserver(Object observer, ReferenceQueue<Object> queue) {
             super(observer, queue);
             this._key = observer.hashCode();
-            this._methods = new HashMap<String, WeakReference<Method<?> > >();
+//            this._methods = new HashMap<String, WeakReference<Method<?> > >();
+            this._methods = new HashMap<String, Object>();
         }
 
         public long methodCount() {return _methods.size();}
 
         public Method<?> method(String notificationName) {
-            WeakReference<Method<?> > weak = _methods.get(notificationName);
-            if (weak != null) {
+            Object obj = _methods.get(notificationName);
+            if (obj != null && obj instanceof WeakReference) {
+                WeakReference<Method<?>> weak = (WeakReference<Method<?>>)obj;
                 return weak.get();
             }
-            return null;
+            else {
+                return (Method<?>)obj;
+            }
         }
 
-        public boolean add(String notificationName, Method<?> method) {
+        public boolean add(String notificationName, Object methodBox) {
             if (_methods.containsKey(notificationName)) {//防止重复注册，
                 return false;
             }
 
-            _methods.put(notificationName,new WeakReference<Method<?> >(method));
+            _methods.put(notificationName,methodBox);
             return true;
         }
 
@@ -239,9 +262,12 @@ public class BroadcastCenter {
             if (!_methods.containsKey(notificationName)) {//
                 return false;
             }
-            WeakReference<Method<?> > weak = _methods.remove(notificationName);
-            if (weak != null) {
-                weak.clear();
+            Object obj = _methods.remove(notificationName);
+            if (obj != null) {
+                if (obj instanceof WeakReference) {
+                    WeakReference<Method<?>> weak = (WeakReference<Method<?>>) obj;
+                    weak.clear();
+                }
                 return true;
             }
             return false;
@@ -362,12 +388,18 @@ public class BroadcastCenter {
             while ((se = (WeakObserver) _gcQueue.poll()) != null) {
                 int key = se.getKey();
                 clearObserver(key);
+                se.clear();
             }
         }
     }
 
     private void clearObserver(int key) {
         WeakObserver observer = _observers.get(key);
+
+        if (observer == null) {
+            APPLog.info("监听者" + Integer.toString(key) + "已经在前一次被JVM回收");
+            return;
+        }
 
         Set<String> actions = observer.actions();//遍历删除么？？？暂时不处理，后面处理吧
         for (String action : actions) {

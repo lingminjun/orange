@@ -155,6 +155,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         _isPause = true;
         Navigator.shareInstance().onActivityDestroy(this);
         BroadcastCenter.shareInstance().removeObserver(this);
+        UILoading.dismiss(this,false);//防止泄露
         super.onDestroy();
     }
 

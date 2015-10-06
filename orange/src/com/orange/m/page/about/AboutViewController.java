@@ -1,11 +1,15 @@
 package com.orange.m.page.about;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import com.orange.m.R;
 import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
+import com.ssn.framework.foundation.BroadcastCenter;
+import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
@@ -29,6 +33,75 @@ public class AboutViewController extends UITableViewController {
     @Override
     public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
+
+        {
+            IconTitleCellModel model = new IconTitleCellModel();
+            model.mIconId = R.drawable.icon_me_normal;
+            model.mTitle = "抛通知";
+            model.click = ViewEvent.click(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BroadcastCenter.shareInstance().postBroadcast(new Intent("TestTTTT"));
+                }
+            });
+            list.add(model);
+        }
+
+
+        {
+            IconTitleCellModel model = new IconTitleCellModel();
+            model.mIconId = R.drawable.icon_me_normal;
+            model.mTitle = "通知注册";
+            model.click = ViewEvent.click(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BroadcastCenter.shareInstance().addObserver(AboutViewController.this, "TestTTTT", new BroadcastCenter.Method<AboutViewController>() {
+                        @Override
+                        public void onReceive(AboutViewController observer, Context context, Intent intent) {
+                            Log.e("收到通知", "xxxxx");
+                        }
+                    });
+                }
+            });
+            list.add(model);
+        }
+
+        {
+            IconTitleCellModel model = new IconTitleCellModel();
+            model.mIconId = R.drawable.icon_me_normal;
+            model.mTitle = "弱通知注册";
+            model.click = ViewEvent.click(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    BroadcastCenter.shareInstance().softAddObserver(AboutViewController.this, "TestTTTT", new BroadcastCenter.Method<AboutViewController>() {
+                        @Override
+                        public void onReceive(AboutViewController observer, Context context, Intent intent) {
+                            Log.e("弱收到通知", "xxxxx");
+                        }
+                    });
+                }
+            });
+            list.add(model);
+        }
+
+        {
+            IconTitleCellModel model = new IconTitleCellModel();
+            model.mIconId = R.drawable.icon_me_normal;
+            model.mTitle = "菊花";
+            model.click = ViewEvent.click(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UILoading.show(AboutViewController.this.getActivity());
+                    TaskQueue.mainQueue().executeDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            UILoading.dismiss(AboutViewController.this.getActivity());
+                        }
+                    },5000);
+                }
+            });
+            list.add(model);
+        }
 
         for (int i = 0; i< 100;i++) {
             {
