@@ -159,14 +159,36 @@ public final class UITabBar extends LinearLayout {
             tv.setLayoutParams(params);
         }
 
+        private static String badgeValueTidy(String value) {
+            if (TextUtils.isEmpty(value)) {return "";}
+            int num = -1;
+            try {
+                num = Integer.parseInt(value);
+            }catch (Throwable e) {
+                num = -1;
+            }
+
+            if (num < 0) {
+                return value;
+            }
+            else {
+                if (num >= 100) {//显示太多很丑
+                    return "99+";
+                }
+                else {
+                    return value;
+                }
+            }
+        }
+
         private static void setBadgeContent(TextView tv,String content){
             tv.setBackgroundResource(R.drawable.white_stroke_red_bg);
             ViewGroup.LayoutParams params = tv.getLayoutParams();
-            tv.setText(content);
+            tv.setText(badgeValueTidy(content));
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             if (params instanceof ViewGroup.MarginLayoutParams) {
-                ((MarginLayoutParams) params).topMargin = Density.dipTopx(-4);
+                ((MarginLayoutParams) params).topMargin = Density.dipTopx(-2);
             }
             tv.setLayoutParams(params);
         }
