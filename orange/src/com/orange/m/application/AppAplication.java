@@ -3,6 +3,7 @@ package com.orange.m.application;
 import android.content.res.XmlResourceParser;
 import android.text.TextUtils;
 import com.orange.m.R;
+import com.orange.m.biz.UserCenter;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
@@ -21,8 +22,19 @@ public class AppAplication extends UIApplication {
     protected void applicationDidLaunch() {
         super.applicationDidLaunch();
 
+        //用户模块加载
+        UserCenter.shareInstance().applicationDidLaunch(this);
+
+        //页面路由加载
         loadPageRouter();
+
     }
+
+
+
+
+
+
 
     private static final String PAGE_ROUTER_NODE = "item";
     private static final String PAGE_ROUTER_URL = "url";

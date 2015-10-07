@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.page.PageCenter;
 import com.orange.m.view.common.Keyboard;
 import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
@@ -78,14 +79,14 @@ public class PopViewController extends UITableViewController {
         Keyboard.shareInstance().setSendClick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                sendAction(Keyboard.shareInstance().text());
             }
         });
 
         switchBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendAction(Keyboard.shareInstance().text());
+                PageCenter.checkAuth(null);
             }
         }));
 
@@ -119,7 +120,7 @@ public class PopViewController extends UITableViewController {
                     public void run() {
                         tableView().resizeFooterViewHeight();
                     }
-                },50);
+                }, 50);
             }
         };
 

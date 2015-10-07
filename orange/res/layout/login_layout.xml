@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/page_bg"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:id="@+id/mid_scroll_layout">
+        <LinearLayout android:orientation="vertical"
+                      android:background="@null"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="25dp"
+                          android:background="@color/white"
+                          android:orientation="vertical">
+                <include layout="@layout/ssn_horizontal_line"/>
+                <EditText style="@style/LoginPageEdt"
+                          android:layout_height="@dimen/login_reg_edt_height"
+                          android:layout_width="match_parent"
+                          android:background="@null"
+                          android:hint="@string/phone"
+                          android:id="@+id/user_name_edt"/>
+                <include layout="@layout/ssn_horizontal_line"/>
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="@dimen/login_reg_edt_height"
+                              android:gravity="center"
+                              android:orientation="horizontal">
+                    <EditText style="@style/LoginPageEdt"
+                              android:background="@null"
+                              android:id="@+id/psw_edt"
+                              android:layout_height="match_parent"
+                              android:hint="@string/password"
+                              android:layout_width="0dp"
+                              android:layout_weight="1"
+                              android:inputType="textPassword"/>
+                    <TextView style="@style/ww_grey_smallSize_text"
+                              android:id="@+id/forget_psw_tv"
+                              android:layout_marginRight="@dimen/big_padding"
+                              android:text="@string/forget_password"/>
+                </LinearLayout>
+                <include layout="@layout/ssn_horizontal_line"/>
+            </LinearLayout>
+
+            <Button style="@style/LargeBtnWhiteText"
+                    android:text="@string/login"
+                    android:enabled="true"
+                    android:id="@+id/login_btn"/>
+
+            <Button style="@style/LargeWhiteBtnRedText"
+                    android:text="@string/register"
+                    android:enabled="true"
+                    android:id="@+id/register_btn"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

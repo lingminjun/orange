@@ -1,6 +1,7 @@
 package com.orange.m.page;
 
 import android.os.Bundle;
+import com.orange.m.biz.UserCenter;
 import com.ssn.framework.uikit.BaseTabActivity;
 import com.ssn.framework.uikit.Navigator;
 
@@ -40,4 +41,27 @@ public final class PageCenter {
 
         Navigator.shareInstance().openURL("http://m.orangestar.com/main.html",args);
     }
+
+    public static interface AuthCallBack {
+        public void auth(String account);//
+    }
+
+    /**
+     * 检查认证，如果没有登录，则触发登录界面
+     * @param callBack
+     */
+    public static void checkAuth(AuthCallBack callBack) {
+        _authCallBack = callBack;
+        if (UserCenter.shareInstance().isLogin()) {
+            if (callBack != null) {
+                callBack.auth(null);
+            }
+            _authCallBack = null;
+        }
+        else {
+            Navigator.shareInstance().openURL("http://m.orangestar.com/login.html",null,true);
+        }
+    }
+
+    public static AuthCallBack _authCallBack;
 }
