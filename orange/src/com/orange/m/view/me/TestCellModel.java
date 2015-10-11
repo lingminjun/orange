@@ -10,6 +10,7 @@ import com.ssn.framework.uikit.UITableViewCell;
 public class TestCellModel extends UITableViewCell.CellModel {
 
     public TestCellModel() {
+        super(true);
         hiddenRightArrow = true;
     }
 

@@ -36,6 +36,14 @@ public abstract class UITableViewCell extends RelativeLayout {
         public int separateLineColor;//分割线颜色
         public boolean hiddenRightArrow;//隐藏右边箭头
 
+        public CellModel() {}
+
+        /**
+         * 若cell中存在EditText时，务必设置成yes，否则无法获取光标
+         * 在派生类构造函数中调用super(true);
+         * @param needInput 是否需要输入内容，需要获取键盘和光标
+         */
+        public CellModel(boolean needInput){this.needInput=needInput;}
 
         /**
          * 一些事件支持
@@ -67,6 +75,11 @@ public abstract class UITableViewCell extends RelativeLayout {
         public int getModelID() {
             return this.hashCode();
         }
+
+        /**
+         * 此cell需要输入，此处指包含EditText控件
+         */
+        private boolean needInput;
 
         /**
          * EditText支持
@@ -109,7 +122,7 @@ public abstract class UITableViewCell extends RelativeLayout {
      * 子类初始化
      * @param context
      */
-    private void derivedInit(Context context) {
+    private void derivedInit(Context context,CellModel cellModel) {
         if (_customView == null) {
             try {
                 ViewGroup viewGroup = _container;
@@ -125,7 +138,7 @@ public abstract class UITableViewCell extends RelativeLayout {
             }
 
             //检查是否存在出入框
-            if (checkContainedEditText(_container)) {
+            if (cellModel.needInput && checkContainedEditText(_container)) {
                 _container.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);//还原到默认值
             }
         }
@@ -154,7 +167,7 @@ public abstract class UITableViewCell extends RelativeLayout {
         }catch (Throwable e){APPLog.error(e);}
 
         if (cell != null) {
-            cell.derivedInit(context);
+            cell.derivedInit(context,cellModel);
         }
         return cell;
     }
@@ -218,7 +231,7 @@ public abstract class UITableViewCell extends RelativeLayout {
 
         cell._cellModel = cellModel;//防止子类替换
 
-        if (cellModel._showKeyboard) {
+        if (cellModel.needInput && cellModel._showKeyboard) {
             afreshFocus(cell,cellModel);
         }
     }
