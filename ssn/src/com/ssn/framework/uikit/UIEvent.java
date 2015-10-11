@@ -113,13 +113,10 @@ public class UIEvent {
         public void onClick(View var1) {
             if (_click == null) {return;}
 
-            if (_click instanceof Click) {
-                ((Click) _click).onInnerClick(var1);
-            }
-            else {
-                if (checkExclusive()) {
-                    onInnerClick(var1);
-                }
+            if (tryLock()) {
+                lock();
+                onInnerClick(var1);
+                unlock();
             }
         }
 
@@ -391,13 +388,10 @@ public class UIEvent {
         public void onItemClick(AdapterView<?> var1, View var2, int var3, long var4) {
             if (_click == null) {return;}
 
-            if (_click instanceof ItemClick) {
-                ((ItemClick) _click).onInnerItemClick(var1, var2, var3, var4);
-            }
-            else {
-                if (checkExclusive()) {
-                    onInnerItemClick(var1, var2, var3, var4);
-                }
+            if (tryLock()) {//是否要排他
+                lock();
+                onInnerItemClick(var1, var2, var3, var4);
+                unlock();
             }
         }
 
@@ -439,14 +433,18 @@ public class UIEvent {
         //exclusive 实现
         private final static long MIN_CLICK_SPACE   = 300;
         private static long _last_click_at = 0;
+        private static boolean _event_lock_recursion = false;
 
         /**
-         * 排他校验
+         * 获得event lock
          * @return 返回yes表示有效，返回no表示无效
          */
-        protected final boolean checkExclusive() {
+        protected final boolean tryLock() {
             //非排他属性时，立即响应
             if (_nonExclusive) {return true;}
+
+            //说明递归调用
+            if (_event_lock_recursion) {return true;}
 
             long at = System.currentTimeMillis();
             if (_last_click_at == 0 || at > _last_click_at + MIN_CLICK_SPACE || _last_click_at > at + MIN_CLICK_SPACE) {
@@ -455,6 +453,9 @@ public class UIEvent {
             }
             return false;
         }
+
+        protected final void lock() {_event_lock_recursion = true;}
+        protected final void unlock() {_event_lock_recursion = false;}
 
         private UIEvent.UTEvent _ut;
         private String _utid;

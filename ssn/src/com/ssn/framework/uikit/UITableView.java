@@ -133,10 +133,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             }
 
             if (cellModel.click != null) {
-                boolean exclusive = cellModel.click.isExclusive();
-                cellModel.click.setExclusive(false);
                 cellModel.click.onClick(view);
-                cellModel.click.setExclusive(exclusive);
             }
 
             if (_delegate != null) {
