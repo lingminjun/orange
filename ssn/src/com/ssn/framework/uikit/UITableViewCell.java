@@ -85,6 +85,7 @@ public abstract class UITableViewCell extends RelativeLayout {
          * EditText支持
          */
         private int _editID;
+        private EditText _edit;
         private boolean _showKeyboard;
     }
 
@@ -175,20 +176,23 @@ public abstract class UITableViewCell extends RelativeLayout {
     /**
      * 获取焦点时处理
      * @param cell
-     * @param editTextID
+     * @param editText
      */
-    public static void prepareFocus(final UITableViewCell cell, int editTextID) {
+    public static void prepareFocus(final UITableViewCell cell, EditText editText) {
         UITableViewCell.CellModel cellModel = cell.cellModel();
-        cellModel._editID = editTextID;
+        cellModel._editID = editText.getId();
+        cellModel._edit = editText;
         cellModel._showKeyboard = true;
     }
 
     private static void afreshFocus(final UITableViewCell cell, final CellModel cellModel) {
-        cellModel._showKeyboard = false;
         TaskQueue.mainQueue().executeDelayed(new Runnable() {
             @Override
             public void run() {
+                cellModel._showKeyboard = false;
+
                 if (cell._cellModel != cellModel) {
+                    cellModel._edit = null;
                     return;
                 }
 
@@ -198,11 +202,18 @@ public abstract class UITableViewCell extends RelativeLayout {
                 }
 
                 if (cellModel._editID <= 0 || parentView == null) {
+                    cellModel._edit = null;
                     return;
                 }
 
                 EditText editText = (EditText)parentView.findViewById(cellModel._editID);
                 if (editText != null) {
+
+                    if (cellModel._edit != null && editText != cellModel._edit) {
+                        cellModel._edit.clearFocus();
+                    }
+                    cellModel._edit = null;
+
                     InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(editText, 0);
                     editText.requestFocus();

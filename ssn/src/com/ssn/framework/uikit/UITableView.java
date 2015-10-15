@@ -528,7 +528,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         UITableViewCell cell = targetCellWithEditText(this,editText);
 
         if (cell != null && cell.cellModel() != null) {
-            UITableViewCell.prepareFocus(cell,editText.getId());
+            UITableViewCell.prepareFocus(cell,editText);
         }
     }
 

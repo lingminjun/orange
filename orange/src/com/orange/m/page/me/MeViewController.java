@@ -73,7 +73,7 @@ public class MeViewController extends UITableViewController {
 //                            }
 //                        });
 
-                        Navigator.shareInstance().openURL("http://m.orangestar.com/about.html");
+//                        Navigator.shareInstance().openURL("http://m.orangestar.com/about.html");
                     }
                 });
 
