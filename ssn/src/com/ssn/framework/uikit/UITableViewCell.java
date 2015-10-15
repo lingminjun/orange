@@ -85,7 +85,7 @@ public abstract class UITableViewCell extends RelativeLayout {
          * EditText支持
          */
         private int _editID;
-        private EditText _edit;
+//        private EditText _edit;
         private boolean _showKeyboard;
     }
 
@@ -181,7 +181,7 @@ public abstract class UITableViewCell extends RelativeLayout {
     public static void prepareFocus(final UITableViewCell cell, EditText editText) {
         UITableViewCell.CellModel cellModel = cell.cellModel();
         cellModel._editID = editText.getId();
-        cellModel._edit = editText;
+//        cellModel._edit = editText;
         cellModel._showKeyboard = true;
     }
 
@@ -192,7 +192,7 @@ public abstract class UITableViewCell extends RelativeLayout {
                 cellModel._showKeyboard = false;
 
                 if (cell._cellModel != cellModel) {
-                    cellModel._edit = null;
+//                    cellModel._edit = null;
                     return;
                 }
 
@@ -202,17 +202,17 @@ public abstract class UITableViewCell extends RelativeLayout {
                 }
 
                 if (cellModel._editID <= 0 || parentView == null) {
-                    cellModel._edit = null;
+//                    cellModel._edit = null;
                     return;
                 }
 
                 EditText editText = (EditText)parentView.findViewById(cellModel._editID);
                 if (editText != null) {
 
-                    if (cellModel._edit != null && editText != cellModel._edit) {
-                        cellModel._edit.clearFocus();
-                    }
-                    cellModel._edit = null;
+//                    if (cellModel._edit != null && editText != cellModel._edit) {
+//                        cellModel._edit.clearFocus();
+//                    }
+//                    cellModel._edit = null;
 
                     InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(editText, 0);
