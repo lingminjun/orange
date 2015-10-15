@@ -37,6 +37,21 @@ public class UITableViewController extends UIViewController implements UITableVi
         _adapter.setDelegate(this);
     }
 
+    /**
+     * 务必在load view中调用
+     * @param tableView
+     * @param adapter
+     */
+    protected void setTableView(UITableView tableView,UITableView.TableViewAdapter adapter) {
+        _tableView = tableView;
+        if (adapter != null && adapter.tableView() == tableView) {
+            _adapter = adapter;
+        } else {
+            _adapter = new UITableView.TableViewAdapter(_tableView);
+        }
+        _adapter.setDelegate(this);
+    }
+
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();

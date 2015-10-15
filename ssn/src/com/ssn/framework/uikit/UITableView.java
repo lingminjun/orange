@@ -35,21 +35,26 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             public void onTableViewPullUpRefresh(TableViewAdapter adapter);
         }
 
+        public static final int DEFAULT_CELL_TYPE_COUNT = 8;
+
         protected List<UITableViewCell.CellModel> _items = new ArrayList<UITableViewCell.CellModel>();
 
         private Map<String,Integer> _types = new HashMap<>();
         private UITableView _tableView;
         private TableViewDelegate _delegate;
-        private int _viewTypeCount;
+        private int _viewTypeCount;//cell类型个数
+        private boolean _nonReusable;//cell可复用
 
         public TableViewDelegate delegate() {return _delegate;}
         public void setDelegate(TableViewDelegate delegate) {_delegate = delegate;}
 
         public int cellTypeCount(){return _viewTypeCount;}
 
+        public boolean isReusable() { return !_nonReusable; }
+
         public TableViewAdapter(UITableView tableView){
             _tableView = tableView;
-            _viewTypeCount = 8;//默认支持八种
+            _viewTypeCount = DEFAULT_CELL_TYPE_COUNT;//默认支持八种
             _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
             _tableView._tableView.setAdapter(this);
             updateRefreshLabel();
@@ -58,7 +63,21 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
         public TableViewAdapter(UITableView tableView,int cellTypeCount){
             _tableView = tableView;
-            _viewTypeCount = cellTypeCount < 8 ? 8 : cellTypeCount;
+            _viewTypeCount = cellTypeCount < DEFAULT_CELL_TYPE_COUNT ? DEFAULT_CELL_TYPE_COUNT : cellTypeCount;
+            _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
+            _tableView._tableView.setAdapter(this);
+            updateRefreshLabel();
+            setListeners();
+        }
+
+        public TableViewAdapter(UITableView tableView,boolean reusable){
+            _tableView = tableView;
+            _nonReusable = !reusable;
+            if (reusable) {
+                _viewTypeCount = DEFAULT_CELL_TYPE_COUNT;
+            } else {
+                _viewTypeCount = 0;
+            }
             _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//默认只开启下拉模式
             _tableView._tableView.setAdapter(this);
             updateRefreshLabel();
@@ -370,13 +389,8 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
         @Override
         public int getViewTypeCount() {//默认最大为4个
+            if (_nonReusable) {return 1;}
             return _viewTypeCount;
-//            int i = super.getViewTypeCount();
-//            Log.e("getViewTypeCount","count="+0);
-//            if (_types.size() > 10) {
-//                return _types.size() + 1;
-//            }
-//            return 10;//设置一个非常大的数，使得后面cellModel的hashCode都小于此值
         }
 
         @Override
@@ -386,6 +400,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
         @Override
         public int getItemViewType(int position) {
+            if (_nonReusable) {return 0;}
             //此方法调用非常频繁，
             UITableViewCell.CellModel cellModel = getItem(position);
 //            Log.e("getType","idx="+position+"model="+cellModel.getClass().getName());
@@ -410,14 +425,14 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             UITableViewCell.CellModel cellModel = this.getItem(i);
 //            Log.e("getView","idx="+i+"model="+cellModel.getClass().getSimpleName());
             if (cellModel == null) {
-                if (view == null) {
+                if (_nonReusable || view == null) {
                     return new View(viewGroup.getContext());
                 }
                 return view;
             }
 
             UITableViewCell cell = null;
-            if (view != null && view instanceof UITableViewCell) {
+            if (!_nonReusable && view != null && view instanceof UITableViewCell) {
                 cell = (UITableViewCell)view;
             }
             else {
