@@ -36,7 +36,7 @@
           activityclass="com.orange.m.page.splash.WelcomeActivity"
           description="新手引导"/>
 
-    <!--登录-->
+    <!--登录模块-->
     <item url="http://m.orangestar.com/login.html"
           fragmentclass="com.orange.m.page.auth.LoginViewController"
           activityclass="com.orange.m.page.auth.LoginActivity"

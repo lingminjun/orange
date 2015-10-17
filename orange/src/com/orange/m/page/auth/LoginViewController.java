@@ -66,7 +66,7 @@ public class LoginViewController extends UIViewController {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.PAGE_ARG_NEXT_URL,"http://m.orangestar.com/resetpassword.html");
-                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html");
+                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html",bundle);
             }
         }));
     }

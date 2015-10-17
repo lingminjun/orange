@@ -66,6 +66,8 @@
                           android:layout_height="@dimen/login_reg_edt_height">
                 <TextView style="@style/ww_grey_smallSize_text"
                           android:id="@+id/forget_psw_tv"
+                          android:paddingTop="4dp"
+                          android:paddingBottom="4dp"
                           android:layout_marginRight="@dimen/big_padding"
                           android:text="@string/forget_password"
                           android:layout_gravity="right|center_vertical"/>
