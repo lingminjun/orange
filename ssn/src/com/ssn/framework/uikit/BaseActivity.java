@@ -410,4 +410,11 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
             displayFragment(fragment);
         }
     }
+
+    public void setBackgroundDrawable(int sourceID) {
+        View root = findViewById(R.id.ssn_root_wrap_view);
+        if (root != null) {
+            root.setBackgroundResource(sourceID);
+        }
+    }
 }

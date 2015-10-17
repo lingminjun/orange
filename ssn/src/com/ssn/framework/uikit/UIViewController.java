@@ -401,6 +401,13 @@ public class UIViewController extends Fragment implements ViewController {
         return containerView().findViewById(id);
     }
 
+
+    protected final void setBackgroundDrawable(int resourceID) {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity) {
+            ((BaseActivity) activity).setBackgroundDrawable(resourceID);
+        }
+    }
     //
 //    @Override
 //    public void onDetach() {

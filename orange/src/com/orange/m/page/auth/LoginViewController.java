@@ -38,6 +38,8 @@ public class LoginViewController extends UIViewController {
     public void onViewDidLoad() {
         super.onViewDidLoad();
 
+        setBackgroundDrawable(R.drawable.page_background);
+
         loginBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
