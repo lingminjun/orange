@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UIViewController;
 
@@ -18,6 +20,7 @@ public class LoginViewController extends UIViewController {
 
     Button loginBtn;
     Button registerBtn;
+    TextView forgetPswdBtn;
 
     @Override
     public void onInit(Bundle args) {
@@ -33,6 +36,7 @@ public class LoginViewController extends UIViewController {
         View view = inflater.inflate(R.layout.login_layout, null);
         loginBtn = (Button)view.findViewById(R.id.login_btn);
         registerBtn = (Button)view.findViewById(R.id.register_btn);
+        forgetPswdBtn = (TextView)view.findViewById(R.id.forget_psw_tv);
         return view;
     }
 
@@ -45,6 +49,24 @@ public class LoginViewController extends UIViewController {
         loginBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            }
+        }));
+
+        registerBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.PAGE_ARG_NEXT_URL,"http://m.orangestar.com/register.html");
+                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html",bundle);
+            }
+        }));
+
+        forgetPswdBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.PAGE_ARG_NEXT_URL,"http://m.orangestar.com/resetpassword.html");
+                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html");
             }
         }));
     }

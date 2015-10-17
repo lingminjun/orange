@@ -41,5 +41,17 @@
           fragmentclass="com.orange.m.page.auth.LoginViewController"
           activityclass="com.orange.m.page.auth.LoginActivity"
           description="登录"/>
+    <item url="http://m.orangestar.com/checkmobile.html"
+          fragmentclass="com.orange.m.page.auth.CheckMobileViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="验证手机"/>
+    <item url="http://m.orangestar.com/register.html"
+          fragmentclass="com.orange.m.page.auth.RegisterViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="注册"/>
+    <item url="http://m.orangestar.com/resetpassword.html"
+          fragmentclass="com.orange.m.page.auth.ResetPassworViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="忘记密码"/>
 
 </items>

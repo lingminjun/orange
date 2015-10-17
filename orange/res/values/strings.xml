@@ -13,4 +13,10 @@
     <string name="login">登录</string>
     <string name="register">注册</string>
     <string name="origin_star">桔子星球</string>
+    <string name="next">下一步</string>
+    <string name="send_sms_code">发送验证码</string>
+    <string name="nick">昵称</string>
+    <string name="done">完成</string>
+    <string name="new_password_hint">请输入新密码</string>
+    <string name="password_confirm_hint">请再次输入新密码</string>
 </resources>
