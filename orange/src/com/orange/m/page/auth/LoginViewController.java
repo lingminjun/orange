@@ -23,7 +23,9 @@ public class LoginViewController extends UIViewController {
     public void onInit(Bundle args) {
         super.onInit(args);
 
-        navigationItem().setTitle(Res.localized(R.id.login));
+        navigationItem().setTitle(Res.localized(R.string.origin_star));
+        navigationItem().setBottomLineHidden(true);
+        navigationItem().setTitleColor(Res.color(R.color.white));
     }
 
     @Override

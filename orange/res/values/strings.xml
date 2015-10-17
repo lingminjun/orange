@@ -9,7 +9,8 @@
     <string name="publish">发送</string>
     <string name="phone">手机号</string>
     <string name="password">密码</string>
-    <string name="forget_password">忘记密码</string>
+    <string name="forget_password">忘记密码?</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
+    <string name="origin_star">桔子星球</string>
 </resources>

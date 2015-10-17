@@ -107,7 +107,7 @@ public final class UITabBar extends LinearLayout {
                     textView.setText(tabName);
 
                     //颜色设置
-                    if (textColor > 0) {
+                    if (textColor != 0) {
                         textView.setTextColor(getColor(isSelected, textColor));
                     }
 

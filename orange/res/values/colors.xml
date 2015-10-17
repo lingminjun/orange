@@ -13,6 +13,9 @@
     <color name="normal_line">#dcdcdc</color>
     <color name="blue_text_color">#4bb8e4</color>
 
+    <!--背景颜色-->
+    <color name="grey_alpha_40">#40cccccc</color>
+
     <!--button颜色定义-->
     <color name="red_btn_normal">#ff5e56</color>
     <color name="red_btn_press">#FF4E44</color>
@@ -62,6 +65,8 @@
     <color name="blue_text">#2790EB</color>
     <color name="btn_red_press">#FF4E44</color>
     <color name="btn_red">#ff5e56</color>
+    <color name="btn_green_press">#11E979</color>
+    <color name="btn_green">#11D967</color>
     <color name="_orange_press">#B0420D</color>
     <color name="orange">#DB5110</color>
     <color name="green_btn_press">#7B9F00</color>

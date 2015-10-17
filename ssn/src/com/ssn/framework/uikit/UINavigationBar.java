@@ -117,7 +117,7 @@ public final class UINavigationBar extends RelativeLayout {
                         textView.setText(title);
 
                         //颜色设置
-                        if (textColor > 0) {
+                        if (textColor != 0) {
                             textView.setTextColor(Res.resources().getColorStateList(textColor));
                         }
 
@@ -248,6 +248,7 @@ public final class UINavigationBar extends RelativeLayout {
             this.leftContainer = (LinearLayout) view.findViewById(R.id.left_layout);
             this.rightContainer = (LinearLayout) view.findViewById(R.id.right_layout);
 
+            display();
             displayTitle();
             displayBackButton();
             displayRightButtons();
@@ -289,7 +290,7 @@ public final class UINavigationBar extends RelativeLayout {
                     view.setVisibility(VISIBLE);
 
                     //颜色设置
-                    if (backgroundColor > 0) {
+                    if (backgroundColor != 0) {
                         view.setBackgroundColor(backgroundColor);
                     }
 
@@ -312,8 +313,8 @@ public final class UINavigationBar extends RelativeLayout {
                 textView.setText(TR.string(title));
 
                 //颜色设置
-                if (textColor > 0) {
-                    textView.setTextColor(Res.color(textColor));
+                if (textColor != 0) {
+                    textView.setTextColor(textColor);
                 }
 
                 //字体大小

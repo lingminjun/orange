@@ -5,6 +5,7 @@
     <color name="ssn_hint_text">#C9C9C9</color>
 
     <color name="ssn_link_text">#4bb8e4</color>
+    <color name="ssn_error_text">#FF4E44</color>
 
     <color name="ssn_white">@android:color/white</color>
     <color name="ssn_white_light">#cccccc</color>
