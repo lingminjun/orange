@@ -337,7 +337,44 @@ public final class UITabBar extends LinearLayout {
         return null;
     }
 
+    /**
+     * 刷新界面
+     */
+    public void refresh() {
+        //清除原来的
+        if (_items == null) {return;}
+
+        this._container.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        int size = _items.size();
+
+        for (int i = 0; i < size; i++) {
+            TabItem item = _items.get(i);
+
+            item.setView(inflater.inflate(R.layout.ssn_tab_item, null));
+
+            this._container.addView(item.view);
+
+            LinearLayout.LayoutParams params = (LayoutParams) item.view.getLayoutParams();
+            params.weight = 1;
+
+            final int index = i;
+            item.view.setOnClickListener(UIEvent.click(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    checkIndex(index);
+                }
+            }));
+
+            if (i == selectedIndex) {
+                _items.get(selectedIndex).setSelected(true);
+            }
+        }
+    }
+
     public interface OnTabSelectedListener {
         public void onSelected(UITabBar tabbar,int index);
     }
+
 }
