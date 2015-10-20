@@ -22,7 +22,7 @@
         <item name="android:activityOpenEnterAnimation">@anim/base_stay_orig</item>
         <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
         <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/base_stay_orig</item>
     </style>
 
     <!--模态渐变-->

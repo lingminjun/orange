@@ -47,7 +47,7 @@ public class UIWrapperView extends LinearLayout {
                     @Override
                     public void run() {
                         if (_showingKeyboard) {
-                            _bottomView.setVisibility(GONE);
+                            _bottomView.onKeyboardStatusChanged(true);
                         }
                     }
                 }, 100);
@@ -61,7 +61,8 @@ public class UIWrapperView extends LinearLayout {
             _showingKeyboard = false;
 
             if (_bottomView != null) {
-                _bottomView.setVisibility(VISIBLE);
+                _bottomView.onKeyboardStatusChanged(false);
+
             }
 
             Intent intent = new Intent(UIEvent.UIKeyboardWillHideNotification);
@@ -83,8 +84,12 @@ public class UIWrapperView extends LinearLayout {
     }
     public boolean isShowingKeyboard() {return _showingKeyboard;}
 
-    private View _bottomView;
-    public void setBottomDockView(View view) {
+    private UIBottomBarRefreshInterface _bottomView;
+    public void setBottomDockView(UIBottomBarRefreshInterface view) {
         _bottomView = view;
+    }
+
+    public static interface UIBottomBarRefreshInterface {
+        public void onKeyboardStatusChanged(boolean isShow);
     }
 }
