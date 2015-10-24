@@ -1,6 +1,7 @@
 package com.ssn.framework.foundation;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -72,17 +73,36 @@ public final class App {
 
     private static boolean _background = false;
     public static void terminate() {
+        _terminate = true;
         _background = true;
         _checked = false;
+
+        //是否需要真的退出引用，最好是启动推送服务的service
+        ActivityManager activityMgr = (ActivityManager) Res.context().getSystemService(Context.ACTIVITY_SERVICE);
+        /**
+         * 需要此协议，因为只杀掉自己进程，可以不设置，android.permission.KILL_BACKGROUND_PROCESSES
+         * activityMgr.restartPackage(Res.context().getPackageName());
+         */
+        activityMgr.killBackgroundProcesses(Res.packageName());
     }
 
     private static Runnable _runnable = null;
+    private static boolean _terminate = false;
     public static void checkEnterBackground(final boolean terminate) {
         //三秒后，进入后台，如果没有新的activity出现，将直接进入后台
+        if (terminate && !_terminate) {
+            _terminate = terminate;
+        }
+
+        if (_runnable != null) {
+            TaskQueue.mainQueue().cancel(_runnable);
+        }
         _runnable = new Runnable() {
             @Override
             public void run() {
-                if (terminate) {
+                if (_runnable == null || _runnable != this) {return;}
+
+                if (_terminate) {
                     terminate();
                 }
                 else {

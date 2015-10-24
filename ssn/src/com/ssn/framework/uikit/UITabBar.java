@@ -378,7 +378,6 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         public void onSelected(UITabBar tabbar,int index);
     }
 
-
     @Override
     public void onKeyboardStatusChanged(boolean isShow) {
         if (isShow) {
