@@ -42,7 +42,7 @@ public class RPC {
          * 请求调用
          * @return
          */
-        public abstract T call();
+        public abstract T call() throws Exception;
     }
 
     /**

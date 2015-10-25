@@ -1,6 +1,8 @@
 package com.ssn.framework.foundation;
 
 import android.os.Looper;
+import android.text.TextUtils;
+import android.util.Log;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,12 +41,24 @@ public final class HTTPAccessor {
 
     private static long    _ntt_diff             = 0;//客户端-服务端时间差
 
+//    private static String _device_token          = "";
+    private static String _auth_token            = "";
+
+//    /**
+//     * 认证权限
+//     */
+//    public static enum AUTH_LEVEL {
+//        NONE,DEVICE,TOKEN
+//    }
+
     /**
      * HTTP请求协议
      */
     public static interface HTTPRequest {
         public String methodURI();//请求地址 如 http://www.xxx.com/mothod
         public HashMap<String,Object> parameter();//返回参数，Object仅仅支持String或者List<String>
+        public boolean postToJson();//当post时是否转换成json
+        public boolean auth();
         public boolean forcePost();//强制post
     }
 
@@ -83,6 +98,22 @@ public final class HTTPAccessor {
         _debug = debug;
     }
 
+//    /**
+//     * 设备权限认证
+//     * @param token
+//     */
+//    public static void setDeviceToken(String token) {
+//        _device_token = TR.string(token);
+//    }
+//
+    /**
+     * 用户权限认证
+     * @param token
+     */
+    public static void setAuthToken(String token) {
+        _auth_token = TR.string(token);
+    }
+
     /**
      * 同步发起请求
      * @param request
@@ -104,6 +135,16 @@ public final class HTTPAccessor {
         DefaultHttpClient hClient = getHttpClient();
 
         HashMap<String,Object> parameter = request.parameter();
+//        HashMap<String,Object> tem = request.parameter();
+//        if (tem != null) {
+//            parameter.putAll(tem);
+//        }
+//
+//        //权限认证
+//        if (request.auth() == AUTH_LEVEL.DEVICE) {
+//            parameter.put("deviceToken",_device_token);
+//        }
+
         String params = URLHelper.URLQueryString(parameter);
 
 //        String cid = "" + (long) (Math.random() * 10000000000L);
@@ -115,8 +156,18 @@ public final class HTTPAccessor {
             httpRequest = new HttpPost(request.methodURI());
 
             try {
+
+                boolean json = request.postToJson();
+                if (json) {
+                    params = new JSONObject(parameter).toString();
+                }
+
                 StringEntity se = new StringEntity(params, "utf-8");
-                se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+                if (json) {
+                    se.setContentType("application/json");
+                } else {
+                    se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+                }
                 ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
             } catch (Throwable e) {
             }
@@ -133,6 +184,13 @@ public final class HTTPAccessor {
         if (_gzip) {
             httpRequest.setHeader("Accept-Encoding", "gzip");
         }
+
+        //认证支持
+        if (request.auth() && !TextUtils.isEmpty(_auth_token)) {
+            httpRequest.setHeader("Authorization", _auth_token);
+        }
+
+        Log.e("request:",params);
 
         try {
             response = hClient.execute(httpRequest);
