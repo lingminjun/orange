@@ -8,6 +8,8 @@ package com.ssn.framework.foundation;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+import android.util.Base64;
 
 /**
  * 引用默认值设置
@@ -104,6 +106,35 @@ public final class UserDefaults {
 
     public boolean get(String key, boolean defValue) {
         return sp.getBoolean(key, defValue);
+    }
+
+    //高级接口
+    public String getJSONString(String key) {
+        if (TextUtils.isEmpty(key)) {return null;}
+
+        String tokenCry = get(key, "");
+        if (!TextUtils.isEmpty(tokenCry)) {
+            byte[] bytes = Base64.decode(tokenCry.getBytes(), Base64.DEFAULT);
+            if (bytes != null) {
+                return new String(bytes);
+            }
+        }
+        return null;
+    }
+
+    public void putJSONString(String key,String json) {
+        if (TextUtils.isEmpty(key)) {return;}
+
+        if (TextUtils.isEmpty(json)) {//清除
+            putAsync(key, "");//清除
+        }
+        else {
+            byte[] bytes = Base64.encode(json.getBytes(), Base64.DEFAULT);
+            if (bytes != null) {
+                String value = new String(bytes);
+                putAsync(key, value);//清除
+            }
+        }
     }
 
 }

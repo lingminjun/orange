@@ -19,4 +19,6 @@
     <string name="done">完成</string>
     <string name="new_password_hint">请输入新密码</string>
     <string name="password_confirm_hint">请再次输入新密码</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_failed">登录失败</string>
 </resources>

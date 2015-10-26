@@ -12,8 +12,19 @@ import java.util.HashMap;
  */
 public final class UserBiz {
 
+    /*
+    {"id":3,
+    "refreshToken":"MTM3NjEwNjczODZ8NjkxMGRkMTJhOTg4OTQ2N2M1MTNmNjI4MDkxZDM1NTA=",
+    "token":"M3wxMzc2MTA2NzM4NnwxNDQ1OTE4MDYyMTI0",
+    "nickname":"?? ???nickname???",
+    "mobile":"13761067386"}
+    */
     public static class TokenModel extends BaseModel {
-
+        public int id;
+        public String refreshToken;
+        public String token;
+        public String nickname;
+        public String mobile;
     }
 
     public static class SMSCodeModel extends BaseModel {
@@ -56,6 +67,16 @@ public final class UserBiz {
                 params.put("smsAuthCode",smsCode);
                 params.put("password",password);
                 params.put("nickname",nick);
+            }
+
+            @Override
+            public TokenModel call() throws Exception {
+                TokenModel token = super.call();
+
+                //数据存储下来
+                UserCenter.shareInstance().saveToken(token);
+
+                return token;
             }
         };
 

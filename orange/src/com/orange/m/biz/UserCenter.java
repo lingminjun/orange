@@ -1,12 +1,22 @@
 package com.orange.m.biz;
 
 import android.app.Application;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Base64;
+import com.alibaba.fastjson.JSON;
 import com.ssn.framework.foundation.APPLog;
+import com.ssn.framework.foundation.BroadcastCenter;
+import com.ssn.framework.foundation.UserDefaults;
 
 /**
  * Created by lingminjun on 15/10/7.
  */
 public final class UserCenter {
+
+    public static final String USER_LOGIN_NOTIFICATION = "userLoginNotice";
+    public static final String USER_LOGOUT_NOTIFICATION = "userLogoutNotice";
+
     private static UserCenter _instance = null;
 
     /**
@@ -50,6 +60,13 @@ public final class UserCenter {
 
         _application = application;
 
+        String json = UserDefaults.getInstance().getJSONString(USER_TOKEN_KEY);
+        if (!TextUtils.isEmpty(json)) {
+            try {
+                _token = (UserBiz.TokenModel)JSON.parseArray(json, UserBiz.TokenModel.class);
+            } catch (Throwable e) {}
+        }
+
         return true;
     }
 
@@ -60,11 +77,30 @@ public final class UserCenter {
      */
     public boolean isLogin() {
         synchronized (this) {
-            return false;
+            return _token != null && _token.token != null && _token.token.length() > 0 && _token.id > 0;
         }
     }
 
     private Application _application;
     private static final String TOKEN_INFO_DIR  = "/users/";
     private static final String UID_MD5         = "sfht.user.uid.md5";
+
+    //将数据存储下来
+    public void saveToken(UserBiz.TokenModel tokenModel) {
+        synchronized (this) {
+            _token = tokenModel;
+            if (tokenModel != null) {
+                String json = JSON.toJSONString(tokenModel);
+                UserDefaults.getInstance().put(USER_TOKEN_KEY, json);
+            }
+        }
+
+        //抛出成功通知
+        if (tokenModel != null && tokenModel.token != null && tokenModel.token.length() > 0 && tokenModel.id > 0) {
+            BroadcastCenter.shareInstance().postBroadcast(new Intent(USER_LOGIN_NOTIFICATION));
+        }
+    }
+
+    private static final String USER_TOKEN_KEY = "_user_token";
+    private UserBiz.TokenModel _token;
 }

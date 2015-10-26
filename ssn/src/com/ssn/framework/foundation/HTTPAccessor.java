@@ -32,10 +32,10 @@ public final class HTTPAccessor {
     /**
      * 通用配置
      */
-    private static long _cn_timeout              = 5000;//连接超时时间（毫秒）
-    private static long _so_timeout              = 30000;//数据响应超时时间（毫秒）
+    private static int _cn_timeout               = 5000;//连接超时时间（毫秒）
+    private static int _so_timeout               = 30000;//数据响应超时时间（毫秒）
     private static String _agent                 = "Android App";
-    private static long _keep_alive              = 5000;//小于零禁用
+    private static int _keep_alive               = 5000;//小于零禁用
     private static boolean _gzip                 = false;//是否使用gzip
 
     private static boolean _debug                = false;//连接超时时间（毫秒）
@@ -211,7 +211,7 @@ public final class HTTPAccessor {
      * @param requestTimeout 请求超时时间(ms)
      * @param aliveTimeout   请求保持时间(ms)
      */
-    public static void configAccessor(long connectTimeout,long requestTimeout,long aliveTimeout) {
+    public static void configAccessor(int connectTimeout,int requestTimeout,int aliveTimeout) {
         _cn_timeout = connectTimeout;
         _so_timeout = requestTimeout;
         _keep_alive  = aliveTimeout;
@@ -346,6 +346,9 @@ public final class HTTPAccessor {
             throw e;
         }
 
+        if (response == null) {
+            return null;
+        }
 
         int statusCode = response.getStatusLine().getStatusCode();
 

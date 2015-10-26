@@ -11,6 +11,7 @@ import com.orange.m.R;
 import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
@@ -71,11 +72,17 @@ public class LoginViewController extends UIViewController {
                     @Override
                     public void onSuccess(UserBiz.TokenModel tokenModel) {
                         super.onSuccess(tokenModel);
+
+                        //进入主页
+                        finish();
+
+                        App.toast(Res.localized(R.string.login_success));
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         super.onFailure(e);
+                        App.toast(Res.localized(R.string.login_failed));
                     }
 
                     @Override
