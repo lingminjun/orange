@@ -13,13 +13,13 @@ public abstract class BaseModel implements Serializable {
 
     public BaseModel() {}
 
-    public void fillFromJSON(JSONObject object) {
-
+    public boolean fillFromJSON(JSONObject object) {
+        return false;
     }
 
-    public void fillFromOther(Object obj) {
+    public boolean fillFromOther(Object obj) {
         if (obj == null){
-            return;
+            return false;
         }
 
         Class<?> objC = null;//
@@ -32,7 +32,7 @@ public abstract class BaseModel implements Serializable {
         }
 
         if (objC == null) {
-            return;
+            return false;
         }
 
         Field[] fV = objC.getDeclaredFields();
@@ -66,6 +66,7 @@ public abstract class BaseModel implements Serializable {
             }
         }
 
+        return true;
     }
 
 }

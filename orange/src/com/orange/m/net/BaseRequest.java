@@ -76,18 +76,20 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
         T object = null;
         if (response.getStatusCode() == HttpStatus.SC_OK) {
 
-//            JSONObject json = new JSONObject(response.getResponseString());
+            JSONObject json = new JSONObject(response.getResponseString());
 
             //转换成对象
             object = getModel();
 
-            /*
-            if (object != null) {
-                object.fillFromJSON(json);
+            boolean fill = false;
+            if (object != null) {//先看是否能自己fill，不行再采用fastjson
+                fill = object.fillFromJSON(json);
             }
-            */
-            //先用fastjson处理
-            object = (T)com.alibaba.fastjson.JSON.parseObject(response.getResponseString(),object.getClass());
+
+            if (!fill) {
+                //先用fastjson处理
+                object = (T) com.alibaba.fastjson.JSON.parseObject(response.getResponseString(), object.getClass());
+            }
         }
 
         //数据转换
