@@ -1,11 +1,15 @@
 package com.orange.m.net;
 
+import android.util.Log;
 import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.TR;
-import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
+
 
 /**
  * Created by lingminjun on 15/10/21.
@@ -14,6 +18,22 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     private static String _device_token          = "";
     private static String _user_token            = "";
 
+    private Class<T> _modelClass;
+
+    public BaseRequest() {
+        _modelClass =(Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+
+    private T getModel() {
+        try {
+            return _modelClass.newInstance();
+        } catch (Exception e) {
+            Log.e("BaseRequest",_modelClass.getName() + "必须包含一个不带参数的构造函数");
+        }
+        return null;
+    }
+
     /**
      * 认证权限
      */
@@ -21,16 +41,61 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
         NONE,DEVICE,TOKEN
     }
 
+
     @Override
     public T call() throws Exception {
 
-        //请求
-        HttpResponse response = HTTPAccessor.access(this);
 
-        //获取返回值
+//        System.out.println("\ntestGetByJSON\n-----------------------------");
+
+        /*
+        ServiceResponse response = null;
+        RequestParams params = getRequestParams();
+
+        //请求
+        if (restMethod() == HTTPAccessor.REST_METHOD.GET) {
+            response = Resting.get(methodURI(), 8080, params);
+        } else if (restMethod() == HTTPAccessor.REST_METHOD.POST) {
+            response = Resting.post(methodURI(), 8080, params);
+        } else if (restMethod() == HTTPAccessor.REST_METHOD.PUT) {
+            response = Resting.put(methodURI(), 8080, params);
+        } else if (restMethod() == HTTPAccessor.REST_METHOD.DELETE) {
+            response = Resting.delete(methodURI(), 8080, params);
+        }
+        //解析数据
+        if (response.getStatusCode() == HttpStatus.SC_OK) {
+            String content = response.getResponseString();
+            Log.e("res:",content);
+        }
+        */
+
+        HTTPAccessor.ServerResponse response = HTTPAccessor.access(this);
+
+        //获取返回值，开始解析
+        T object = null;
+        if (response.getStatusCode() == HttpStatus.SC_OK) {
+            JSONObject json = new JSONObject(response.getResponseString());
+
+            //转换成对象
+            object = getModel();
+
+            if (object != null) {
+                object.fillFromJSON(json);
+            }
+        }
 
         //数据转换
-        return null;
+        return object;
+    }
+
+    public static <T> T createInstance(Class<T> cls) {
+        T obj=null;
+        try {
+            obj=cls.newInstance();
+        } catch (Exception e) {
+            obj=null;
+        }
+        return obj;
     }
 
     public abstract String path();
@@ -48,29 +113,30 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     @Override
     public HashMap<String, Object> parameter() {
         HashMap<String, Object> ps = new HashMap<>();
+
         params(ps);
 
-        if (authLevel() == AUTH_LEVEL.DEVICE) {
-            ps.put("deviceToken",_device_token);
-        }
-
-        if (authLevel() == AUTH_LEVEL.TOKEN) {
-            ps.put("token",_user_token);
-        }
-
-        //其他公共参数添加
+        //添加其他公共参数添加
+//
+//        if (authLevel() == AUTH_LEVEL.DEVICE) {
+//            ps.put("deviceToken",_device_token);
+//        }
+//
+//        if (authLevel() == AUTH_LEVEL.TOKEN) {
+//            ps.put("token",_user_token);
+//        }
 
         return ps;
     }
 
-    @Override
-    public boolean postToJson() {
-        return true;
-    }
 
     @Override
-    public boolean forcePost() {
-        return false;
+    public abstract HTTPAccessor.REST_METHOD method();
+
+    @Override
+    public HTTPAccessor.PARAM_ENCODE_TYPE encode() {
+        //更具服务器需要配置
+        return HTTPAccessor.PARAM_ENCODE_TYPE.JSON;
     }
 
     @Override
@@ -97,4 +163,18 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
         _user_token = TR.string(token);
         HTTPAccessor.setAuthToken(_user_token);
     }
+
+//    private RequestParams getRequestParams() {
+//        HashMap<String, String> ps = new HashMap<>();
+//        params(ps);
+//
+//        RequestParams params = new BasicRequestParams();
+//        Set<String> keys = ps.keySet();
+//        for (String key : keys) {
+//            String value = ps.get(key);
+//            params.add(key,value);
+//        }
+//
+//        return params;
+//    }
 }

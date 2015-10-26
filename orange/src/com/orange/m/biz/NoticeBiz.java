@@ -3,6 +3,7 @@ package com.orange.m.biz;
 import com.orange.m.net.BaseModel;
 import com.orange.m.net.BaseModelList;
 import com.orange.m.net.BaseRequest;
+import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
 
 import java.util.HashMap;
@@ -36,6 +37,11 @@ public final class NoticeBiz {
             }
 
             @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.POST;
+            }
+
+            @Override
             public void params(HashMap<String, Object> params) {
                 params.put("content",notice.content);
                 params.put("longitude",notice.longitude);
@@ -59,8 +65,13 @@ public final class NoticeBiz {
             }
 
             @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
+            }
+
+            @Override
             public void params(HashMap<String, Object> params) {
-                params.put("from",from);
+                params.put("from",Long.toString(from));
                 params.put("longitude",longitude);
                 params.put("latitude",latitude);
             }

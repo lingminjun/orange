@@ -3,6 +3,7 @@ package com.orange.m.biz;
 import com.orange.m.net.BaseModel;
 import com.orange.m.net.BaseModelList;
 import com.orange.m.net.BaseRequest;
+import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
 
 import java.util.Date;
@@ -37,6 +38,11 @@ public final class MessageBiz {
             }
 
             @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.POST;
+            }
+
+            @Override
             public void params(HashMap<String, Object> params) {
                 params.put("content",content);
                 params.put("receiverId",Long.toString(toId));
@@ -58,6 +64,11 @@ public final class MessageBiz {
             @Override
             public AUTH_LEVEL authLevel() {
                 return AUTH_LEVEL.TOKEN;
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
             }
 
             @Override

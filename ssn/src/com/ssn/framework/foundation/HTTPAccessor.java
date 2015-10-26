@@ -3,25 +3,26 @@ package com.ssn.framework.foundation;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.*;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.CharArrayBuffer;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by lingminjun on 15/10/21.
@@ -33,7 +34,7 @@ public final class HTTPAccessor {
      */
     private static long _cn_timeout              = 5000;//连接超时时间（毫秒）
     private static long _so_timeout              = 30000;//数据响应超时时间（毫秒）
-    private static String _agent                 = "android";
+    private static String _agent                 = "Android App";
     private static long _keep_alive              = 5000;//小于零禁用
     private static boolean _gzip                 = false;//是否使用gzip
 
@@ -43,6 +44,147 @@ public final class HTTPAccessor {
 
 //    private static String _device_token          = "";
     private static String _auth_token            = "";
+
+
+    /**
+     * 服务器返回的响应数据
+     */
+    public static final class ServerResponse {
+
+        private int statusCode = 500;
+        private Header[] responseHeaders;
+        private String contentString;
+        private long contentLength;
+
+        public ServerResponse(HttpResponse response) {
+
+            assert response!=null:"HttpResponse should not be null";
+            try {
+                if (response !=null){
+
+                    InputStream inputStream=null;
+
+                    this.statusCode = response.getStatusLine().getStatusCode();
+                    this.responseHeaders=response.getAllHeaders();
+
+                    HttpEntity httpEntity = response.getEntity();
+
+                    this.contentLength = httpEntity.getContentLength();
+
+                    inputStream = httpEntity.getContent();
+
+                    Header contentType = httpEntity.getContentEncoding();
+                    if (contentType != null) {
+                        String value = contentType.getValue();
+                        if (value != null && value.contains("gzip")) {
+                            inputStream = new GZIPInputStream(inputStream);
+                        }
+                    }
+
+                    InputStreamReader in = new InputStreamReader(inputStream, "utf-8");
+                    StringBuilder sb = new StringBuilder();
+                    char[] cs = new char[2048];
+                    int size = 0;
+                    while ((size = in.read(cs)) >= 0) {
+                        sb.append(cs, 0, size);
+                    }
+
+                    this.contentString = sb.toString();
+
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } else {
+                    throw new NullPointerException("HTTP response is null. Please check availability of endpoint service.");
+                }
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch(Exception e){
+                e.printStackTrace();
+            }finally{}//try
+
+        }//ServiceResponse
+
+        /**
+         * Get status code of http response
+         *
+         * @return http status code
+         */
+        public int getStatusCode() {
+            return statusCode;
+        }//getStatusCode
+
+        /**
+         * @return HTTP response content as a string
+         */
+
+        public String getResponseString() {
+            return contentString;
+        }//getResponseInString
+
+        /**
+         * Get the response headers of the HTTP response.
+         *
+         * @return Array of response headers, in name-value pair in {@link org.apache.http.Header} objects.
+         */
+        public Header[] getResponseHeaders(){
+            assert responseHeaders.length>0:"Response headers can not be null.";
+            return responseHeaders;
+        }//getResponseHeaders
+
+        /**
+         * Returns the content length of the HTTP response
+         *
+         * @return Content length
+         */
+        public long getResponseLength(){
+            return contentLength;
+        }//getResponseLengths
+
+
+        @Override
+        public String toString(){
+            long length=150;
+            length=contentLength+length;
+            for(Header header:responseHeaders){
+                length+=header.getName().length()+header.getValue().length()+3;
+            }
+            CharArrayBuffer buffer= new CharArrayBuffer((int)length);
+            buffer.append("\nServiceResponse\n---------------\nHTTP Status: ");
+            buffer.append(statusCode);
+            buffer.append("\nHeaders: \n");
+            for(Header header:responseHeaders){
+                buffer.append(header.getName());
+                buffer.append(" : ");
+                buffer.append(header.getValue());
+                buffer.append("\n");
+            }
+
+            buffer.append("Response body: \n");
+            buffer.append(contentString);
+            buffer.append("\n----------------\n");
+
+            return buffer.toString();
+        }//toString
+    }
+
+    /**
+     * 请求方式
+     */
+    public static enum REST_METHOD {
+        GET,POST,PUT,DELETE
+    }
+
+    /**
+     * 参数编码方式
+     * QUERY:值键对，通过&分割
+     * JSON:
+     */
+    public static enum PARAM_ENCODE_TYPE {
+        QUERY,JSON
+    }
 
 //    /**
 //     * 认证权限
@@ -56,10 +198,11 @@ public final class HTTPAccessor {
      */
     public static interface HTTPRequest {
         public String methodURI();//请求地址 如 http://www.xxx.com/mothod
-        public HashMap<String,Object> parameter();//返回参数，Object仅仅支持String或者List<String>
-        public boolean postToJson();//当post时是否转换成json
+        public HashMap<String,Object> parameter();//返回参数，Object仅仅支持String
         public boolean auth();
-        public boolean forcePost();//强制post
+        public REST_METHOD method();    //调用方法
+
+        public PARAM_ENCODE_TYPE encode();//是否传输json文件
     }
 
     /**
@@ -120,7 +263,7 @@ public final class HTTPAccessor {
      * @return
      * @throws Exception
      */
-    public static HttpResponse access(HTTPRequest request) throws Exception {
+    public static ServerResponse access(HTTPRequest request) throws Exception {
         if (_debug) {
             if (Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper()) {
                 System.exit(-1);
@@ -135,47 +278,52 @@ public final class HTTPAccessor {
         DefaultHttpClient hClient = getHttpClient();
 
         HashMap<String,Object> parameter = request.parameter();
-//        HashMap<String,Object> tem = request.parameter();
-//        if (tem != null) {
-//            parameter.putAll(tem);
-//        }
-//
-//        //权限认证
-//        if (request.auth() == AUTH_LEVEL.DEVICE) {
-//            parameter.put("deviceToken",_device_token);
-//        }
 
-        String params = URLHelper.URLQueryString(parameter);
-
-//        String cid = "" + (long) (Math.random() * 10000000000L);
         HttpResponse response = null;
 
-        boolean bigThan200 = params.length() > 200;
-        HttpRequestBase httpRequest = null;
-        if (bigThan200 || request.forcePost()) {
-            httpRequest = new HttpPost(request.methodURI());
+        //rest支持
+        //http://zhidao.baidu.com/link?url=b_cXrtCsZFejBqBqL2jTzxu-lu-X5U7pzskAC2WVrkwAFf1-Pq3lPAc62t_i2hGOBhsHyM-7hlZT0JCPsf3Bbq
 
+
+        HttpRequestBase httpRequest = null;
+
+        if (request.method() == REST_METHOD.GET) {
+            String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
+            httpRequest = new HttpGet(url);
+        } else if (request.method() == REST_METHOD.POST) {
+            httpRequest = new HttpPost(request.methodURI());
             try {
 
-                boolean json = request.postToJson();
-                if (json) {
-                    params = new JSONObject(parameter).toString();
-                }
-
-                StringEntity se = new StringEntity(params, "utf-8");
-                if (json) {
+                StringEntity se = encodeParam(parameter,request.encode());
+                if (request.encode() == PARAM_ENCODE_TYPE.JSON) {
                     se.setContentType("application/json");
                 } else {
                     se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
                 }
-                ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
-            } catch (Throwable e) {
-            }
 
-        } else {
+                ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
+            } catch (Throwable e) { }
+        } else if (request.method() == REST_METHOD.PUT) {
+            httpRequest = new HttpPut(request.methodURI());
+
+            try {
+
+                StringEntity se = encodeParam(parameter,request.encode());
+                if (request.encode() == PARAM_ENCODE_TYPE.JSON) {
+                    se.setContentType("application/json");
+                } else {
+                    se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+                }
+
+                ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
+            } catch (Throwable e) { }
+        } else if (request.method() == REST_METHOD.PUT) {
             String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
-            httpRequest = new HttpGet(url);
+            httpRequest = new HttpDelete(url);
         }
+
+        //设置接收数据为json
+        httpRequest.setHeader("Accept", "application/json");
 
         if (_keep_alive < 0) {
             httpRequest.setHeader("Connection", "close");
@@ -189,8 +337,6 @@ public final class HTTPAccessor {
         if (request.auth() && !TextUtils.isEmpty(_auth_token)) {
             httpRequest.setHeader("Authorization", _auth_token);
         }
-
-        Log.e("request:",params);
 
         try {
             response = hClient.execute(httpRequest);
@@ -208,7 +354,35 @@ public final class HTTPAccessor {
             _ntt_diff = getNetTime(response);
         }
 
-        return response;
+        //返回响应
+        if (response != null) {
+            return new ServerResponse(response);
+        }
+
+        return null;
+    }
+
+
+    private static StringEntity encodeParam(HashMap<String,Object> params,PARAM_ENCODE_TYPE type) throws Exception {
+        if (type == PARAM_ENCODE_TYPE.JSON) {
+            String json = new JSONObject(params).toString();
+            return new StringEntity(json, "utf-8");
+        } else if (type == PARAM_ENCODE_TYPE.QUERY) {
+
+            /*
+            final List<NameValuePair> dataList = new ArrayList<>();
+            Set<String> keys = params.keySet();
+            for (String key : keys) {
+                String value = (String)params.get(key);
+                dataList.add(new BasicNameValuePair(key, value));
+            }
+            return new UrlEncodedFormEntity(dataList, "UTF-8");
+            */
+
+            String query = URLHelper.URLQueryString(params);
+            return new StringEntity(query, "utf-8");
+        }
+        return null;
     }
 
 

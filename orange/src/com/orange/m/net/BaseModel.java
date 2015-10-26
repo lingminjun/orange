@@ -1,6 +1,7 @@
 package com.orange.m.net;
 
 import android.util.Log;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -8,9 +9,15 @@ import java.lang.reflect.Field;
 /**
  * Created by lingminjun on 15/10/25.
  */
-public class BaseModel implements Serializable {
+public abstract class BaseModel implements Serializable {
 
-    public void setValue(Object obj) {
+    public BaseModel() {}
+
+    public void fillFromJSON(JSONObject object) {
+
+    }
+
+    public void fillFromOther(Object obj) {
         if (obj == null){
             return;
         }

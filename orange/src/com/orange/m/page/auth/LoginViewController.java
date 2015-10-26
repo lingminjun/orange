@@ -1,13 +1,17 @@
 package com.orange.m.page.auth;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
+import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIEvent;
@@ -21,6 +25,9 @@ public class LoginViewController extends UIViewController {
     Button loginBtn;
     Button registerBtn;
     TextView forgetPswdBtn;
+
+    EditText accountEdit;
+    EditText passwordEdit;
 
     @Override
     public void onInit(Bundle args) {
@@ -37,6 +44,9 @@ public class LoginViewController extends UIViewController {
         loginBtn = (Button)view.findViewById(R.id.login_btn);
         registerBtn = (Button)view.findViewById(R.id.register_btn);
         forgetPswdBtn = (TextView)view.findViewById(R.id.forget_psw_tv);
+
+        accountEdit = (EditText)view.findViewById(R.id.user_name_edt);
+        passwordEdit = (EditText)view.findViewById(R.id.psw_edt);
         return view;
     }
 
@@ -49,6 +59,31 @@ public class LoginViewController extends UIViewController {
         loginBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String account = getInputString(accountEdit);
+                String password = getInputString(passwordEdit);
+
+                RPC.Response<UserBiz.TokenModel> response = new RPC.Response<UserBiz.TokenModel>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onSuccess(UserBiz.TokenModel tokenModel) {
+                        super.onSuccess(tokenModel);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        super.onFailure(e);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                    }
+                };
+                UserBiz.login(account,password,response);
             }
         }));
 
@@ -75,5 +110,13 @@ public class LoginViewController extends UIViewController {
     public void onViewDidAppear() {
         super.onViewDidAppear();
 
+    }
+
+    private static String getInputString(EditText editText) {
+        Editable editable = editText.getText();
+        if (editable != null) {
+            return editable.toString().trim();
+        }
+        return "";
     }
 }

@@ -13,6 +13,7 @@
     <modules>
         <module>orange</module>
         <module>ssn</module>
+        <!--<module>resting</module>-->
     </modules>
 
     <properties>
@@ -37,6 +38,11 @@
                 <artifactId>ssn</artifactId>
                 <version>1.0.0</version>
                 <type>aar</type>
+            </dependency>
+            <dependency>
+                <groupId>com.google.resting</groupId>
+                <artifactId>resting-android</artifactId>
+                <version>1.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

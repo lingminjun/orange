@@ -2,6 +2,7 @@ package com.orange.m.biz;
 
 import com.orange.m.net.BaseModel;
 import com.orange.m.net.BaseRequest;
+import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
 
 import java.util.HashMap;
@@ -41,7 +42,12 @@ public final class UserBiz {
         BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
             @Override
             public String path() {
-                return "register";
+                return "user";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.POST;
             }
 
             @Override
@@ -61,7 +67,12 @@ public final class UserBiz {
         BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
             @Override
             public String path() {
-                return "login";
+                return "user";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
             }
 
             @Override
@@ -80,6 +91,11 @@ public final class UserBiz {
             @Override
             public String path() {
                 return "refreshToken";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.PUT;
             }
 
             @Override
@@ -112,6 +128,11 @@ public final class UserBiz {
             }
 
             @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.PUT;
+            }
+
+            @Override
             public void params(HashMap<String, Object> params) {
                 params.put("nickname",nick);
             }
@@ -133,6 +154,11 @@ public final class UserBiz {
             @Override
             public String path() {
                 return "smsAuthCode";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
             }
 
             @Override
