@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.BroadcastCenter;
+import com.ssn.framework.foundation.TR;
 import com.ssn.framework.foundation.URLHelper;
 import com.ssn.framework.uikit.inc.ViewController;
 
@@ -42,6 +43,10 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
     private boolean _isPause;
 
     private String _navigator_uri;
+
+    public String getURI() {
+        return TR.string(_navigator_uri);
+    }
 
     /**
      * 获取xml

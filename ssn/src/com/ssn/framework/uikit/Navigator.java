@@ -163,6 +163,23 @@ public class Navigator implements ActivityTracking {
     }
     public void onActivitySaveInstanceState(Activity activity,Bundle outState) {}
 
+    public Activity getExistActivity(String url) {
+
+        String uri = URLHelper.getURLFinderPath(url);
+
+        if (TextUtils.isEmpty(uri)) {return null;}
+
+        for (Activity activity : _stack) {
+            if (activity instanceof BaseActivity) {
+                if (((BaseActivity) activity).getURI().equals(uri)) {
+                    return activity;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void finishTopActivity() {
         Activity last = _stack.lastElement();
         if (last != null) {

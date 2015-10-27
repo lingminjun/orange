@@ -1,5 +1,6 @@
 package com.orange.m.page;
 
+import android.app.Activity;
 import android.os.Bundle;
 import com.orange.m.biz.UserCenter;
 import com.ssn.framework.uikit.BaseTabActivity;
@@ -13,33 +14,40 @@ import java.util.ArrayList;
 public final class PageCenter {
 
     public static void goHome() {
-        Bundle args = new Bundle();
 
-        ArrayList<BaseTabActivity.IntentTabItem> list = new ArrayList<BaseTabActivity.IntentTabItem>();
-        {
-            BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-            tabItem.url = "http://m.orangestar.com/pop.html";
-            tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
-            list.add(tabItem);
+        Activity mainActivity = Navigator.shareInstance().getExistActivity(PageURLs.MAIN_URL);
+        if (mainActivity != null) {
+            Navigator.shareInstance().finishToActivity(mainActivity);
+            return;
+        } else {
+            Bundle args = new Bundle();
+
+            ArrayList<BaseTabActivity.IntentTabItem> list = new ArrayList<BaseTabActivity.IntentTabItem>();
+            {
+                BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
+                tabItem.url = "http://m.orangestar.com/pop.html";
+                tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
+                list.add(tabItem);
+            }
+
+            {
+                BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
+                tabItem.url = "http://m.orangestar.com/chat.html";
+                tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
+                list.add(tabItem);
+            }
+
+            {
+                BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
+                tabItem.url = "http://m.orangestar.com/me.html";
+                tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
+                list.add(tabItem);
+            }
+
+            args.putParcelableArrayList(BaseTabActivity.TAB_FRAGMENT_CLASS_LIST_KEY, list);
+
+            Navigator.shareInstance().openURL(PageURLs.MAIN_URL, args);
         }
-
-        {
-            BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-            tabItem.url = "http://m.orangestar.com/chat.html";
-            tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
-            list.add(tabItem);
-        }
-
-        {
-            BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-            tabItem.url = "http://m.orangestar.com/me.html";
-            tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
-            list.add(tabItem);
-        }
-
-        args.putParcelableArrayList(BaseTabActivity.TAB_FRAGMENT_CLASS_LIST_KEY, list);
-
-        Navigator.shareInstance().openURL("http://m.orangestar.com/main.html",args);
     }
 
     public static interface AuthCallBack {
