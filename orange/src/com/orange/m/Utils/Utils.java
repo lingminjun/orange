@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -1083,5 +1084,14 @@ public final class Utils /*extends CommonUtil*/ {
             }
         }
         return result;
+    }
+
+
+    public static String getInputString(EditText editText) {
+        Editable editable = editText.getText();
+        if (editable != null) {
+            return editable.toString().trim();
+        }
+        return "";
     }
 }

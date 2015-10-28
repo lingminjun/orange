@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.Utils.Utils;
 import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
@@ -60,8 +61,8 @@ public class LoginViewController extends UIViewController {
         loginBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String account = getInputString(accountEdit);
-                String password = getInputString(passwordEdit);
+                String account = Utils.getInputString(accountEdit);
+                String password = Utils.getInputString(passwordEdit);
 
                 RPC.Response<UserBiz.TokenModel> response = new RPC.Response<UserBiz.TokenModel>() {
                     @Override
@@ -117,13 +118,5 @@ public class LoginViewController extends UIViewController {
     public void onViewDidAppear() {
         super.onViewDidAppear();
 
-    }
-
-    private static String getInputString(EditText editText) {
-        Editable editable = editText.getText();
-        if (editable != null) {
-            return editable.toString().trim();
-        }
-        return "";
     }
 }

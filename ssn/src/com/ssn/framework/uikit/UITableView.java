@@ -92,37 +92,13 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         }
 
         public void setPullRefreshEnabled(boolean enable) {
-            PullToRefreshBase.Mode mode = _tableView._tableView.getMode();
-            if (enable) {
-                if (mode == PullToRefreshBase.Mode.PULL_FROM_END) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.BOTH);
-                } else if (mode == PullToRefreshBase.Mode.DISABLED) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                }
-            } else if (!enable) {
-                if (mode == PullToRefreshBase.Mode.BOTH) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                } else if (mode == PullToRefreshBase.Mode.PULL_FROM_START) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);
-                }
-            }
+            this.completedLoad();
+            _tableView._tableView.setPullUpEnable(enable);
         }
 
         public void setPullLoadMoreEnabled(boolean enable) {
-            PullToRefreshBase.Mode mode = _tableView._tableView.getMode();
-            if (enable) {
-                if (mode == PullToRefreshBase.Mode.PULL_FROM_START) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.BOTH);
-                } else if (mode == PullToRefreshBase.Mode.DISABLED) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                }
-            } else {
-                if (mode == PullToRefreshBase.Mode.BOTH) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                } else if (mode == PullToRefreshBase.Mode.PULL_FROM_END) {
-                    _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);
-                }
-            }
+            this.completedLoad();
+            _tableView._tableView.setPullDownEnable(enable);
         }
 
         /**
@@ -489,6 +465,8 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_table_view_layout, this);
         _tableView = (PullToRefreshListView)findViewById(R.id.ssn_list_view);
+        _headerLayout = (FrameLayout)findViewById(R.id.ssn_header_layout);
+        _footerLayout = (FrameLayout)findViewById(R.id.ssn_footer_layout);
     }
 
 
@@ -554,22 +532,22 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
-    /**
-     * listview添加底部view
-     *
-     * @param view
-     */
-    public void setFooterView(View view) {
-        addExtraView(view, RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-    }
+    private View _headerView;
+    private View _footerView;
 
     /**
      * listview添加底部view
      *
      * @param view
      */
-    public void setFooterView(View view, int height) {
-        addExtraView(view, RelativeLayout.ALIGN_PARENT_BOTTOM, height);
+    public void setFooterView(View view) {
+        if (_footerView != null) {
+            _footerLayout.removeView(_footerView);
+        }
+        _footerView = view;
+        if (view != null) {
+            _footerLayout.addView(view);
+        }
     }
 
     /**
@@ -578,95 +556,16 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
      * @param view
      */
     public void setHeaderView(View view) {
-        addExtraView(view, RelativeLayout.ALIGN_PARENT_TOP, -1);
-    }
-
-    /**
-     * listview添加顶部view
-     *
-     * @param view
-     */
-    public void setHeaderView(View view, int height) {
-        addExtraView(view, RelativeLayout.ALIGN_PARENT_TOP, height);
-    }
-
-
-    private View _headerView;
-    private View _footerView;
-
-    /**
-     * 页面添加额外的view
-     *
-     * @param view
-     * @param position       比如顶部、底部
-     * @param moveLvDistance listview需要为view空出的位置大小，如小于0则默认为view的高度
-     */
-    private void addExtraView(View view, int position, int moveLvDistance) {
-        RelativeLayout layout = (RelativeLayout) this;
-
-        if (position == RelativeLayout.ALIGN_PARENT_TOP) {
-            if (_headerView != null) {
-                layout.removeView(_headerView);
-            }
-            _headerView = view;
-        } else if (position == RelativeLayout.ALIGN_PARENT_BOTTOM) {
-            if (_footerView != null) {
-                layout.removeView(_footerView);
-            }
-            _footerView = view;
+        if (_headerView != null) {
+            _headerLayout.removeView(_headerView);
         }
-
-        layout.addView(view);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        if (position == RelativeLayout.ALIGN_PARENT_BOTTOM) {
-            params.addRule(position, RelativeLayout.TRUE);//align top 不用该方式
-        } else {
-            params.addRule(position, RelativeLayout.TRUE);//align top 不用该方式
-//            params.addRule(RelativeLayout.BELOW, R.id.top_menu_bar);
-        }
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        RelativeLayout.LayoutParams listParams = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
-        int viewHeight = view.getHeight();
-        if (viewHeight <= 0) {
-            int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            view.measure(w, h);
-            viewHeight = view.getMeasuredHeight();
-        }
-        switch (position) {
-            case RelativeLayout.ALIGN_PARENT_TOP:
-                listParams.topMargin += moveLvDistance < 0 ? viewHeight : moveLvDistance;
-                break;
-            case RelativeLayout.ALIGN_PARENT_BOTTOM:
-                listParams.bottomMargin = moveLvDistance < 0 ? viewHeight : moveLvDistance;
-                break;
-        }
-        _tableView.setLayoutParams(listParams);
-    }
-
-    /**
-     * 调整底部高度
-     */
-    public void resizeHeaderViewHeight() {
-        if (_headerView == null) {return;}
-        if (_tableView != null) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
-            params.topMargin = _headerView.getHeight();
-            _tableView.setLayoutParams(params);
+        _headerView = view;
+        if (view != null) {
+            _headerLayout.addView(view);
         }
     }
-
-    public void resizeFooterViewHeight() {
-        if (_tableView != null) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) _tableView.getLayoutParams();
-            params.bottomMargin = _footerView.getHeight();
-            _tableView.setLayoutParams(params);
-        }
-    }
-
-
 
     private PullToRefreshListView _tableView;
+    private FrameLayout _headerLayout;
+    private FrameLayout _footerLayout;
 }

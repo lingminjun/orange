@@ -359,7 +359,12 @@ public final class HTTPAccessor {
 
         //返回响应
         if (response != null) {
-            return new ServerResponse(response);
+            ServerResponse serverResponse = new ServerResponse(response);
+
+            String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
+            Log.i("HTTP","\nreq:["+url+"]\nres:["+serverResponse.toString()+"]");
+
+            return serverResponse;
         }
 
         return null;

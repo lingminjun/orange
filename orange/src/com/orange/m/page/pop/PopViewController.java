@@ -72,7 +72,7 @@ public class PopViewController extends UITableViewController {
         Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
             @Override
             public void onChanged(int newHeight, int oldHeight) {
-                tableView().resizeFooterViewHeight();
+//                tableView().resizeFooterViewHeight();
             }
         });
 
@@ -113,14 +113,6 @@ public class PopViewController extends UITableViewController {
                     Keyboard.shareInstance().dismiss(false);
                     tableViewAdapter().setPullRefreshEnabled(true);
                 }
-
-                //必须延迟，否则高度没有变化
-                TaskQueue.mainQueue().executeDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tableView().resizeFooterViewHeight();
-                    }
-                }, 50);
             }
         };
 

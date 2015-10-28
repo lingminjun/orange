@@ -200,6 +200,7 @@ public class Navigator implements ActivityTracking {
                 return;
             }
 
+            _stack.remove(last);
             last.finish();
         } while (true);
     }

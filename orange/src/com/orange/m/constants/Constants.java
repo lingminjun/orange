@@ -5,4 +5,6 @@ package com.orange.m.constants;
  */
 public final class Constants {
     public static final String PAGE_ARG_NEXT_URL = "next_url";
+    public static final String PAGE_ARG_MOBILE   = "mobile";
+    public static final String PAGE_ARG_SMS_CODE  = "sms_code";
 }

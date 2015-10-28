@@ -4,6 +4,11 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:layout_above="@+id/ssn_list_view"
+                 android:id="@+id/ssn_header_layout"/>
     <com.ssn.framework.uikit.pullview.PullToRefreshListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -12,5 +17,10 @@
             ptr:ptrAnimationStyle="rotate"
             ptr:ptrScrollingWhileRefreshingEnabled="true"
             ptr:ptrMode="both"
+            android:layout_above="@+id/ssn_footer_layout"
             android:id="@+id/ssn_list_view"/>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:id="@+id/ssn_footer_layout"/>
 </RelativeLayout>

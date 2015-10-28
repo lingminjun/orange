@@ -4,13 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.Utils.Utils;
 import com.orange.m.constants.Constants;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UIViewController;
+
+import java.util.HashMap;
 
 /**
  * Created by lingminjun on 15/9/26.
@@ -18,6 +22,8 @@ import com.ssn.framework.uikit.UIViewController;
 public class CheckMobileViewController extends UIViewController {
 
     Button nexBtn;
+    EditText mobileEdit;
+    EditText smsCodeEdit;
     TextView sendSMSCode;
 
     String nextURL;
@@ -38,6 +44,8 @@ public class CheckMobileViewController extends UIViewController {
         View view = inflater.inflate(R.layout.check_mobile_layout, null);
         nexBtn = (Button)view.findViewById(R.id.next_btn);
         sendSMSCode = (TextView)view.findViewById(R.id.send_sms_code_tv);
+        mobileEdit = (EditText)view.findViewById(R.id.mobile_edt);
+        smsCodeEdit = (EditText)view.findViewById(R.id.code_edt);
         return view;
     }
 
@@ -50,7 +58,14 @@ public class CheckMobileViewController extends UIViewController {
         nexBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigator.shareInstance().openURL(nextURL);
+
+                String mobile = Utils.getInputString(mobileEdit);
+                String smsCode = Utils.getInputString(smsCodeEdit);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.PAGE_ARG_MOBILE, mobile);
+                bundle.putString(Constants.PAGE_ARG_SMS_CODE, smsCode);
+                Navigator.shareInstance().openURL(nextURL,bundle);
             }
         }));
     }

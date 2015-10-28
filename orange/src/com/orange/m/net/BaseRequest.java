@@ -2,9 +2,8 @@ package com.orange.m.net;
 
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
-import com.ssn.framework.foundation.HTTPAccessor;
-import com.ssn.framework.foundation.RPC;
-import com.ssn.framework.foundation.TR;
+import com.orange.m.R;
+import com.ssn.framework.foundation.*;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
@@ -18,6 +17,37 @@ import java.util.HashMap;
 public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> implements HTTPAccessor.HTTPRequest {
     private static String _device_token          = "";
     private static String _user_token            = "";
+
+    /**
+     * 异常处理
+     */
+    public static class APIException extends RuntimeException {
+        public int code;
+        public String domain;
+        public String name;
+
+        public APIException() {
+            super();
+        }
+
+        public APIException(String detailMessage) {
+            super(detailMessage);
+        }
+    }
+
+    private static class HTTPError extends BaseModel {
+        private int errorCode;
+        private String name;
+        private String message;
+
+        private APIException exception() {
+            APIException exception = new APIException(message == null ? name : message);
+            exception.code = errorCode;
+            exception.name = name;
+            exception.domain = "API";
+            return exception;
+        }
+    }
 
     private Class<T> _modelClass;
 
@@ -89,6 +119,17 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             if (!fill) {
                 //先用fastjson处理
                 object = (T) com.alibaba.fastjson.JSON.parseObject(response.getResponseString(), object.getClass());
+            }
+        } else {
+            HTTPError error = (HTTPError)com.alibaba.fastjson.JSON.parseObject(response.getResponseString(), HTTPError.class);
+            if (error != null) {
+                throw error.exception();
+            } else {
+                error = new HTTPError();
+                error.errorCode = -1;
+                error.message = Res.localized(R.string.unknown_exception);
+                error.name = "UNKNOWN_EXCEPTION";
+                throw error.exception();
             }
         }
 
