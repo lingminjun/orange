@@ -64,12 +64,21 @@ public class RegisterViewController extends UIViewController {
                 String nick = Utils.getInputString(nickEdit);
                 String password = Utils.getInputString(pswdEdit);
 
-                UserBiz.register(mobile,smsCode,password,nick, new RPC.Response<UserBiz.TokenModel>() {
+                String sms = "3721";
+
+                UserBiz.register(mobile,sms,password,nick, new RPC.Response<UserBiz.TokenModel>() {
                     @Override
                     public void onSuccess(UserBiz.TokenModel tokenModel) {
                         super.onSuccess(tokenModel);
 
                         PageCenter.goHome();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        super.onFailure(e);
+
+
                     }
                 });
 
