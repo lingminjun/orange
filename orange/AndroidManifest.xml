@@ -65,7 +65,6 @@
             </intent-filter>
         </activity>
         <activity android:name="com.ssn.framework.uikit.BaseNavActivity"
-                  android:theme="@style/ssn_ui_page_push_style"
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="adjustResize|stateHidden">

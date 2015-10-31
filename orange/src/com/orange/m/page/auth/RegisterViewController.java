@@ -36,6 +36,7 @@ public class RegisterViewController extends UIViewController {
         navigationItem().setBottomLineHidden(true);
         navigationItem().setTitleColor(Res.color(R.color.white));
 
+        //获取参数
         Bundle bundle = getArguments();
         mobile = bundle.getString(Constants.PAGE_ARG_MOBILE);
         smsCode = bundle.getString(Constants.PAGE_ARG_SMS_CODE);

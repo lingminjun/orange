@@ -23,4 +23,8 @@
     <string name="login_failed">登录失败</string>
     <string name="sms_code">验证码</string>
     <string name="unknown_exception">未知错误</string>
+    <string name="please_input_password">请输入3~18位密码</string>
+    <string name="confirm_password_error">确认密码错误</string>
+    <string name="please_input_mobile">请输入手机号</string>
+    <string name="please_input_sms_code">请输入短信验证码</string>
 </resources>

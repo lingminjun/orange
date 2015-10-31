@@ -135,6 +135,41 @@ public final class UserBiz {
         return RPC.call(request,response);
     }
 
+    public static RPC.Cancelable resetPassword(final String mobile, final String smsCode, final String password, final RPC.Response<TokenModel> response){
+
+        BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
+            @Override
+            public String path() {
+                return "updateUser";
+            }
+
+            @Override
+            public AUTH_LEVEL authLevel() {
+                return AUTH_LEVEL.TOKEN;
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.PUT;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                params.put("mobile",mobile);
+                params.put("smsAuthCode",smsCode);
+                params.put("password",password);
+            }
+        };
+
+        return RPC.call(request,response);
+    }
+
+    /**
+     * 修改nick
+     * @param nick
+     * @param response
+     * @return
+     */
     public static RPC.Cancelable updateUser(final String nick, final RPC.Response<TokenModel> response){
 
         BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
@@ -169,6 +204,8 @@ public final class UserBiz {
      * @param response
      * @return
      */
+    public static final String SMS_CODE_TYPE_FORGET = "forget_pw";
+    public static final String SMS_CODE_TYPE_REGISTER = "register";
     public static RPC.Cancelable requestSMSCode(final String mobile, final String type, final RPC.Response<SMSCodeModel> response){
 
         BaseRequest<SMSCodeModel> request = new BaseRequest<SMSCodeModel>() {
