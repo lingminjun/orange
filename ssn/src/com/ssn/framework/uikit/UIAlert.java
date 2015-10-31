@@ -48,7 +48,7 @@ public final class UIAlert {
      * @return
      */
     public static Dialog showAlert(@NonNull Context context, @Nullable final String title, @NonNull final String msg, @NonNull final String ok, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
-        final Dialog dialog = new Dialog(context, R.style.ui_alert_style);
+        final Dialog dialog = new Dialog(context, R.style.ssn_ui_alert_style);
         dialog.setCanceledOnTouchOutside(false);
 
         View layout = null;
@@ -125,7 +125,7 @@ public final class UIAlert {
      * @return
      */
     public static Dialog showCustomAlert(@NonNull Context context, @NonNull View contentView, @NonNull final String ok, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
-        final Dialog dialog = new Dialog(context, R.style.ui_alert_style);
+        final Dialog dialog = new Dialog(context, R.style.ssn_ui_alert_style);
         dialog.setCanceledOnTouchOutside(false);
 
         View layout = null;

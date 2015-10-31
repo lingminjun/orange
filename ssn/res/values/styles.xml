@@ -2,55 +2,55 @@
 <resources>
 
     <!--页面压栈-->
-    <style name="ui_page_push_style" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="ssn_ui_page_push_style" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/ui_page_push_animation</item>
+        <item name="android:windowAnimationStyle">@style/ssn_ui_page_push_animation</item>
     </style>
-    <style name="ui_page_push_animation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
+    <style name="ssn_ui_page_push_animation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ssn_slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseExitAnimation">@anim/ssn_slide_right_out</item>
     </style>
 
     <!--root展示-->
-    <style name="ui_page_root_style" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="ssn_ui_page_root_style" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/ui_page_root_animation</item>
+        <item name="android:windowAnimationStyle">@style/ssn_ui_page_root_animation</item>
     </style>
-    <style name="ui_page_root_animation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseExitAnimation">@anim/base_stay_orig</item>
+    <style name="ssn_ui_page_root_animation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityOpenExitAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseExitAnimation">@anim/ssn_stay_put</item>
     </style>
 
     <!--模态渐变-->
-    <style name="ui_page_modal_fade_style" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="ssn_ui_page_modal_fade_style" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/ui_page_modal_fade_animation</item>
+        <item name="android:windowAnimationStyle">@style/ssn_ui_page_modal_fade_animation</item>
     </style>
-    <style name="ui_page_modal_fade_animation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/splash_alpha_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseExitAnimation">@anim/splash_alpha_out</item>
+    <style name="ssn_ui_page_modal_fade_animation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ssn_splash_alpha_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseExitAnimation">@anim/ssn_splash_alpha_out</item>
     </style>
 
     <!--模态弹出-->
-    <style name="ui_page_modal_pop_style" parent="@android:style/Theme.Light.NoTitleBar">
+    <style name="ssn_ui_page_modal_pop_style" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/ui_page_modal_pop_animation</item>
+        <item name="android:windowAnimationStyle">@style/ssn_ui_page_modal_pop_animation</item>
     </style>
-    <style name="ui_page_modal_pop_animation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/push_bottom_in</item>
-        <item name="android:activityOpenExitAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseEnterAnimation">@anim/base_stay_orig</item>
-        <item name="android:activityCloseExitAnimation">@anim/push_bottom_out</item>
+    <style name="ssn_ui_page_modal_pop_animation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ssn_push_bottom_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseExitAnimation">@anim/ssn_push_bottom_out</item>
     </style>
 
     <!--loading菊花-->
-    <style name="ui_loading_style">
+    <style name="ssn_ui_loading_style">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
@@ -58,7 +58,7 @@
     </style>
 
     <!--弹出框-->
-    <style name="ui_alert_style">
+    <style name="ssn_ui_alert_style">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -70,7 +70,7 @@
     </style>
 
     <!--action sheet 样式-->
-    <style name="ui_action_sheet_style">
+    <style name="ssn_ui_action_sheet_style">
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -78,10 +78,10 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@style/ui_action_sheet_animation</item>
+        <item name="android:windowAnimationStyle">@style/ssn_ui_action_sheet_animation</item>
     </style>
-    <style name="ui_action_sheet_animation" parent="@android:style/Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/action_sheet_show</item>
-        <item name="android:windowExitAnimation">@anim/action_sheet_dismiss</item>
+    <style name="ssn_ui_action_sheet_animation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/ssn_action_sheet_show</item>
+        <item name="android:windowExitAnimation">@anim/ssn_action_sheet_dismiss</item>
     </style>
 </resources>

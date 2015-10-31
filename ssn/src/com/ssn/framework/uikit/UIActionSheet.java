@@ -36,7 +36,7 @@ public final class UIActionSheet {
      */
     public static Dialog showActionSheet(@NonNull Context context, @NonNull final String[] actions, @Nullable final String cancel, @Nullable final UIAlertButtonClick click) {
 
-        final Dialog dialog = new Dialog(context, R.style.ui_action_sheet_style);
+        final Dialog dialog = new Dialog(context, R.style.ssn_ui_action_sheet_style);
         dialog.setCanceledOnTouchOutside(true);
 
         LayoutInflater inflater = LayoutInflater.from(context);

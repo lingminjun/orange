@@ -33,7 +33,7 @@ public class MeViewController extends UITableViewController {
     public View loadView(LayoutInflater inflater) {
         View view = inflater.inflate(R.layout.me_layout, null);
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
-        UITableView.TableViewAdapter adapter = new UITableView.TableViewAdapter(tableView,false);
+        UITableView.TableViewAdapter adapter = new UITableView.TableViewAdapter(tableView);
         setTableView(tableView,adapter);
         return view;
     }

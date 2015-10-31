@@ -134,7 +134,7 @@ public class UILoading {
 
         protected void show(Context context,boolean cancelAble, int key) {
             if (this.dialog == null) {
-                Dialog dialog = new Dialog(context, R.style.ui_loading_style);
+                Dialog dialog = new Dialog(context, R.style.ssn_ui_loading_style);
                 this.dialog = dialog;
 
 //                APPLog.error("开启菊花"+key);

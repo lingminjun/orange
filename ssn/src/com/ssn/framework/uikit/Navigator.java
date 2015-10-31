@@ -221,7 +221,7 @@ public class Navigator implements ActivityTracking {
      * 结束应用
      */
     public void finishApplication() {
-        App.terminate();
+//        App.terminate();
         while (_stack.size() > 0) {
             Activity last = _stack.lastElement();
             _stack.remove(last);
