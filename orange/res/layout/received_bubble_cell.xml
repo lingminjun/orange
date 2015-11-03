@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="88dp"
               android:orientation="horizontal"
-              android:background="@drawable/press_white_bg"
+              android:background="@drawable/press_transparent_bg"
               android:paddingLeft="@dimen/page_edg_mar"
               android:paddingRight="10dp"
               android:paddingTop="10dp"

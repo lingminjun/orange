@@ -2,6 +2,7 @@ package com.orange.m.page.pop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,6 +51,7 @@ public class PopViewController extends UITableViewController {
     public View loadView(LayoutInflater inflater) {
         View view = inflater.inflate(R.layout.pop_layout, null);
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
+        tableView.setCacheColorHint(Color.TRANSPARENT);
         setTableView(tableView);
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
         switchBtn = (TextView)bottom.findViewById(R.id.close_pop_btn);

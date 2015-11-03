@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadingEdge="none"
-            android:background="@color/ssn_white"
+            android:background="@android:color/transparent"
             ptr:ptrAnimationStyle="rotate"
             ptr:ptrScrollingWhileRefreshingEnabled="true"
             ptr:ptrMode="both"

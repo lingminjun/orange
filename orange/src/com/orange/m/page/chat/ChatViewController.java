@@ -2,6 +2,7 @@ package com.orange.m.page.chat;
 
 import android.os.Bundle;
 import com.orange.m.R;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIViewController;
 
 /**
@@ -13,8 +14,8 @@ public class ChatViewController extends UIViewController {
     public void onInit(Bundle args) {
         super.onInit(args);
 
-        navigationItem().setTitle("邂逅");
-        tabItem().setTabName("邂逅");
+        navigationItem().setTitle(Res.localized(R.string.encounters));
+        tabItem().setTabName(Res.localized(R.string.encounters));
         tabItem().setTabImage(R.drawable.tab_selector_chat);
     }
 

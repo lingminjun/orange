@@ -565,6 +565,12 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         }
     }
 
+    public void setCacheColorHint(int color) {
+        if (_tableView != null) {
+            _tableView.getRefreshableView().setCacheColorHint(color);
+        }
+    }
+
     private PullToRefreshListView _tableView;
     private FrameLayout _headerLayout;
     private FrameLayout _footerLayout;
