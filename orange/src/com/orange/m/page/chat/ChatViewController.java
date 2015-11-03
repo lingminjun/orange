@@ -2,13 +2,14 @@ package com.orange.m.page.chat;
 
 import android.os.Bundle;
 import com.orange.m.R;
+import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIViewController;
 
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class ChatViewController extends UIViewController {
+public class ChatViewController extends BaseViewController {
 
     @Override
     public void onInit(Bundle args) {

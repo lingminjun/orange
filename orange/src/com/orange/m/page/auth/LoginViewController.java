@@ -12,6 +12,7 @@ import com.orange.m.Utils.Utils;
 import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
+import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
@@ -22,7 +23,7 @@ import com.ssn.framework.uikit.UIViewController;
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class LoginViewController extends UIViewController {
+public class LoginViewController extends BaseViewController {
 
     Button loginBtn;
     Button registerBtn;
@@ -37,7 +38,6 @@ public class LoginViewController extends UIViewController {
 
         navigationItem().setTitle(Res.localized(R.string.origin_star));
         navigationItem().setBottomLineHidden(true);
-        navigationItem().setTitleColor(Res.color(R.color.white));
     }
 
     @Override

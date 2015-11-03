@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.orange.m.R;
 import com.orange.m.page.PageCenter;
+import com.orange.m.page.base.BaseTableViewController;
 import com.orange.m.view.common.Keyboard;
 import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class PopViewController extends UITableViewController {
+public class PopViewController extends BaseTableViewController {
 
     LinearLayout bottom;
 

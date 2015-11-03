@@ -12,6 +12,7 @@ import com.orange.m.Utils.Utils;
 import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
+import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class CheckMobileViewController extends UIViewController {
+public class CheckMobileViewController extends BaseViewController {
 
     Button nexBtn;
     EditText mobileEdit;
@@ -39,7 +40,6 @@ public class CheckMobileViewController extends UIViewController {
 
         navigationItem().setTitle(Res.localized(R.string.origin_star));
         navigationItem().setBottomLineHidden(true);
-        navigationItem().setTitleColor(Res.color(R.color.white));
 
         nextURL = args.getString(Constants.PAGE_ARG_NEXT_URL);
     }

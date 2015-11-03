@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.orange.m.R;
+import com.orange.m.page.base.BaseTableViewController;
 import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
 import com.ssn.framework.foundation.TaskQueue;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by lingminjun on 15/9/26.
  */
-public class MeViewController extends UITableViewController {
+public class MeViewController extends BaseTableViewController {
 
     private int count = 0;
 
