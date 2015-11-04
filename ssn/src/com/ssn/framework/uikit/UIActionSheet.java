@@ -2,6 +2,7 @@ package com.ssn.framework.uikit;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import com.ssn.framework.R;
+import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 
 /**
@@ -97,6 +99,22 @@ public final class UIActionSheet {
         }
 
         dialog.setContentView(layout);
+
+        //若存在取消，返回键等同于取消
+        if (!TextUtils.isEmpty(cancel) && click != null) {
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    try {
+                        if (click != null) {
+                            click.onClick(dialog, cancel);
+                        }
+                    } catch (Throwable e) {
+                        APPLog.error(e);}
+                }
+            });
+        }
+
         dialog.show();
 
         return dialog;
