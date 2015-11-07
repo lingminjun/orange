@@ -90,6 +90,12 @@ public final class Store {
     }
 
     private void _store(String path,byte[] data, int expire) throws Exception {
+
+        File file = new File(path);
+        if (file.exists()) { //删除已存在文件
+            file.delete();
+        }
+
         RandomAccessFile out = new RandomAccessFile(path, STORE_READ_WRITE);
         out.write(data);
         out.close();
