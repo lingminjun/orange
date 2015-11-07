@@ -78,12 +78,16 @@ public final class App {
         _checked = false;
 
         //是否需要真的退出引用，最好是启动推送服务的service
-        ActivityManager activityMgr = (ActivityManager) Res.context().getSystemService(Context.ACTIVITY_SERVICE);
-        /**
-         * 需要此协议，因为只杀掉自己进程，可以不设置，android.permission.KILL_BACKGROUND_PROCESSES
-         * activityMgr.restartPackage(Res.context().getPackageName());
-         */
-        activityMgr.killBackgroundProcesses(Res.packageName());
+        try {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        } catch (Throwable e) {System.exit(0);}
+
+//        ActivityManager activityMgr = (ActivityManager) Res.context().getSystemService(Context.ACTIVITY_SERVICE);
+//        /**
+//         * 需要此协议，因为只杀掉自己进程，可以不设置，android.permission.KILL_BACKGROUND_PROCESSES
+//         * activityMgr.restartPackage(Res.context().getPackageName());
+//         */
+//        activityMgr.killBackgroundProcesses(Res.packageName());
     }
 
     private static Runnable _runnable = null;
