@@ -122,15 +122,15 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             }
         } else {
             HTTPError error = (HTTPError)com.alibaba.fastjson.JSON.parseObject(response.getResponseString(), HTTPError.class);
-            if (error != null) {
-                throw error.exception();
-            } else {
+            if (error == null) {
                 error = new HTTPError();
                 error.errorCode = -1;
                 error.message = Res.localized(R.string.unknown_exception);
                 error.name = "UNKNOWN_EXCEPTION";
-                throw error.exception();
             }
+
+            //最后抛出错误
+            throw error.exception();
         }
 
         //数据转换

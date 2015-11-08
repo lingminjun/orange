@@ -11,6 +11,7 @@ import com.orange.m.R;
 import com.orange.m.Utils.Utils;
 import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
+import com.orange.m.net.APIErrorMessage;
 import com.orange.m.page.PageCenter;
 import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
@@ -83,7 +84,7 @@ public class LoginViewController extends BaseViewController {
                     @Override
                     public void onFailure(Exception e) {
                         super.onFailure(e);
-                        App.toast(Res.localized(R.string.login_failed));
+                        Utils.toastException(e,Res.localized(R.string.login_failed));
                     }
 
                     @Override

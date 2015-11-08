@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.orange.m.R;
+import com.orange.m.page.PageURLs;
 import com.orange.m.page.base.BaseTableViewController;
 import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
@@ -74,7 +75,7 @@ public class MeViewController extends BaseTableViewController {
 //                            }
 //                        });
 
-                        Navigator.shareInstance().openURL("http://m.orangestar.com/about.html");
+                        Navigator.shareInstance().openURL(PageURLs.EDIT_HEADER_URL);
                     }
                 });
 

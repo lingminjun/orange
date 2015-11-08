@@ -24,6 +24,12 @@
           activityclass=""
           description="我"/>
 
+    <item url="http://m.orangestar.com/edit_header.html"
+          fragmentclass="com.orange.m.page.user.EditHeaderViewController"
+          activityclass=""
+          description="编辑头像"/>
+
+
     <!--关于页面-->
     <item url="http://m.orangestar.com/about.html"
           fragmentclass="com.orange.m.page.about.AboutViewController"

@@ -82,6 +82,12 @@ public class ResetPassworViewController extends BaseViewController {
 
                         PageCenter.goHome();
                     }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        super.onFailure(e);
+                        Utils.toastException(e,Res.localized(R.string.reset_failed));
+                    }
                 });
             }
         }));

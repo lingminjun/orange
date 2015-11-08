@@ -77,8 +77,7 @@ public class RegisterViewController extends BaseViewController {
                     @Override
                     public void onFailure(Exception e) {
                         super.onFailure(e);
-
-
+                        Utils.toastException(e,Res.localized(R.string.register_failed));
                     }
                 });
 

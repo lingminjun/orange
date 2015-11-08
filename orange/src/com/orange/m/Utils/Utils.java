@@ -29,7 +29,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.orange.m.R;
 import com.orange.m.Utils.cropimg.CropImage;
+import com.orange.m.net.APIErrorMessage;
 import com.ssn.framework.foundation.APPLog;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -196,24 +198,18 @@ public final class Utils /*extends CommonUtil*/ {
 //        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
 //    }
 //
-//    public static void toastException(Context context, Exception e, String placeholder) {
-//        if (context == null) {
-//            return;
-//        }
-//        if (context instanceof Activity && ((Activity) context).isFinishing()) {
-//            return;
-//        }
-//        String msg = ConvertUtil.exceptionToMsg(e, context);
-//        if (msg == null || msg.isEmpty()) {
-//            msg = placeholder;
-//        }
-//
-//        if (msg != null) {
-//            Utils.toast(context, msg);
-//        }
-//    }
 
-    ;
+    public static void toastException(Exception e, String placeholder) {
+
+        String msg = APIErrorMessage.message(e);
+        if (msg == null || msg.isEmpty()) {
+            msg = placeholder;
+        }
+
+        if (msg != null) {
+            App.toast(msg);
+        }
+    }
 
     public static String parseStrToMd5L32(String str) {
         String reStr = null;

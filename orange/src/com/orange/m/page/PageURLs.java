@@ -5,4 +5,7 @@ package com.orange.m.page;
  */
 public class PageURLs {
     public static final String MAIN_URL = "http://m.orangestar.com/main.html";
+
+
+    public static final String EDIT_HEADER_URL = "http://m.orangestar.com/edit_header.html";
 }
