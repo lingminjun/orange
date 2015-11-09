@@ -82,7 +82,7 @@ public class ResetPassworViewController extends BaseViewController {
 
                         //直接登录
                         App.toast(Res.localized(R.string.login_success));
-                        
+
                         PageCenter.goHome();
                     }
 
