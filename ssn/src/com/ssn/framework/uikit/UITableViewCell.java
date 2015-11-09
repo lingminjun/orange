@@ -133,7 +133,8 @@ public abstract class UITableViewCell extends RelativeLayout {
                 _customView = loadCustomDisplayView(LayoutInflater.from(context),viewGroup);
             } catch (Throwable e) {APPLog.error(e);}
             if (_customView != null && _container != _customView && _container != null) {
-                if (_container.indexOfChild(_customView) >= _container.getChildCount()) {
+                int index = _container.indexOfChild(_customView);
+                if (index < 0 || index >= _container.getChildCount()) {
                     _container.addView(_customView);
                 }
             }
