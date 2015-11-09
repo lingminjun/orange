@@ -143,7 +143,7 @@ public final class Store {
 
         if(file.exists()) {//文件存在再进行操作
 
-            RandomAccessFile in = new RandomAccessFile(path, STORE_READ_WRITE);
+            RandomAccessFile in = new RandomAccessFile(path, STORE_READ_ONLY);
             long len = in.length() + 1;
             data = new byte[(int) len];
             in.read(data);
