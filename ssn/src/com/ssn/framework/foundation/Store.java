@@ -125,7 +125,7 @@ public final class Store {
                 long latest = exp.readLong();//存储上次访问时间
                 long expire = exp.readLong();//过期时长
 
-                if (now < latest + expire) {//过期，删除文件
+                if (now >= latest + expire) {//过期，删除文件
                     exp.close();
                     isExpire = true;
 
@@ -144,7 +144,7 @@ public final class Store {
         if(file.exists()) {//文件存在再进行操作
 
             RandomAccessFile in = new RandomAccessFile(path, STORE_READ_ONLY);
-            long len = in.length() + 1;
+            long len = in.length();
             data = new byte[(int) len];
             in.read(data);
             in.close();
