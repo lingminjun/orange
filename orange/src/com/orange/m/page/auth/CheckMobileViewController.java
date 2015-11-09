@@ -14,6 +14,7 @@ import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
 import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
+import com.ssn.framework.foundation.Clock;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
@@ -104,12 +105,54 @@ public class CheckMobileViewController extends BaseViewController {
 
     }
 
+    @Override
+    public void onDestroyController() {
+        super.onDestroyController();
+    }
+
     private void sendSMSCode(String mobile) {
+        startTiming();
+
         UserBiz.requestSMSCode(mobile, UserBiz.SMS_CODE_TYPE_FORGET, new RPC.Response<UserBiz.SMSCodeModel>() {
             @Override
             public void onSuccess(UserBiz.SMSCodeModel model) {
                 super.onSuccess(model);
             }
+
+            @Override
+            public void onFailure(Exception e) {
+                super.onFailure(e);
+                stopTiming();
+            }
         });
     }
+
+    private static final int CLOCK_MAX_COUNT = 60;
+    private int count;
+    private Clock.Listener timing = new Clock.Listener() {
+        @Override
+        public void fire(String flag) {
+            if (count >= CLOCK_MAX_COUNT) {//可以继续点击
+                stopTiming();
+            } else {
+                sendSMSCode.setEnabled(false);
+                sendSMSCode.setText(Res.localized(R.string.x_second_can_send,CLOCK_MAX_COUNT - count));
+                count++;
+            }
+        }
+    };
+
+    private void startTiming() {
+        count = 0;
+        Clock.shareInstance().addListener(timing,CLOCK_KEY);
+    }
+
+    private void stopTiming() {
+        Clock.shareInstance().removeListener(CLOCK_KEY);
+        sendSMSCode.setEnabled(true);
+        count = 0;
+        sendSMSCode.setText(Res.localized(R.string.send_sms_code));
+    }
+
+    private static final String CLOCK_KEY = "check_mobile";
 }
