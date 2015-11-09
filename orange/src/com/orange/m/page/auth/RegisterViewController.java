@@ -11,6 +11,7 @@ import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.page.PageCenter;
 import com.orange.m.page.base.BaseViewController;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
@@ -70,6 +71,9 @@ public class RegisterViewController extends BaseViewController {
                     @Override
                     public void onSuccess(UserBiz.TokenModel tokenModel) {
                         super.onSuccess(tokenModel);
+
+                        //直接登录
+                        App.toast(Res.localized(R.string.login_success));
 
                         PageCenter.goHome();
                     }
