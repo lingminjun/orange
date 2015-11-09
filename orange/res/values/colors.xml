@@ -15,6 +15,8 @@
 
     <!--背景颜色-->
     <color name="grey_alpha_40">#40cccccc</color>
+    <color name="grey_alpha_a0">#a0cccccc</color>
+    <color name="grey_alpha_80">#80cccccc</color>
 
     <!--button颜色定义-->
     <color name="red_btn_normal">#ff5e56</color>

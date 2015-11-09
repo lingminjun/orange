@@ -114,10 +114,12 @@ public final class UserDefaults {
 
         String tokenCry = get(key, "");
         if (!TextUtils.isEmpty(tokenCry)) {
-            byte[] bytes = Base64.decode(tokenCry.getBytes(), Base64.DEFAULT);
-            if (bytes != null) {
-                return new String(bytes);
-            }
+            try {
+                byte[] bytes = Base64.decode(tokenCry.getBytes(), Base64.DEFAULT);
+                if (bytes != null) {
+                    return new String(bytes);
+                }
+            } catch (Throwable e) { APPLog.error(e); }
         }
         return null;
     }
@@ -129,11 +131,13 @@ public final class UserDefaults {
             putAsync(key, "");//清除
         }
         else {
-            byte[] bytes = Base64.encode(json.getBytes(), Base64.DEFAULT);
-            if (bytes != null) {
-                String value = new String(bytes);
-                putAsync(key, value);//清除
-            }
+            try {
+                byte[] bytes = Base64.encode(json.getBytes(), Base64.DEFAULT);
+                if (bytes != null) {
+                    String value = new String(bytes);
+                    putAsync(key, value);//清除
+                }
+            } catch (Throwable e) {APPLog.error(e);}
         }
     }
 

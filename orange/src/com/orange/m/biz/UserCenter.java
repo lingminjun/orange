@@ -64,6 +64,9 @@ public final class UserCenter {
         if (!TextUtils.isEmpty(json)) {
             try {
                 _token = (UserBiz.TokenModel)JSON.parseArray(json, UserBiz.TokenModel.class);
+                if (_token != null) {
+                    _uid = _token.id;
+                }
             } catch (Throwable e) {}
         }
 
@@ -81,6 +84,15 @@ public final class UserCenter {
         }
     }
 
+    /**
+     * 返回用户id
+     * @return
+     */
+    public int UID() {
+        return _uid;
+    }
+
+    private int _uid;
     private Application _application;
     private static final String TOKEN_INFO_DIR  = "/users/";
     private static final String UID_MD5         = "sfht.user.uid.md5";
@@ -90,8 +102,9 @@ public final class UserCenter {
         synchronized (this) {
             _token = tokenModel;
             if (tokenModel != null) {
+                _uid = tokenModel.id;
                 String json = JSON.toJSONString(tokenModel);
-                UserDefaults.getInstance().put(USER_TOKEN_KEY, json);
+                UserDefaults.getInstance().putJSONString(USER_TOKEN_KEY, json);
             }
         }
 

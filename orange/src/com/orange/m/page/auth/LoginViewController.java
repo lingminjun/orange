@@ -13,6 +13,7 @@ import com.orange.m.biz.UserBiz;
 import com.orange.m.constants.Constants;
 import com.orange.m.net.APIErrorMessage;
 import com.orange.m.page.PageCenter;
+import com.orange.m.page.PageURLs;
 import com.orange.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
@@ -100,8 +101,8 @@ public class LoginViewController extends BaseViewController {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.PAGE_ARG_NEXT_URL,"http://m.orangestar.com/register.html");
-                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html",bundle);
+                bundle.putString(Constants.PAGE_ARG_NEXT_URL, PageURLs.REGISTER_URL);
+                Navigator.shareInstance().openURL(PageURLs.SMS_CODE_URL,bundle);
             }
         }));
 
@@ -109,15 +110,10 @@ public class LoginViewController extends BaseViewController {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString(Constants.PAGE_ARG_NEXT_URL,"http://m.orangestar.com/resetpassword.html");
-                Navigator.shareInstance().openURL("http://m.orangestar.com/checkmobile.html",bundle);
+                bundle.putString(Constants.PAGE_ARG_NEXT_URL,PageURLs.RESET_PASSWORD_URL);
+                Navigator.shareInstance().openURL(PageURLs.SMS_CODE_URL,bundle);
             }
         }));
     }
 
-    @Override
-    public void onViewDidAppear() {
-        super.onViewDidAppear();
-
-    }
 }

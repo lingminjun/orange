@@ -67,7 +67,7 @@ public final class PageCenter {
             _authCallBack = null;
         }
         else {
-            Navigator.shareInstance().openURL("http://m.orangestar.com/login.html",null,true);
+            Navigator.shareInstance().openURL(PageURLs.LOGIN_URL,null,true);
         }
     }
 
