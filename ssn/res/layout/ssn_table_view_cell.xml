@@ -6,13 +6,12 @@
                 android:layout_height="wrap_content">
 
     <!--cell container view-->
-    <LinearLayout android:layout_gravity="center"
-                  android:orientation="horizontal"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:descendantFocusability="blocksDescendants"
-                  android:id="@+id/ssn_view_container">
-    </LinearLayout>
+    <FrameLayout android:orientation="horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:descendantFocusability="blocksDescendants"
+                 android:id="@+id/ssn_view_container">
+    </FrameLayout>
 
     <!--右边指示按钮-->
     <ImageView android:id="@+id/ssn_right_arrow_icon"

@@ -89,7 +89,7 @@ public abstract class UITableViewCell extends RelativeLayout {
         private boolean _showKeyboard;
     }
 
-    private LinearLayout _container;
+    private ViewGroup _container;
     private View _customView;
     private ImageView _rightArrow;
     private TextView _separateLine;
@@ -114,7 +114,7 @@ public abstract class UITableViewCell extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.ssn_table_view_cell, this);
-        _container = (LinearLayout)this.findViewById(R.id.ssn_view_container);
+        _container = (ViewGroup)this.findViewById(R.id.ssn_view_container);
         _rightArrow = (ImageView)this.findViewById(R.id.ssn_right_arrow_icon);
         _separateLine = (TextView)this.findViewById(R.id.ssn_separate_line);
     }
