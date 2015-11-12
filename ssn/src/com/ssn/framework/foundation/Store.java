@@ -5,12 +5,71 @@ import android.text.TextUtils;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 /**
  * Created by lingminjun on 15/11/6.
  * 负责文件存储
  */
 public final class Store {
+
+    private static RigidFactory<Store> _factory = null;
+    private static RigidFactory<Store> newFactory() {
+        RigidFactory.SingletonCreator<Store> creator = new RigidFactory.SingletonCreator() {
+            @Override
+            public Store onCreate(String key, Map params) {
+                return new Store(key);//构建实例
+            }
+        };
+        return new RigidFactory<Store>(creator);
+    }
+
+    /**
+     * Store工程
+     * @return
+     */
+    public static RigidFactory<Store> shareInstance() {
+        if (_factory != null) {return _factory;}
+        synchronized (Store.class) {
+            if (_factory == null) {
+                _factory = newFactory();
+            }
+        }
+        return _factory;
+    }
+
+    /**
+     * 返回缓存目录
+     * @return
+     */
+    public static Store caches() {
+        return shareInstance().get("caches");
+    }
+
+    /**
+     * 返回临时目录
+     * @return
+     */
+    public static Store temporary() {
+        return shareInstance().get("temp");
+    }
+
+    /**
+     * 返回文件目录
+     * @return
+     */
+    public static Store documents() {
+        return shareInstance().get("documents");
+    }
+
+    /**
+     * 返回库目录
+     * @return
+     */
+    public static Store library() {
+        return shareInstance().get("library");
+    }
+
     private final static String STORE_FINDER = "/ssn_store/";
     private final static String STORE_TAIL = ".tail";
     private final static String STORE_READ_ONLY = "r";

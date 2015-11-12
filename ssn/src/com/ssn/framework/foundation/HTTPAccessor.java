@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
@@ -450,6 +451,25 @@ public final class HTTPAccessor {
             client.set(hClient);
         }
         return hClient;
+    }
+
+    public static String getHostIP(String host) {
+
+        java.net.InetAddress x;
+        try {
+            x = java.net.InetAddress.getByName(host);
+            String ip_devdiv = x.getHostAddress();//得到字符串形式的ip地址
+//            Log.d("TAG", ip_devdiv);
+            return ip_devdiv;
+        } catch (UnknownHostException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            Log.d("TAG", "域名解析出错");
+        } catch (Throwable e) {
+            Log.d("TAG", "域名解析出错");
+        }
+
+        return null;
     }
 
 }
