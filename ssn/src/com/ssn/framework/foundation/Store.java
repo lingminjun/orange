@@ -28,7 +28,7 @@ public final class Store {
      * Store工程
      * @return
      */
-    public static RigidFactory<Store> shareInstance() {
+    public static RigidFactory<Store> factory() {
         if (_factory != null) {return _factory;}
         synchronized (Store.class) {
             if (_factory == null) {
@@ -43,7 +43,7 @@ public final class Store {
      * @return
      */
     public static Store caches() {
-        return shareInstance().get("caches");
+        return factory().get("caches");
     }
 
     /**
@@ -51,7 +51,7 @@ public final class Store {
      * @return
      */
     public static Store temporary() {
-        return shareInstance().get("temp");
+        return factory().get("temp");
     }
 
     /**
@@ -59,7 +59,7 @@ public final class Store {
      * @return
      */
     public static Store documents() {
-        return shareInstance().get("documents");
+        return factory().get("documents");
     }
 
     /**
@@ -67,7 +67,7 @@ public final class Store {
      * @return
      */
     public static Store library() {
-        return shareInstance().get("library");
+        return factory().get("library");
     }
 
     private final static String STORE_FINDER = "/ssn_store/";
