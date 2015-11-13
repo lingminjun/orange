@@ -56,12 +56,15 @@ public class PopViewController extends BaseTableViewController {
         tableView.setCacheColorHint(Color.TRANSPARENT);
         tableView.setStackFromBottom(true);
         setTableView(tableView);
+
+        //底部发送panel
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
         switchBtn = (TextView)bottom.findViewById(R.id.close_pop_btn);
         sendBtn = (TextView)bottom.findViewById(R.id.send_pop_btn);
         buttonBar = (LinearLayout)bottom.findViewById(R.id.button_bar);
         bottomBar = (LinearLayout)bottom.findViewById(R.id.bottom_input_bar);
         tableView.setFooterView(bottom);
+
         return view;
     }
 
@@ -77,6 +80,7 @@ public class PopViewController extends BaseTableViewController {
         Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
             @Override
             public void onChanged(int newHeight, int oldHeight) {
+                tableView().scrollToBottom();
 //                tableView().resizeFooterViewHeight();
             }
         });
@@ -131,13 +135,20 @@ public class PopViewController extends BaseTableViewController {
                 String action = intent.getAction();
                 if (action.equals(UIEvent.UIKeyboardWillShowNotification)) {
                     buttonBar.setVisibility(View.GONE);
-                    tableViewAdapter().setPullRefreshEnabled(false);
+//                    tableViewAdapter().setPullRefreshEnabled(false);
                 }
                 else if (action.equals(UIEvent.UIKeyboardWillHideNotification)) {
                     buttonBar.setVisibility(View.VISIBLE);
                     Keyboard.shareInstance().dismiss(false);
-                    tableViewAdapter().setPullRefreshEnabled(true);
+//                    tableViewAdapter().setPullRefreshEnabled(true);
                 }
+                TaskQueue.mainQueue().executeDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tableView().scrollToBottom();
+                    }
+                },500);
+
             }
         };
 
