@@ -238,10 +238,12 @@ public abstract class UITableViewCell extends RelativeLayout {
         } catch (Throwable e) {APPLog.error(e);}
 
         try {
+            cell._cellModel = cellModel;
             cell.onDisplay(cellModel, row);
         } catch (Throwable e) {APPLog.error(e);}
 
         cell._cellModel = cellModel;//防止子类替换
+        cell._onDisplay(cellModel,row);
 
         if (cellModel.needInput && cellModel._showKeyboard) {
             afreshFocus(cell,cellModel);
@@ -297,9 +299,10 @@ public abstract class UITableViewCell extends RelativeLayout {
      * @param cellModel
      * @param row
      */
-    protected void onDisplay(CellModel cellModel, int row) {
-        this._cellModel = cellModel;
+    protected void onDisplay(CellModel cellModel, int row) {}
 
+    //防止子类实现不调用父类方法造成错误
+    private void _onDisplay(CellModel cellModel, int row) {
         if (_container != null) {
             LayoutParams params = (LayoutParams) _container.getLayoutParams();
             if (cellModel.height > 0 && cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
