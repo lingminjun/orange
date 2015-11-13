@@ -2,19 +2,21 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="88dp"
+              android:layout_height="wrap_content"
               android:orientation="horizontal"
               android:paddingLeft="15dp"
               android:paddingRight="15dp"
-              android:paddingTop="2dp"
-              android:paddingBottom="2dp"
-              android:gravity="center">
+              android:paddingTop="4dp"
+              android:paddingBottom="4dp"
+              android:gravity="center|left">
     <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:paddingLeft="8dp"
                   android:paddingRight="8dp"
                   android:paddingTop="6dp"
                   android:paddingBottom="6dp"
+                  android:id="@+id/message_content_panel"
+                  android:clickable="true"
                   android:gravity="center"
                   android:background="@drawable/press_corner_transparent_bg">
         <ImageView android:id="@+id/icon_image"
@@ -26,21 +28,18 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:background="@android:color/transparent"
-                  android:textColor="@color/normal_text"
+                  android:textColor="@color/white"
                   android:textSize="@dimen/normal_font"
                   android:gravity="center"
-                  android:layout_marginLeft="@dimen/page_edg_mar"
-                  android:layout_marginRight="@dimen/page_edg_mar"
+                  android:layout_marginLeft="@dimen/bmid_padding"
                   android:lines="1"
                   android:ellipsize="end"
                   android:text="标题"/>
     </LinearLayout>
-    <TextView android:layout_width="0dp"
-              android:layout_height="1dp"
-              android:visibility="invisible"
-              android:layout_weight="1"/>
     <ImageView android:id="@+id/right_icon"
-               android:layout_width="22dp"
-               android:layout_height="22dp"
+               android:layout_marginLeft="10dp"
+               android:layout_width="@dimen/tag_icon_size"
+               android:layout_height="@dimen/tag_icon_size"
+               android:background="@color/blue_tag"
                android:scaleType="fitCenter"/>
 </LinearLayout>

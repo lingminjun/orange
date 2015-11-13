@@ -18,6 +18,7 @@ import com.orange.m.view.me.TestCellModel;
 import com.orange.m.view.pop.BubbleCellModel;
 import com.orange.m.view.pop.ReceivedBubbleCell;
 import com.ssn.framework.foundation.BroadcastCenter;
+import com.ssn.framework.foundation.Clock;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.*;
@@ -53,6 +54,7 @@ public class PopViewController extends BaseTableViewController {
         View view = inflater.inflate(R.layout.pop_layout, null);
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
         tableView.setCacheColorHint(Color.TRANSPARENT);
+        tableView.setStackFromBottom(true);
         setTableView(tableView);
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
         switchBtn = (TextView)bottom.findViewById(R.id.close_pop_btn);
@@ -99,7 +101,27 @@ public class PopViewController extends BaseTableViewController {
                 Keyboard.shareInstance().showInView(bottomBar);
             }
         }));
+
+        Clock.shareInstance().addListener(new Clock.Listener() {
+            @Override
+            public void fire(String flag) {
+                {
+                    BubbleCellModel model = new BubbleCellModel();
+                    model.message = "这仅仅只为测试"+test_count;
+                    test_count++;
+
+                    tableViewAdapter().appendCell(model);
+                    tableView().scrollToBottom();
+
+                    if (test_count > 20) {
+                        Clock.shareInstance().removeListener("dd");
+                    }
+                }
+            }
+        },"dd");
     }
+
+    private int test_count;
 
     private void addObserver() {
 
@@ -131,13 +153,13 @@ public class PopViewController extends BaseTableViewController {
     public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
-        for (int i = 0; i< 10;i++) {
-            {
-                BubbleCellModel model = new BubbleCellModel();
-                model.message = "这仅仅只为测试"+i;
-                list.add(model);
-            }
-        }
+//        for (int i = 0; i< 10;i++) {
+//            {
+//                BubbleCellModel model = new BubbleCellModel();
+//                model.message = "这仅仅只为测试"+i;
+//                list.add(model);
+//            }
+//        }
 
         return list;
     }

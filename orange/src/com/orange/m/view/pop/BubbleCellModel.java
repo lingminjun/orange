@@ -12,6 +12,7 @@ public class BubbleCellModel extends UITableViewCell.CellModel {
 
     public BubbleCellModel() {
         hiddenRightArrow = true;
+        hiddenSeparateLine = true;
     }
 
     @Override

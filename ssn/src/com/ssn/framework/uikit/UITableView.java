@@ -565,9 +565,49 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         }
     }
 
+    /**
+     * 设置滑动颜色
+     * @param color
+     */
     public void setCacheColorHint(int color) {
         if (_tableView != null) {
             _tableView.getRefreshableView().setCacheColorHint(color);
+        }
+    }
+
+    /**
+     * 不满屏幕时，显示在最底下
+     * @param bottom
+     */
+    public void setStackFromBottom(boolean bottom) {
+        if (_tableView != null) {
+            _tableView.getRefreshableView().setStackFromBottom(true);
+        }
+    }
+
+    /**
+     * 滚到最顶部
+     */
+    public void scrollToTop() {
+        if (_tableView != null) {
+            ListView listView = _tableView.getRefreshableView();
+            int idx = listView.getTop();
+            if (idx >= 0) {
+                listView.smoothScrollToPosition(idx);
+            }
+        }
+    }
+
+    /**
+     * 滚到最底部
+     */
+    public void scrollToBottom() {
+        if (_tableView != null) {
+            ListView listView = _tableView.getRefreshableView();
+            int idx = listView.getBottom();
+            if (idx >= 0) {
+                listView.smoothScrollToPosition(idx);
+            }
         }
     }
 

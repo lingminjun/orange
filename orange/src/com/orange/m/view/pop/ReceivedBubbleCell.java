@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
@@ -15,6 +16,7 @@ import com.ssn.framework.uikit.UITableViewCell;
 public class ReceivedBubbleCell extends UITableViewCell {
     private View view;
 
+    private View panel;
     private ImageView mIconView;
     private TextView mTitleView;
     private ImageView mRightIcon;
@@ -24,6 +26,13 @@ public class ReceivedBubbleCell extends UITableViewCell {
         super(context);
     }
 
+    private OnClickListener click = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
     @Override
     public void onPrepareForReuse() {
         mTitleView.setText("");;
@@ -32,6 +41,8 @@ public class ReceivedBubbleCell extends UITableViewCell {
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
         view = inflate(inflate,R.layout.received_bubble_cell, containerView);
+        panel = view.findViewById(R.id.message_content_panel);
+        panel.setOnClickListener(UIEvent.click(click));
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         mRightIcon = (ImageView) view.findViewById(R.id.right_icon);
