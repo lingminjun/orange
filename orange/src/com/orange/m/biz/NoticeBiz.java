@@ -28,7 +28,7 @@ public final class NoticeBiz {
         BaseRequest<Notice> request = new BaseRequest<Notice>() {
             @Override
             public String path() {
-                return "create";
+                return "notice";
             }
 
             @Override
@@ -48,8 +48,8 @@ public final class NoticeBiz {
                 params.put("latitude",notice.latitude);
                 params.put("type",notice.type);
 
-                params.put("creatorId",Long.toString(notice.creatorId));
-                params.put("creator",notice.creator);
+//                params.put("creatorId",Long.toString(notice.creatorId));
+//                params.put("creator",notice.creator);
             }
         };
 
@@ -61,7 +61,7 @@ public final class NoticeBiz {
         BaseRequest<BaseModelList<Notice> > request = new BaseRequest<BaseModelList<Notice> >() {
             @Override
             public String path() {
-                return "list";
+                return "notice/list";
             }
 
             @Override
