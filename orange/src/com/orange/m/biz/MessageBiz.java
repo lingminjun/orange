@@ -16,7 +16,12 @@ import java.util.List;
 public final class MessageBiz {
 
     public static class Message extends BaseModel {
-
+    	String content;
+    	Long toUserId;
+    	
+    	Long reeiverId;
+    	Long senderId;
+    	Long timestamp;
     }
 
     /*
@@ -29,7 +34,7 @@ public final class MessageBiz {
         BaseRequest<Message> request = new BaseRequest<Message>() {
             @Override
             public String path() {
-                return "send";
+                return "message";
             }
 
             @Override
@@ -45,7 +50,7 @@ public final class MessageBiz {
             @Override
             public void params(HashMap<String, Object> params) {
                 params.put("content",content);
-                params.put("receiverId",Long.toString(toId));
+                params.put("toUserId",Long.toString(toId));
             }
         };
 
@@ -58,7 +63,7 @@ public final class MessageBiz {
         BaseRequest<BaseModelList<Message> > request = new BaseRequest<BaseModelList<Message> >() {
             @Override
             public String path() {
-                return "list";
+                return "message/list";
             }
 
             @Override
@@ -73,7 +78,7 @@ public final class MessageBiz {
 
             @Override
             public void params(HashMap<String, Object> params) {
-                params.put("senderId",Long.toString(from));
+                params.put("from",Long.toString(from));
             }
         };
 
