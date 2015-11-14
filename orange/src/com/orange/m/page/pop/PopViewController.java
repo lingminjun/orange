@@ -173,39 +173,54 @@ public class PopViewController extends BaseTableViewController {
         PageCenter.checkAuth(new PageCenter.AuthCallBack() {
             @Override
             public void auth(String account) {
-                Keyboard.shareInstance().dismiss(false);
-
-                UserCenter.User user = UserCenter.shareInstance().user();
-
-                NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                notice.content = msg;
-                notice.creator = user.nick;
-                notice.creatorId = user.uid;
-                notice.longitude = Double.toString(31.2117411154);
-                notice.latitude = Double.toString(121.4596178033);
-
-                NoticeBiz.create(notice,new RPC.Response<BoolModel>(){
-                    @Override
-                    public void onSuccess(BoolModel boolModel) {
-                        super.onSuccess(boolModel);
-
-                        //清除输入
-                        Keyboard.shareInstance().setText("");
-
-                        SendBubbleCellModel model = new SendBubbleCellModel();
-                        model.message = msg;
-                        tableViewAdapter().appendCell(model);
-                        tableView().scrollToBottom();
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        super.onFailure(e);
-                        Utils.toastException(e,Res.localized(R.string.send_failed));
-                    }
-                });
+                sendNotice(msg);
             }
         });
+    }
+
+    private void sendNotice(final String msg) {
+        Keyboard.shareInstance().dismiss(false);
+
+        UserCenter.User user = UserCenter.shareInstance().user();
+
+        NoticeBiz.Notice notice = new NoticeBiz.Notice();
+        notice.content = msg;
+        notice.creator = user.nick;
+        notice.creatorId = user.uid;
+        notice.longitude = Double.toString(31.2117411154);
+        notice.latitude = Double.toString(121.4596178033);
+
+        NoticeBiz.create(notice,new RPC.Response<BoolModel>(){
+            @Override
+            public void onSuccess(BoolModel boolModel) {
+                super.onSuccess(boolModel);
+
+                //清除输入
+                Keyboard.shareInstance().setText("");
+
+                SendBubbleCellModel model = new SendBubbleCellModel();
+                model.message = msg;
+                tableViewAdapter().appendCell(model);
+                tableView().scrollToBottom();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                super.onFailure(e);
+                Utils.toastException(e,Res.localized(R.string.send_failed));
+            }
+        });
+    }
+
+    private void sendMessage(final String msg) {
+
+        MessageBiz.send(msg,3, new RPC.Response<MessageBiz.Message>() {
+            @Override
+            public void onSuccess(MessageBiz.Message message) {
+                super.onSuccess(message);
+            }
+        });
+        
     }
 
     @Override

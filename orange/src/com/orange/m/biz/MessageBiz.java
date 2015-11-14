@@ -5,7 +5,10 @@ import com.orange.m.net.BaseModelList;
 import com.orange.m.net.BaseRequest;
 import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +19,51 @@ import java.util.List;
 public final class MessageBiz {
 
     public static class Message extends BaseModel {
+        String id;
+
     	String content;
     	Long toUserId;
     	
-    	Long reeiverId;
+    	Long receiverId;
     	Long senderId;
     	Long timestamp;
+    }
+
+    public static class MessageList extends BaseModelList<Message> {
+        public long latestTime;
+
+        @Override
+        public boolean fillFromJSON(JSONObject object) {
+
+            if (object != null) {
+                try {
+                    latestTime = object.getLong("latestTime");
+
+                    JSONArray array = object.getJSONArray("messages");
+                    size = array.length();
+                    total = size;
+                    page = 0;
+
+                    List<Message> list = new ArrayList<>();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject obj = array.getJSONObject(i);
+
+                        Message notice = new Message();
+                        boolean fill = notice.fillFromJSON(obj);
+
+                        if (!fill) {//先用fastjson处理
+                            notice = (Message) com.alibaba.fastjson.JSON.parseObject(obj.toString(), Message.class);
+                        }
+
+                        list.add(notice);
+                    }
+
+                    this.list = list;
+                } catch (Throwable e) {}
+
+            }
+            return true;
+        }
     }
 
     /*
@@ -58,9 +100,9 @@ public final class MessageBiz {
     }
 
 
-    public static RPC.Cancelable fetchMessage(final long from, final RPC.Response<BaseModelList<Message> > response){
+    public static RPC.Cancelable fetchMessage(final long from, final RPC.Response<MessageList > response){
 
-        BaseRequest<BaseModelList<Message> > request = new BaseRequest<BaseModelList<Message> >() {
+        BaseRequest<MessageList> request = new BaseRequest<MessageList>() {
             @Override
             public String path() {
                 return "message/list";
