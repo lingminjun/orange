@@ -15,6 +15,7 @@ import com.orange.m.Utils.Utils;
 import com.orange.m.biz.MessageBiz;
 import com.orange.m.biz.NoticeBiz;
 import com.orange.m.biz.UserCenter;
+import com.orange.m.net.BoolModel;
 import com.orange.m.page.PageCenter;
 import com.orange.m.page.base.BaseTableViewController;
 import com.orange.m.view.common.Keyboard;
@@ -169,35 +170,40 @@ public class PopViewController extends BaseTableViewController {
             return;
         }
 
-        Keyboard.shareInstance().dismiss(false);
-
-        UserCenter.User user = UserCenter.shareInstance().user();
-
-        NoticeBiz.Notice notice = new NoticeBiz.Notice();
-        notice.content = msg;
-        notice.creator = user.nick;
-        notice.creatorId = user.uid;
-        notice.longitude = Double.toString(31.2117411154);
-        notice.latitude = Double.toString(121.4596178033);
-
-        NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
+        PageCenter.checkAuth(new PageCenter.AuthCallBack() {
             @Override
-            public void onSuccess(NoticeBiz.Notice notice) {
-                super.onSuccess(notice);
+            public void auth(String account) {
+                Keyboard.shareInstance().dismiss(false);
 
-                //清除输入
-                Keyboard.shareInstance().setText("");
+                UserCenter.User user = UserCenter.shareInstance().user();
 
-                SendBubbleCellModel model = new SendBubbleCellModel();
-                model.message = msg;
-                tableViewAdapter().appendCell(model);
-                tableView().scrollToBottom();
-            }
+                NoticeBiz.Notice notice = new NoticeBiz.Notice();
+                notice.content = msg;
+                notice.creator = user.nick;
+                notice.creatorId = user.uid;
+                notice.longitude = Double.toString(31.2117411154);
+                notice.latitude = Double.toString(121.4596178033);
 
-            @Override
-            public void onFailure(Exception e) {
-                super.onFailure(e);
-                Utils.toastException(e,Res.localized(R.string.send_failed));
+                NoticeBiz.create(notice,new RPC.Response<BoolModel>(){
+                    @Override
+                    public void onSuccess(BoolModel boolModel) {
+                        super.onSuccess(boolModel);
+
+                        //清除输入
+                        Keyboard.shareInstance().setText("");
+
+                        SendBubbleCellModel model = new SendBubbleCellModel();
+                        model.message = msg;
+                        tableViewAdapter().appendCell(model);
+                        tableView().scrollToBottom();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        super.onFailure(e);
+                        Utils.toastException(e,Res.localized(R.string.send_failed));
+                    }
+                });
             }
         });
     }

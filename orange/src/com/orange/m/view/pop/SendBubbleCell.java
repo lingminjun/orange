@@ -40,7 +40,7 @@ public class SendBubbleCell extends UITableViewCell {
 
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
-        view = inflate(inflate,R.layout.received_bubble_cell, containerView);
+        view = inflate(inflate,R.layout.send_bubble_cell, containerView);
         panel = view.findViewById(R.id.message_content_panel);
         panel.setOnClickListener(UIEvent.click(click));
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
@@ -56,7 +56,7 @@ public class SendBubbleCell extends UITableViewCell {
 
         cellModel.disabled = true;
 
-        BubbleCellModel mEntity = (BubbleCellModel)cellModel;
+        SendBubbleCellModel mEntity = (SendBubbleCellModel)cellModel;
 
         if (mEntity.message != null) {
             mTitleView.setText(mEntity.message);

@@ -1,6 +1,7 @@
 package com.orange.m.biz.pop;
 
 import com.orange.m.biz.MessageBiz;
+import com.orange.m.biz.NoticeBiz;
 import com.orange.m.net.BaseModelList;
 import com.ssn.framework.foundation.Clock;
 import com.ssn.framework.foundation.RPC;
@@ -70,17 +71,29 @@ public final class BarrageCenter {
 
     private void pullBarrage() {
         long latest_pull_at = UserDefaults.getInstance().get(LATEST_PULL_KEY,0);
-
-        RPC.Response<BaseModelList<MessageBiz.Message>> res = new RPC.Response<BaseModelList<MessageBiz.Message>>() {
+        String longitude = Double.toString(31.2117411154);
+        String latitude = Double.toString(121.4596178033);
+        NoticeBiz.getList(latest_pull_at,longitude,latitude,new RPC.Response<NoticeBiz.NoticeList>(){
             @Override
-            public void onSuccess(BaseModelList<MessageBiz.Message> messageBaseModelList) {
-                super.onSuccess(messageBaseModelList);
+            public void onSuccess(NoticeBiz.NoticeList list) {
+                super.onSuccess(list);
 
-                //接受到数据并做去重处理
+                if (list != null) {
+
+                }
             }
-        };
+        });
 
-        MessageBiz.fetchMessage(0,res);
+//        RPC.Response<BaseModelList<MessageBiz.Message>> res = new RPC.Response<BaseModelList<MessageBiz.Message>>() {
+//            @Override
+//            public void onSuccess(BaseModelList<MessageBiz.Message> messageBaseModelList) {
+//                super.onSuccess(messageBaseModelList);
+//
+//                //接受到数据并做去重处理
+//            }
+//        };
+//
+//        MessageBiz.fetchMessage(0,res);
     }
 
     private Clock.Listener clock = new Clock.Listener() {

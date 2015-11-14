@@ -13,7 +13,7 @@ public class SendBubbleCellModel extends UITableViewCell.CellModel {
     public SendBubbleCellModel() {
         hiddenRightArrow = true;
         hiddenSeparateLine = true;
-        disabled = true;
+//        disabled = true;
     }
 
     @Override

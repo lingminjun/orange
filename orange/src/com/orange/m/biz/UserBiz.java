@@ -72,10 +72,7 @@ public final class UserBiz {
             @Override
             public TokenModel call() throws Exception {
                 TokenModel token = super.call();
-
-                //数据存储下来
                 UserCenter.shareInstance().saveToken(token);
-
                 return token;
             }
         };
@@ -101,6 +98,13 @@ public final class UserBiz {
                 params.put("mobile",mobile);
                 params.put("password",password);
             }
+
+            @Override
+            public TokenModel call() throws Exception {
+                TokenModel token = super.call();
+                UserCenter.shareInstance().saveToken(token);
+                return token;
+            }
         };
 
         return RPC.call(request,response);
@@ -124,6 +128,13 @@ public final class UserBiz {
                 params.put("mobile",mobile);
                 params.put("token",token);
                 params.put("refreshToken",refreshToken);
+            }
+
+            @Override
+            public TokenModel call() throws Exception {
+                TokenModel token = super.call();
+                UserCenter.shareInstance().saveToken(token);
+                return token;
             }
 
             @Override

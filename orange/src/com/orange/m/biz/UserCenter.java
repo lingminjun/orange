@@ -7,6 +7,7 @@ import android.util.Base64;
 import com.alibaba.fastjson.JSON;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.BroadcastCenter;
+import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.UserDefaults;
 
 /**
@@ -63,11 +64,15 @@ public final class UserCenter {
         String json = UserDefaults.getInstance().getJSONString(USER_TOKEN_KEY);
         if (!TextUtils.isEmpty(json)) {
             try {
-                _token = (UserBiz.TokenModel)JSON.parseArray(json, UserBiz.TokenModel.class);
+                _token = (UserBiz.TokenModel)JSON.parseObject(json, UserBiz.TokenModel.class);
                 if (_token != null) {
                     _uid = _token.id;
                 }
             } catch (Throwable e) {}
+        }
+
+        if (_token != null && !TextUtils.isEmpty(_token.token)) {
+            HTTPAccessor.setAuthToken(_token.token);
         }
 
         return true;
@@ -123,6 +128,10 @@ public final class UserCenter {
                 String json = JSON.toJSONString(tokenModel);
                 UserDefaults.getInstance().putJSONString(USER_TOKEN_KEY, json);
             }
+        }
+
+        if (tokenModel != null && !TextUtils.isEmpty(tokenModel.token)) {
+            HTTPAccessor.setAuthToken(tokenModel.token);
         }
 
         //抛出成功通知
