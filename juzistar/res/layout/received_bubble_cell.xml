@@ -17,7 +17,7 @@
                   android:paddingBottom="6dp"
                   android:id="@+id/message_content_panel"
                   android:clickable="true"
-                  android:gravity="center"
+                  android:gravity="center|left"
                   android:background="@drawable/press_corner_transparent_bg">
         <ImageView android:id="@+id/icon_image"
                    android:layout_width="@dimen/user_icon_size"
@@ -30,9 +30,9 @@
                   android:background="@android:color/transparent"
                   android:textColor="@color/white"
                   android:textSize="@dimen/normal_font"
-                  android:gravity="center"
+                  android:gravity="left"
                   android:layout_marginLeft="@dimen/bmid_padding"
-                  android:lines="1"
+                  android:lines="2"
                   android:ellipsize="end"
                   android:text="标题"/>
     </LinearLayout>

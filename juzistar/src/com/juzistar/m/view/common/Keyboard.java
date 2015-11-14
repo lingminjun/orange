@@ -252,7 +252,7 @@ public final class Keyboard {
             _sendButton.setOnClickListener(UIEvent.click(sendClick));
         }
         _input = (EditText) _keyboard.findViewById(R.id.input_edt);
-//        _input.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        _input.setImeOptions(EditorInfo.IME_ACTION_SEND);
         _input.setOnEditorActionListener(actionListener);
         _input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(COMMENT_MAX_LENGTH)});
         _maxLengthTip = (TextView) _keyboard.findViewById(R.id.count_tv);

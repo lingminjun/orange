@@ -17,13 +17,14 @@
                android:scaleType="fitCenter"/>
     <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
+                  android:orientation="horizontal"
                   android:paddingLeft="8dp"
                   android:paddingRight="8dp"
                   android:paddingTop="6dp"
                   android:paddingBottom="6dp"
                   android:id="@+id/message_content_panel"
                   android:clickable="true"
-                  android:gravity="center"
+                  android:gravity="center|right"
                   android:background="@drawable/press_corner_transparent_bg">
         <TextView android:id="@+id/title_label"
                   android:layout_width="wrap_content"
@@ -31,8 +32,8 @@
                   android:background="@android:color/transparent"
                   android:textColor="@color/white"
                   android:textSize="@dimen/normal_font"
-                  android:gravity="center"
-                  android:lines="1"
+                  android:gravity="left"
+                  android:lines="2"
                   android:ellipsize="end"
                   android:text="标题"/>
         <ImageView android:id="@+id/icon_image"
