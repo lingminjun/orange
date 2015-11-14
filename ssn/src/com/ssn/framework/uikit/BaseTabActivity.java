@@ -85,6 +85,10 @@ public class BaseTabActivity extends BaseActivity {
         return _tabbar;
     }
 
+    protected UITabBar tabBar() {
+        return getTabbar();
+    }
+
     protected final int getContentViewlayoutID() {
         return R.layout.ssn_base_tab_activity;
     }

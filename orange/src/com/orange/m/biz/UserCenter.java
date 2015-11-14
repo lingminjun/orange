@@ -92,6 +92,22 @@ public final class UserCenter {
         return _uid;
     }
 
+    /**
+     * 返回当前用户的昵称
+     * @return
+     */
+    public User user() {
+        User us = new User();
+        synchronized (this) {
+            if (_token != null) {
+                us.uid = _token.id;
+                us.nick = _token.nickname;
+                us.mobile = _token.mobile;
+            }
+        }
+        return us;
+    }
+
     private int _uid;
     private Application _application;
     private static final String TOKEN_INFO_DIR  = "/users/";
@@ -100,7 +116,8 @@ public final class UserCenter {
     //将数据存储下来
     public void saveToken(UserBiz.TokenModel tokenModel) {
         synchronized (this) {
-            _token = tokenModel;
+            _token = new UserBiz.TokenModel();
+            _token.fillFromOther(tokenModel);//采用copy的方式
             if (tokenModel != null) {
                 _uid = tokenModel.id;
                 String json = JSON.toJSONString(tokenModel);
@@ -116,4 +133,11 @@ public final class UserCenter {
 
     private static final String USER_TOKEN_KEY = "_user_token";
     private UserBiz.TokenModel _token;
+
+
+    public static class User {
+        public long uid;
+        public String nick;
+        public String mobile;
+    }
 }

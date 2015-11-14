@@ -8,7 +8,13 @@
               android:paddingRight="15dp"
               android:paddingTop="4dp"
               android:paddingBottom="4dp"
-              android:gravity="center|left">
+              android:gravity="center|right">
+    <ImageView android:id="@+id/right_icon"
+               android:layout_marginRight="10dp"
+               android:layout_width="@dimen/tag_icon_size"
+               android:layout_height="@dimen/tag_icon_size"
+               android:background="@color/blue_tag"
+               android:scaleType="fitCenter"/>
     <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:paddingLeft="8dp"
@@ -19,11 +25,6 @@
                   android:clickable="true"
                   android:gravity="center"
                   android:background="@drawable/press_corner_transparent_bg">
-        <ImageView android:id="@+id/icon_image"
-                   android:layout_width="@dimen/user_icon_size"
-                   android:layout_height="@dimen/user_icon_size"
-                   android:background="@drawable/btn_red_circle_bg"
-                   android:scaleType="fitCenter"/>
         <TextView android:id="@+id/title_label"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -31,15 +32,14 @@
                   android:textColor="@color/white"
                   android:textSize="@dimen/normal_font"
                   android:gravity="center"
-                  android:layout_marginLeft="@dimen/bmid_padding"
                   android:lines="1"
                   android:ellipsize="end"
                   android:text="标题"/>
+        <ImageView android:id="@+id/icon_image"
+                   android:layout_width="@dimen/user_icon_size"
+                   android:layout_height="@dimen/user_icon_size"
+                   android:layout_marginLeft="@dimen/bmid_padding"
+                   android:background="@drawable/btn_red_circle_bg"
+                   android:scaleType="fitCenter"/>
     </LinearLayout>
-    <ImageView android:id="@+id/right_icon"
-               android:layout_marginLeft="10dp"
-               android:layout_width="@dimen/tag_icon_size"
-               android:layout_height="@dimen/tag_icon_size"
-               android:background="@color/blue_tag"
-               android:scaleType="fitCenter"/>
 </LinearLayout>

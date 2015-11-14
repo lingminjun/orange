@@ -4,12 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.orange.m.R;
+import com.orange.m.Utils.Utils;
+import com.orange.m.biz.MessageBiz;
+import com.orange.m.biz.NoticeBiz;
+import com.orange.m.biz.UserCenter;
 import com.orange.m.page.PageCenter;
 import com.orange.m.page.base.BaseTableViewController;
 import com.orange.m.view.common.Keyboard;
@@ -17,10 +22,8 @@ import com.orange.m.view.me.IconTitleCellModel;
 import com.orange.m.view.me.TestCellModel;
 import com.orange.m.view.pop.BubbleCellModel;
 import com.orange.m.view.pop.ReceivedBubbleCell;
-import com.ssn.framework.foundation.BroadcastCenter;
-import com.ssn.framework.foundation.Clock;
-import com.ssn.framework.foundation.Res;
-import com.ssn.framework.foundation.TaskQueue;
+import com.orange.m.view.pop.SendBubbleCellModel;
+import com.ssn.framework.foundation.*;
 import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
@@ -36,7 +39,9 @@ public class PopViewController extends BaseTableViewController {
     LinearLayout buttonBar;
     LinearLayout bottomBar;
 
+    LinearLayout switchBtnPanel;
     TextView switchBtn;
+    LinearLayout sendBtnPanel;
     TextView sendBtn;
 
     @Override
@@ -60,7 +65,9 @@ public class PopViewController extends BaseTableViewController {
         //底部发送panel
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
         switchBtn = (TextView)bottom.findViewById(R.id.close_pop_btn);
+        switchBtnPanel = (LinearLayout)bottom.findViewById(R.id.close_pop_btn_panel);
         sendBtn = (TextView)bottom.findViewById(R.id.send_pop_btn);
+        sendBtnPanel = (LinearLayout)bottom.findViewById(R.id.send_pop_btn_panel);
         buttonBar = (LinearLayout)bottom.findViewById(R.id.button_bar);
         bottomBar = (LinearLayout)bottom.findViewById(R.id.bottom_input_bar);
         tableView.setFooterView(bottom);
@@ -92,14 +99,14 @@ public class PopViewController extends BaseTableViewController {
             }
         });
 
-        switchBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+        switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PageCenter.checkAuth(null);
             }
         }));
 
-        sendBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+        sendBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Keyboard.shareInstance().showInView(bottomBar);
@@ -156,8 +163,43 @@ public class PopViewController extends BaseTableViewController {
         BroadcastCenter.shareInstance().addObserver(this, UIEvent.UIKeyboardWillHideNotification, method);
     }
 
-    public void sendAction(String msg) {
+    public void sendAction(final String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            App.toast(Res.localized(R.string.please_input_content));
+            return;
+        }
 
+        Keyboard.shareInstance().dismiss(false);
+
+        UserCenter.User user = UserCenter.shareInstance().user();
+
+        NoticeBiz.Notice notice = new NoticeBiz.Notice();
+        notice.content = msg;
+        notice.creator = user.nick;
+        notice.creatorId = user.uid;
+        notice.longitude = Double.toString(31.2117411154);
+        notice.latitude = Double.toString(121.4596178033);
+
+        NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
+            @Override
+            public void onSuccess(NoticeBiz.Notice notice) {
+                super.onSuccess(notice);
+
+                //清除输入
+                Keyboard.shareInstance().setText("");
+
+                SendBubbleCellModel model = new SendBubbleCellModel();
+                model.message = msg;
+                tableViewAdapter().appendCell(model);
+                tableView().scrollToBottom();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                super.onFailure(e);
+                Utils.toastException(e,Res.localized(R.string.send_failed));
+            }
+        });
     }
 
     @Override

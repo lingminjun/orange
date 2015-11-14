@@ -19,6 +19,9 @@ public class MainTabActivity extends BaseTabActivity {
 
         setBackgroundDrawable(R.drawable.page_bd);
 
+        tabBar().setBackgroundResource(R.color.black_0_5_alpha);
+
+
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
     }
 
