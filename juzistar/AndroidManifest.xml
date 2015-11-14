@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.juzistar.m"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="21" />
+
+    <!--权限申明-->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application android:allowBackup="true"
+                 android:hardwareAccelerated="false"
+                 android:name=".application.AppAplication"
+                 android:label="@string/app_name"
+                 android:icon="@drawable/ic_launcher"
+                 android:persistent="true"
+                 android:supportsRtl="true"
+                 android:theme="@style/ssn_ui_page_push_style">
+
+        <!--Activity申明-->
+        <activity android:name=".page.splash.SplashActivity"
+                  android:label="@string/app_name"
+                  android:theme="@style/ssn_ui_page_modal_fade_style">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--进入无动画-->
+        <activity android:name=".page.splash.WelcomeActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden"
+                  android:theme="@style/ssn_ui_page_modal_fade_style">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--登录-->
+        <activity android:name=".page.auth.LoginActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden"
+                  android:theme="@style/ssn_ui_page_modal_pop_style">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
+        <activity android:launchMode="singleTask"
+                  android:name=".page.main.MainTabActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/ssn_ui_page_root_style"
+                  android:windowSoftInputMode="adjustResize|stateHidden"/>
+<!--adjustPan-->
+        <activity android:name="com.ssn.framework.uikit.BaseActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.ssn.framework.uikit.BaseNavActivity"
+                  android:configChanges="keyboardHidden|orientation|screenSize"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

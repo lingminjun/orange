@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.orange.m.android</groupId>
+    <groupId>com.juzistar.m.android</groupId>
     <artifactId>android</artifactId>
     <name>android</name>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
     <modules>
-        <module>orange</module>
+        <module>juzistar</module>
         <module>ssn</module>
         <!--<module>resting</module>-->
     </modules>
@@ -39,11 +39,11 @@
                 <version>1.0.0</version>
                 <type>aar</type>
             </dependency>
-            <dependency>
-                <groupId>com.google.resting</groupId>
-                <artifactId>resting-android</artifactId>
-                <version>1.0.0</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>com.google.resting</groupId>-->
+                <!--<artifactId>resting-android</artifactId>-->
+                <!--<version>1.0.0</version>-->
+            <!--</dependency>-->
         </dependencies>
     </dependencyManagement>
 
