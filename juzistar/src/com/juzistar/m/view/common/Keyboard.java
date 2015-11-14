@@ -1,13 +1,17 @@
 package com.juzistar.m.view.common;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -159,6 +163,77 @@ public final class Keyboard {
         }
     }
 
+    private TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editable != null) {
+                String content = String.format("%d/%d", editable.length(), COMMENT_MAX_LENGTH);
+                _maxLengthTip.setText(content);
+            }
+            boolean empty = (editable == null) || TextUtils.isEmpty(editable.toString().trim());
+            int maxLines = empty ? COMMENT_EDIT_HINT_MAX_LINES : COMMENT_EDIT_MAX_LINES;
+            setEditMaxLines(maxLines);
+        }
+    };
+
+    private View.OnLayoutChangeListener changeListener = new View.OnLayoutChangeListener() {
+        @Override
+        public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+            int newHeight = bottom - top;
+            int oldHeight = oldBottom - oldTop;
+            if (newHeight != oldHeight) {
+
+                if (_heightChanged != null) {
+                    try {
+                        _heightChanged.onChanged(_keyboard.getHeight(), oldHeight);
+                    } catch (Throwable e) {}
+
+                }
+            }
+        }
+    };
+
+    private String getTextString() {
+        Editable editable = _input.getText();
+        if (editable != null) {
+            return editable.toString().trim();
+        }
+        return "";
+    }
+
+    private TextView.OnEditorActionListener actionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            final String string = getTextString();
+            if (actionId == EditorInfo.IME_ACTION_SEND
+                    || (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                //do something;
+                if (TextUtils.isEmpty(string)) {
+//                    Utils.toast(getActivity(),Res.localized(R.string.));
+                    return false;
+                } else {//触发发送
+                    if (sendClick != null) {
+                        try {
+                            sendClick.onClick(textView);
+                        } catch (Throwable e) {}
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+
     /**
      * 实例化输入框layout
      *
@@ -171,50 +246,20 @@ public final class Keyboard {
 
         Context context = Res.context();
         _keyboard = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
+        ((ViewGroup)_keyboard).setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         _sendButton = _keyboard.findViewById(R.id.send_btn);
         if (sendClick != null) {
             _sendButton.setOnClickListener(UIEvent.click(sendClick));
         }
         _input = (EditText) _keyboard.findViewById(R.id.input_edt);
+//        _input.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        _input.setOnEditorActionListener(actionListener);
         _input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(COMMENT_MAX_LENGTH)});
         _maxLengthTip = (TextView) _keyboard.findViewById(R.id.count_tv);
-        _input.addTextChangedListener(UIEvent.watcher(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable != null) {
-                    String content = String.format("%d/%d", editable.length(), COMMENT_MAX_LENGTH);
-                    _maxLengthTip.setText(content);
-                }
-                boolean empty = (editable == null) || TextUtils.isEmpty(editable.toString().trim());
-                int maxLines = empty ? COMMENT_EDIT_HINT_MAX_LINES : COMMENT_EDIT_MAX_LINES;
-                setEditMaxLines(maxLines);
-            }
-        }));
+        _input.addTextChangedListener(UIEvent.watcher(watcher));
 
         //高度随之改变
-        _input.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                int newHeight = bottom - top;
-                int oldHeight = oldBottom - oldTop;
-                if (newHeight != oldHeight) {
-
-                    if (_heightChanged != null) {
-                        _heightChanged.onChanged(_keyboard.getHeight(), oldHeight);
-                    }
-                }
-            }
-        });
+        _input.addOnLayoutChangeListener(changeListener);
 
         if (_text != null) {
             _input.setText(_text);

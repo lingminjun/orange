@@ -24,6 +24,8 @@
               android:background="@drawable/wbg_grey_stroke_corner"
               android:layout_marginLeft="@dimen/input_comment_view_lr_padding"
               android:layout_marginTop="@dimen/input_comment_view_tb_padding"
+              android:cursorVisible="true"
+              android:textCursorDrawable="@null"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"/>
     <TextView style="@style/ww_grey_smallSize_text"
