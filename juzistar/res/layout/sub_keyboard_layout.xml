@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@color/white"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="4dp"
+                  android:layout_marginBottom="4dp"
+                  android:orientation="horizontal">
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_00"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_01"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_02"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_03"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="4dp"
+                  android:layout_marginBottom="4dp"
+                  android:orientation="horizontal">
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_10"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_11"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_12"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_13"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="4dp"
+                  android:layout_marginBottom="4dp"
+                  android:orientation="horizontal">
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_20"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_21"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_22"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_23"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="4dp"
+                  android:layout_marginBottom="4dp"
+                  android:orientation="horizontal">
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_30"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_31"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_32"/>
+        <include layout="@layout/sub_keyboard_button"
+                 android:id="@+id/button_33"/>
+    </LinearLayout>
+</LinearLayout>

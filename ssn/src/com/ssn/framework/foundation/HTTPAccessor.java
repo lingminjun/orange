@@ -339,6 +339,8 @@ public final class HTTPAccessor {
             httpRequest.setHeader("Authorization", _auth_token);
         }
 
+        Log.i("HTTP","\nstart:["+request.methodURI()+"]");
+
         try {
             response = hClient.execute(httpRequest);
         } catch (Throwable e) {//ConnectException IOException ConnectTimeoutException连接或者io异常，停止

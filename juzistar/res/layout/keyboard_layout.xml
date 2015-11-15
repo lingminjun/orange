@@ -55,4 +55,8 @@
              android:layout_height="wrap_content"
              android:layout_below="@+id/input_edt"
              android:layout_marginTop="@dimen/input_comment_view_tb_padding"/>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/bottom_line"
+                 android:id="@+id/keyboard_panel"/>
 </RelativeLayout>

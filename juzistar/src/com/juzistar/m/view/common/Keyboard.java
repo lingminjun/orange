@@ -39,6 +39,8 @@ public final class Keyboard {
     private View _sendButton;
     private TextView _maxLengthTip;
 
+    private ViewGroup _panel;//键盘区域
+
     private Keyboard() {}
     private static Keyboard _instance = null;
     /**
@@ -122,14 +124,20 @@ public final class Keyboard {
     public void dismiss(boolean isDock) {
         if (_keyboard == null) {return;}
 
-        _input.setSingleLine(true);
-        _input.clearFocus();
+        if (!_showPanel) {
+            _input.setSingleLine(true);
+            _input.clearFocus();
 
-        InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
 
-        if (!isDock) {
-            _keyboard.setVisibility(View.GONE);
+            if (!isDock) {
+                _keyboard.setVisibility(View.GONE);
+            }
+
+        } else {
+            InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
         }
     }
 
@@ -234,6 +242,52 @@ public final class Keyboard {
         }
     };
 
+    private boolean _showPanel;//是否展示panel
+    private View.OnClickListener rightButtonAction = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (_showPanel) {
+                dismissPanel();
+            } else {
+                showPanel();
+            }
+        }
+    };
+
+    private View _subboard;
+    private void showPanel() {
+        if (_subboard == null) {
+            Context context = Res.context();
+            _subboard = LayoutInflater.from(context).inflate(R.layout.sub_keyboard_layout, null);
+        }
+
+        if (_showPanel) {
+            return;
+        }
+
+        _showPanel = true;
+        _panel.addView(_subboard);
+
+        //隐藏键盘
+        InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
+    }
+
+    private void dismissPanel() {
+        if (!_showPanel) {
+            return;
+        }
+
+        _showPanel = false;
+        if (_subboard != null) {
+            _panel.removeView(_subboard);
+        }
+
+        //弹起键盘
+        InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(_input, InputMethodManager.SHOW_IMPLICIT);
+    }
+
     /**
      * 实例化输入框layout
      *
@@ -247,10 +301,9 @@ public final class Keyboard {
         Context context = Res.context();
         _keyboard = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
         ((ViewGroup)_keyboard).setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        _panel = (ViewGroup)_keyboard.findViewById(R.id.keyboard_panel);
         _sendButton = _keyboard.findViewById(R.id.send_btn);
-        if (sendClick != null) {
-            _sendButton.setOnClickListener(UIEvent.click(sendClick));
-        }
+        _sendButton.setOnClickListener(UIEvent.click(rightButtonAction));
         _input = (EditText) _keyboard.findViewById(R.id.input_edt);
         _input.setImeOptions(EditorInfo.IME_ACTION_SEND);
         _input.setOnEditorActionListener(actionListener);
@@ -286,14 +339,14 @@ public final class Keyboard {
     private View.OnClickListener sendClick;
     public void setSendClick(View.OnClickListener click) {
         sendClick = click;
-        if (_sendButton != null) {
-            if (click != null) {
-                _sendButton.setOnClickListener(UIEvent.click(click));
-            }
-            else {
-                _sendButton.setOnClickListener(null);
-            }
-        }
+//        if (_sendButton != null) {
+//            if (click != null) {
+//                _sendButton.setOnClickListener(UIEvent.click(click));
+//            }
+//            else {
+//                _sendButton.setOnClickListener(null);
+//            }
+//        }
     }
 
 //    private void closeInputComment(boolean keepInputViewVisible) {

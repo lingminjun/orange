@@ -53,28 +53,22 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         public boolean isReusable() { return !_nonReusable; }
 
         public TableViewAdapter(UITableView tableView){
-            _tableView = tableView;
-            _viewTypeCount = DEFAULT_CELL_TYPE_COUNT;//默认支持八种
-            _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);//默认只开启下拉模式
-            _tableView._tableView.setAdapter(this);
-            updateRefreshLabel();
-            setListeners();
+            init(tableView, 0, true);
         }
 
         public TableViewAdapter(UITableView tableView,int cellTypeCount){
-            _tableView = tableView;
-            _viewTypeCount = cellTypeCount < DEFAULT_CELL_TYPE_COUNT ? DEFAULT_CELL_TYPE_COUNT : cellTypeCount;
-            _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);//默认只开启下拉模式
-            _tableView._tableView.setAdapter(this);
-            updateRefreshLabel();
-            setListeners();
+            init(tableView,cellTypeCount,true);
         }
 
         public TableViewAdapter(UITableView tableView,boolean reusable){
+            init(tableView,0,reusable);
+        }
+
+        private void init(UITableView tableView,int cellTypeCount,boolean reusable) {
             _tableView = tableView;
             _nonReusable = !reusable;
             if (reusable) {
-                _viewTypeCount = DEFAULT_CELL_TYPE_COUNT;
+                _viewTypeCount = cellTypeCount < DEFAULT_CELL_TYPE_COUNT ? DEFAULT_CELL_TYPE_COUNT : cellTypeCount;
             } else {
                 _viewTypeCount = 0;
             }
@@ -581,6 +575,9 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
      */
     public void setStackFromBottom(boolean bottom) {
         if (_tableView != null) {
+            if (bottom) {
+                _tableView.getRefreshableView().setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+            }
             _tableView.getRefreshableView().setStackFromBottom(true);
         }
     }

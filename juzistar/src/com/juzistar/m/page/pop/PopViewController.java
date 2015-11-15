@@ -88,8 +88,7 @@ public class PopViewController extends BaseTableViewController {
         Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
             @Override
             public void onChanged(int newHeight, int oldHeight) {
-                tableView().scrollToBottom();
-//                tableView().resizeFooterViewHeight();
+                
             }
         });
 
@@ -123,7 +122,6 @@ public class PopViewController extends BaseTableViewController {
                     test_count++;
 
                     tableViewAdapter().appendCell(model);
-                    tableView().scrollToBottom();
 
                     if (test_count > 20) {
                         Clock.shareInstance().removeListener("dd");
@@ -143,19 +141,11 @@ public class PopViewController extends BaseTableViewController {
                 String action = intent.getAction();
                 if (action.equals(UIEvent.UIKeyboardWillShowNotification)) {
                     buttonBar.setVisibility(View.GONE);
-//                    tableViewAdapter().setPullRefreshEnabled(false);
                 }
                 else if (action.equals(UIEvent.UIKeyboardWillHideNotification)) {
                     buttonBar.setVisibility(View.VISIBLE);
                     Keyboard.shareInstance().dismiss(false);
-//                    tableViewAdapter().setPullRefreshEnabled(true);
                 }
-                TaskQueue.mainQueue().executeDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        tableView().scrollToBottom();
-                    }
-                },500);
 
             }
         };
@@ -201,7 +191,6 @@ public class PopViewController extends BaseTableViewController {
                 SendBubbleCellModel model = new SendBubbleCellModel();
                 model.message = msg;
                 tableViewAdapter().appendCell(model);
-                tableView().scrollToBottom();
             }
 
             @Override
