@@ -88,7 +88,7 @@ public class PopViewController extends BaseTableViewController {
         Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
             @Override
             public void onChanged(int newHeight, int oldHeight) {
-                
+
             }
         });
 

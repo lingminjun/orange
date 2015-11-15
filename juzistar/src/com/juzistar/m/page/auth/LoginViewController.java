@@ -79,6 +79,8 @@ public class LoginViewController extends BaseViewController {
                         //进入主页
                         finish();
 
+                        PageCenter.authComplete(null);
+
                         App.toast(Res.localized(R.string.login_success));
                     }
 

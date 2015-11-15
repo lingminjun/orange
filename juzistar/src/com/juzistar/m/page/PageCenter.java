@@ -71,5 +71,16 @@ public final class PageCenter {
         }
     }
 
-    public static AuthCallBack _authCallBack;
+    public static void authComplete(String account) {
+        if (_authCallBack != null) {
+            if (UserCenter.shareInstance().isLogin()) {
+                try {
+                    _authCallBack.auth(account);
+                } catch (Throwable e) {
+                }
+            }
+            _authCallBack = null;
+        }
+    }
+    private static AuthCallBack _authCallBack;
 }

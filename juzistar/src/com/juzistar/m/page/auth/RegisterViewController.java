@@ -76,6 +76,8 @@ public class RegisterViewController extends BaseViewController {
                         App.toast(Res.localized(R.string.login_success));
 
                         PageCenter.goHome();
+
+                        PageCenter.authComplete(null);
                     }
 
                     @Override
