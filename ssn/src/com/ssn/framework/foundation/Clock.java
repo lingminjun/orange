@@ -6,6 +6,9 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lingminjun on 15/7/16.
@@ -92,7 +95,7 @@ public final class Clock {
     ////////////////一下私有方法实现/////////////////////////////
 
     private HashMap<String,Listener> _fires = new HashMap<String, Listener>();
-    private Timer _timer;
+    private ScheduledExecutorService _timer;
 
     private void dispatch() {
         Map<String,Listener> map = listeners();
@@ -118,19 +121,20 @@ public final class Clock {
 
     private void _start() {
         if (_timer != null) return;
-        _timer = new Timer(true);
+        _timer = Executors.newScheduledThreadPool(1);
         TimerTask task = new TimerTask() {
             public void run() {
                 Message msg = _handler.obtainMessage();
                 _handler.sendMessage(msg);
             }
         };
-        _timer.schedule(task, 0, 1000);//一秒触发一次
+        //一秒触发一次
+        _timer.scheduleAtFixedRate(task, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     private void _stop() {
         if (_timer != null){
-            _timer.cancel();
+            _timer.shutdown();
             _timer = null;
         }
     }
