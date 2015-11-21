@@ -20,4 +20,6 @@ public class BaseTableViewController extends UITableViewController {
 
         navigationItem().setBottomLineHidden(true);
     }
+
+
 }

@@ -328,8 +328,8 @@ public abstract class UITableViewCell extends RelativeLayout {
                 }
 
                 //设置颜色
-                if (cellModel.separateLineColor > 0) {
-                    _separateLine.setBackgroundColor(Res.color(cellModel.separateLineColor));
+                if (cellModel.separateLineColor != 0) {
+                    _separateLine.setBackgroundColor(cellModel.separateLineColor);
                 } else {
                     _separateLine.setBackgroundColor(Res.color(android.R.color.darker_gray));
                 }

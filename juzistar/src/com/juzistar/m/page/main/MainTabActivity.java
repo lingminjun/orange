@@ -1,8 +1,11 @@
 package com.juzistar.m.page.main;
 
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import com.juzistar.m.R;
 import com.ssn.framework.foundation.App;
@@ -23,6 +26,14 @@ public class MainTabActivity extends BaseTabActivity {
 
 
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+
+
+//        getRootWrapView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                getKeyboardHeight();
+//            }
+//        });
     }
 
     private long mLastBackKeyTime;
@@ -40,4 +51,33 @@ public class MainTabActivity extends BaseTabActivity {
         }
         return super.dispatchKeyEvent(event);
     }
+
+//    private Rect r = new Rect();
+//    private int mVisibleHeight = 0;
+//    private boolean mIsKeyboardShow = false;
+//    private void getKeyboardHeight() {
+//        getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+//        int visibleHeight = r.height();
+//        if (mVisibleHeight == 0) {
+//            mVisibleHeight = visibleHeight;
+//            return;
+//        }
+//        if (mVisibleHeight == visibleHeight) {
+//            return;
+//        }
+//
+//        int diff = visibleHeight - mVisibleHeight;
+//
+//        if (diff < 0) {
+//            diff = -diff;
+//
+//            mIsKeyboardShow = true;
+//        } else {
+//            mIsKeyboardShow = false;
+//        }
+//
+//        mVisibleHeight = visibleHeight;
+//
+//        Log.e("keyboard:","keybord show="+mIsKeyboardShow+";height="+diff);
+//    }
 }

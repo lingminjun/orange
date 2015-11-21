@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.FrameLayout;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.BroadcastCenter;
@@ -421,5 +422,9 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         if (root != null) {
             root.setBackgroundResource(sourceID);
         }
+    }
+
+    protected FrameLayout getRootWrapView() {
+        return (FrameLayout)findViewById(R.id.ssn_root_wrap_view);
     }
 }

@@ -9,6 +9,7 @@
 
     <color name="ssn_white">@android:color/white</color>
     <color name="ssn_white_light">#cccccc</color>
+    <color name="ssn_gray">#dcdcdc</color>
     <color name="ssn_blue">#2790EB</color>
     <color name="ssn_blue_light">#2790D1</color>
     <color name="ssn_red">#ff5e56</color>

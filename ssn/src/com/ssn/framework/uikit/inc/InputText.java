@@ -1,4 +1,4 @@
-package com.juzistar.m.view.common;
+package com.ssn.framework.uikit.inc;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,21 +11,21 @@ import android.widget.EditText;
 /**
  * Created by lingminjun on 15/11/14.
  */
-public class InputView extends EditText {
-    public InputView(Context context) {
+public class InputText extends EditText {
+    public InputText(Context context) {
         super(context);
     }
 
-    public InputView(Context context, AttributeSet attrs) {
+    public InputText(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public InputView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public InputText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public InputView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public InputText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

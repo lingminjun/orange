@@ -6,23 +6,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
-import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
-import com.juzistar.m.view.common.Keyboard;
-import com.juzistar.m.view.me.IconTitleCellModel;
-import com.juzistar.m.view.me.TestCellModel;
 import com.juzistar.m.view.pop.BubbleCellModel;
-import com.juzistar.m.view.pop.ReceivedBubbleCell;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
 import com.ssn.framework.uikit.*;
@@ -85,19 +79,19 @@ public class PopViewController extends BaseTableViewController {
 
         addObserver();
 
-        Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
-            @Override
-            public void onChanged(int newHeight, int oldHeight) {
-
-            }
-        });
-
-        Keyboard.shareInstance().setSendClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendAction(Keyboard.shareInstance().text());
-            }
-        });
+//        Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
+//            @Override
+//            public void onChanged(int newHeight, int oldHeight) {
+//
+//            }
+//        });
+//
+//        Keyboard.shareInstance().setSendClick(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                sendAction(Keyboard.shareInstance().text());
+//            }
+//        });
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
@@ -109,7 +103,9 @@ public class PopViewController extends BaseTableViewController {
         sendBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Keyboard.shareInstance().showInView(bottomBar);
+//                Keyboard.shareInstance().showInView(bottomBar);
+
+                UIKeyboard.shareInstance().show(PopViewController.this);
             }
         }));
 
@@ -144,7 +140,6 @@ public class PopViewController extends BaseTableViewController {
                 }
                 else if (action.equals(UIEvent.UIKeyboardWillHideNotification)) {
                     buttonBar.setVisibility(View.VISIBLE);
-                    Keyboard.shareInstance().dismiss(false);
                 }
 
             }
@@ -169,7 +164,7 @@ public class PopViewController extends BaseTableViewController {
     }
 
     private void sendNotice(final String msg) {
-        Keyboard.shareInstance().dismiss(false);
+        UIKeyboard.shareInstance().dismiss(false);
 
         UserCenter.User user = UserCenter.shareInstance().user();
 
@@ -186,7 +181,7 @@ public class PopViewController extends BaseTableViewController {
                 super.onSuccess(boolModel);
 
                 //清除输入
-                Keyboard.shareInstance().setText("");
+                UIKeyboard.shareInstance().setText("");
 
                 SendBubbleCellModel model = new SendBubbleCellModel();
                 model.message = msg;
@@ -201,16 +196,16 @@ public class PopViewController extends BaseTableViewController {
         });
     }
 
-    private void sendMessage(final String msg) {
-
-        MessageBiz.send(msg,3, new RPC.Response<MessageBiz.Message>() {
-            @Override
-            public void onSuccess(MessageBiz.Message message) {
-                super.onSuccess(message);
-            }
-        });
-
-    }
+//    private void sendMessage(final String msg) {
+//
+//        MessageBiz.send(msg,3, new RPC.Response<MessageBiz.Message>() {
+//            @Override
+//            public void onSuccess(MessageBiz.Message message) {
+//                super.onSuccess(message);
+//            }
+//        });
+//
+//    }
 
     @Override
     public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
@@ -226,6 +221,44 @@ public class PopViewController extends BaseTableViewController {
 
         return list;
     }
+
+    @Override
+    public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
+        super.onTableViewCellClick(adapter, cellModel, row);
+        UIKeyboard.shareInstance().dismiss(false);
+    }
+
+    //http://www.tuicool.com/articles/raqY7z
+    /*
+    singleTouchView.getViewTreeObserver().addOnGlobalLayoutListener(
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        private int heightDifference;
+
+//        <a href="http://home.51cto.com/index.php?s=/space/5017954" target="_blank">@Override</a>
+        public void onGlobalLayout() {
+            // TODO Auto-generated method stub
+            Rect r = new Rect();
+
+            layout.getWindowVisibleDisplayFrame(r);
+
+            int screenHeight = layout.getRootView().getHeight();
+            //键盘高度
+            heightDifference = screenHeight - (r.bottom - r.top);
+
+
+            if (heightDifference != 0) {
+                tl.setLayoutParams(new AbsoluteLayout.LayoutParams(
+                        mWidth, mBottomHeight, 0, mHeight
+                        - heightDifference - mBottomHeight));
+                tl.setVisibility(View.VISIBLE);
+            } else {
+                tl.clearAnimation();
+                tl.setVisibility(View.INVISIBLE);
+            }
+        }
+    });
+    */
 
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent ev) {
