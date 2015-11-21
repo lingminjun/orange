@@ -18,10 +18,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <keystore.filename>./sfht.jks</keystore.filename>
-        <keystore.storepass>Qwerwsx1234%</keystore.storepass>
-        <keystore.keypass>Qwerwsx1234%</keystore.keypass>
-        <keystore.alias>sfht.android</keystore.alias>
+        <keystore.filename>./juzi.ks</keystore.filename>
+        <keystore.storepass>juzistar@2015</keystore.storepass>
+        <keystore.keypass>juzistar@2015</keystore.keypass>
+        <keystore.alias>android</keystore.alias>
         <android.proguard.obfuscatedJar>${project.build.directory}/classes_obfuscated.jar</android.proguard.obfuscatedJar>
         <android.proguard.includeJdkLibs>false</android.proguard.includeJdkLibs>
     </properties>

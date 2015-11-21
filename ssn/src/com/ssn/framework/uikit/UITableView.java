@@ -267,6 +267,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             checkSynchronize();
         }
 
+
         /**
          * 删除单行数据
          * @param cellModel
@@ -277,6 +278,27 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             if (!_items.contains(cellModel)) {return;}
 
             this._items.remove(cellModel);
+
+            //刷新界面
+            checkSynchronize();
+        }
+
+        /**
+         * 删除从begin row开始到后range位数，越界忽略
+         * @param beginRow
+         * @param range
+         */
+        public void removeCells(int beginRow, int range) {
+            if (beginRow < 0 || beginRow >= this._items.size()) {return;}
+
+            if (range <= 0) {return;}
+
+            for (int i = 0; i < range; i++) {
+
+                if (beginRow>= this._items.size()) {break;}
+
+                this._items.remove(beginRow);
+            }
 
             //刷新界面
             checkSynchronize();
