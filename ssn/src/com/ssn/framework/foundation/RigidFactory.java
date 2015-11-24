@@ -41,7 +41,7 @@ public final class RigidFactory<T> {
      * @return
      */
     public synchronized T get(String key,Map<String,Object> params) {
-        if (!TextUtils.isEmpty(key)) {return null;}
+        if (TextUtils.isEmpty(key)) {return null;}
 
         WeakReference<T> weak = _cache.get(key);
         if (weak != null) {

@@ -52,6 +52,43 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.4</version>
         </dependency>
+
+        <!--百度sdk-->
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>map</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>mapbase</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>mapcloud</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>mapradar</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>mapsearch</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>maputil</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.sdk</groupId>
+            <artifactId>location</artifactId>
+            <version>6.13</version>
+        </dependency>
     </dependencies>
 
     <build>
