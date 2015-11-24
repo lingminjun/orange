@@ -13,6 +13,14 @@
     <color name="normal_line">#dcdcdc</color>
     <color name="blue_text_color">#4bb8e4</color>
 
+    <!--头像color-->
+    <color name="avatar_green_0">#acc011</color>
+    <color name="avatar_green_1">#24cf5f</color>
+    <color name="avatar_blue_0">#0088ff</color>
+    <color name="avatar_red_0">#ff4e70</color>
+    <color name="avatar_yellow_0">#ffc900</color>
+    <color name="avatar_yellow_1">#ff8f00</color>
+
     <!--背景颜色-->
     <color name="grey_alpha_40">#40cccccc</color>
     <color name="grey_alpha_a0">#a0cccccc</color>

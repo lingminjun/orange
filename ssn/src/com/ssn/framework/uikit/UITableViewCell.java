@@ -311,7 +311,7 @@ public abstract class UITableViewCell extends RelativeLayout {
                 params.height = Density.dipTopx(cellModel.height);
             }
             else {
-                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             }
         }
 

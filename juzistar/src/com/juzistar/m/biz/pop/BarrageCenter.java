@@ -7,6 +7,7 @@ import com.ssn.framework.foundation.Clock;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.UserDefaults;
 
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -96,6 +97,8 @@ public final class BarrageCenter {
 //        MessageBiz.fetchMessage(0,res);
     }
 
+
+
     private Clock.Listener clock = new Clock.Listener() {
         @Override
         public void fire(String flag) {
@@ -110,7 +113,21 @@ public final class BarrageCenter {
 
     private int count;
 //    private Set<msgId>
-    
+
+    private Random random = new Random();
+
+    /**
+     * 获取size以内随机数
+     * @param size
+     * @return
+     */
+    public int getRandom(int size) {
+        if (size > 1) {
+            return random.nextInt() % size;
+        } else {
+            return random.nextInt();
+        }
+    }
 
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";

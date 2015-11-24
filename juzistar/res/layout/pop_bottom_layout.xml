@@ -5,7 +5,6 @@
               android:background="@android:color/transparent"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <include layout="@layout/ssn_horizontal_line"/>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="100dp"
                   android:orientation="horizontal"
@@ -17,12 +16,13 @@
                       android:id="@+id/close_pop_btn_panel"
                       android:orientation="horizontal"
                       android:layout_marginRight="30dp"
-                      android:gravity="center">
-            <TextView android:layout_width="18dp"
-                      android:layout_height="18dp"
+                      android:gravity="left|center_vertical">
+            <TextView android:layout_width="28dp"
+                      android:layout_height="28dp"
+                      android:layout_marginLeft="20dp"
                       android:textSize="@dimen/ssn_state_font"
                       android:textColor="@color/ssn_normal_text"
-                      android:background="@drawable/close_icon"
+                      android:background="@drawable/button_pop_icon"
                       android:id="@+id/close_pop_btn"
                       android:scaleType="fitCenter"
                       android:gravity="center"/>
@@ -33,19 +33,15 @@
                       android:id="@+id/send_pop_btn_panel"
                       android:orientation="horizontal"
                       android:layout_marginLeft="30dp"
-                      android:gravity="center">
-            <TextView android:layout_width="18dp"
-                      android:layout_height="18dp"
+                      android:gravity="right|center_vertical">
+            <TextView android:layout_width="28dp"
+                      android:layout_height="28dp"
+                      android:layout_marginRight="20dp"
                       android:textSize="@dimen/ssn_state_font"
                       android:textColor="@color/ssn_normal_text"
                       android:background="@drawable/write_icon"
                       android:id="@+id/send_pop_btn"
                       android:gravity="center"/>
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:id="@+id/bottom_input_bar">
     </LinearLayout>
 </LinearLayout>

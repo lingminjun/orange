@@ -106,8 +106,6 @@ public final class UIKeyboard extends LinearLayout {
                 done = listener.onRightButtonClick(UIKeyboard.this, view);
             }
 
-
-
             if (!done) {
 
                 InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -133,12 +131,15 @@ public final class UIKeyboard extends LinearLayout {
                 }
 
                 _showSystemKeyboard = !_showSystemKeyboard;
+                _rightButton.setSelected(!_showSystemKeyboard);
             }
         }
     };
 
     private KeyboardListener listener;
     private View _customView;
+
+    private int _rightButtonResourceId;
 
     private TextView.OnEditorActionListener editorListener = new TextView.OnEditorActionListener() {
         @Override
@@ -191,7 +192,7 @@ public final class UIKeyboard extends LinearLayout {
 
                 if (listener != null) {
                     try {
-                        listener.onKeyboardChanged(_inputPanel.getHeight(), oldHeight);
+                        listener.onKeyboardChanged(UIKeyboard.this.getHeight(), oldHeight);
                     } catch (Throwable e) {}
 
                 }
@@ -235,6 +236,17 @@ public final class UIKeyboard extends LinearLayout {
         if (customView != null) {
             _keyboardPanel.addView(customView);
         }
+    }
+
+    public void setRightButtonResourceId(int resId) {
+        _rightButtonResourceId = resId;
+        if (_rightButton != null) {
+            _rightButton.setBackgroundResource(resId);
+        }
+    }
+
+    public void setKeyboardListener(KeyboardListener listener) {
+        this.listener = listener;
     }
 
 
@@ -291,9 +303,16 @@ public final class UIKeyboard extends LinearLayout {
 //            });
         }
 
+        _keyboardPanel.setVisibility(VISIBLE);//键盘的body展示出来
         _showSystemKeyboard = true;
 
         showSystemKeyboard();
+
+        if (listener != null) {
+            try {
+                listener.onKeyboardChanged(this.getHeight(),0);
+            } catch (Throwable e){e.printStackTrace();}
+        }
     }
 
     public void dismiss(boolean isDock) {
@@ -304,10 +323,28 @@ public final class UIKeyboard extends LinearLayout {
         }
         hideSystemKeyboard(isDock);
 
+        int keyboard_height = 0;
         if (!isDock) {
             showV.removeView(this);
             showV = null;
+        } else {
+            _keyboardPanel.setVisibility(GONE);
+            keyboard_height = this.getHeight();
         }
+
+        if (listener != null) {
+            try {
+                listener.onKeyboardChanged(keyboard_height,0);
+            } catch (Throwable e){e.printStackTrace();}
+        }
+    }
+
+    public boolean isShow() {
+        return showV != null;
+    }
+
+    public boolean isSystemKeyboardShow() {
+        return _showSystemKeyboard;
     }
 
     private String getTextString() {
@@ -336,7 +373,6 @@ public final class UIKeyboard extends LinearLayout {
         } else {
             params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         }
-
     }
 
     private void showSystemKeyboard() {

@@ -630,6 +630,21 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         }
     }
 
+    /**
+     * 设置底部高度
+     * @param height(px) 小于等于零时自动设置成wrap_content
+     */
+    public void setFooterHeight(int height) {
+        if (_footerLayout != null) {
+            ViewGroup.LayoutParams params = _footerLayout.getLayoutParams();
+            if (height > 0) {
+                params.height = height;
+            } else {
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+        }
+    }
+
     private PullToRefreshListView _tableView;
     private FrameLayout _headerLayout;
     private FrameLayout _footerLayout;

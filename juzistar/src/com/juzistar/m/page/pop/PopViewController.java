@@ -13,6 +13,7 @@ import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
@@ -64,7 +65,6 @@ public class PopViewController extends BaseTableViewController {
         sendBtn = (TextView)bottom.findViewById(R.id.send_pop_btn);
         sendBtnPanel = (LinearLayout)bottom.findViewById(R.id.send_pop_btn_panel);
         buttonBar = (LinearLayout)bottom.findViewById(R.id.button_bar);
-        bottomBar = (LinearLayout)bottom.findViewById(R.id.bottom_input_bar);
         tableView.setFooterView(bottom);
 
         return view;
@@ -77,35 +77,30 @@ public class PopViewController extends BaseTableViewController {
 
 //        tableViewAdapter().setPullRefreshEnabled(false);
 
-        addObserver();
-
-//        Keyboard.shareInstance().setKeyboardHeightChanged(new Keyboard.KeyboardHeightChanged() {
-//            @Override
-//            public void onChanged(int newHeight, int oldHeight) {
-//
-//            }
-//        });
-//
-//        Keyboard.shareInstance().setSendClick(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                sendAction(Keyboard.shareInstance().text());
-//            }
-//        });
+//        addObserver();
+        LayoutInflater inflater = LayoutInflater.from(Res.context());
+        View view = inflater.inflate(R.layout.sub_keyboard_layout, null);
+        UIKeyboard.shareInstance().setKeyboardBody(view);
+        UIKeyboard.shareInstance().setBackgroundResource(R.drawable.button_keyboard_switch_icon);
+        UIKeyboard.shareInstance().setKeyboardListener(keyboardListener);
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PageCenter.checkAuth(null);
+                if (BarrageCenter.shareInstance().isOpenService()) {
+                    BarrageCenter.shareInstance().stopService();
+                    switchBtn.setSelected(true);
+                } else {
+                    BarrageCenter.shareInstance().startService();
+                    switchBtn.setSelected(false);
+                }
             }
         }));
 
         sendBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Keyboard.shareInstance().showInView(bottomBar);
-
-                UIKeyboard.shareInstance().show(PopViewController.this);
+                PageCenter.checkAuth(sendAuthCallback);
             }
         }));
 
@@ -128,6 +123,36 @@ public class PopViewController extends BaseTableViewController {
     }
 
     private int test_count;
+
+    PageCenter.AuthCallBack sendAuthCallback = new PageCenter.AuthCallBack() {
+        @Override
+        public void auth(String account) {
+            UIKeyboard.shareInstance().show(PopViewController.this);
+        }
+    };
+
+    UIKeyboard.KeyboardListener keyboardListener = new UIKeyboard.KeyboardListener() {
+        @Override
+        public void onSendButtonClick(UIKeyboard keyboard, View sender) {
+            sendAction(keyboard.text());//发送消息
+        }
+
+        @Override
+        public boolean onRightButtonClick(UIKeyboard keyboard, View sender) {
+
+            return false;
+        }
+
+        @Override
+        public void onKeyboardChanged(int newHeight, int oldHeight) {
+            int tab_height = Density.dipTopx(50);
+            if (newHeight > tab_height) {
+                tableView().setFooterHeight(newHeight - tab_height);
+            } else {
+                tableView().setFooterHeight(0);
+            }
+        }
+    };
 
     private void addObserver() {
 
