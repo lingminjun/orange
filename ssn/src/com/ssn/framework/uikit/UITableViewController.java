@@ -61,7 +61,7 @@ public class UITableViewController extends UIViewController implements UITableVi
     }
 
     @Override
-    public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
+    public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         return null;
     }
 

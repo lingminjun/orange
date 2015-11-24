@@ -208,7 +208,7 @@ public class PopViewController extends BaseTableViewController {
 //    }
 
     @Override
-    public List<UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
+    public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
 //        for (int i = 0; i< 10;i++) {

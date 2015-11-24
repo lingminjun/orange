@@ -29,7 +29,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
     public static class TableViewAdapter extends BaseAdapter implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener,AbsListView.OnScrollListener,PullToRefreshBase.OnRefreshListener2<ListView> {
 
         public static interface TableViewDelegate {
-            public List<UITableViewCell.CellModel> tableViewLoadCells(TableViewAdapter adapter);
+            public List<? extends UITableViewCell.CellModel> tableViewLoadCells(TableViewAdapter adapter);
             public void onTableViewCellClick(TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row);
             public void onTableViewPullDownRefresh(TableViewAdapter adapter);
             public void onTableViewPullUpRefresh(TableViewAdapter adapter);
@@ -443,7 +443,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         public void reload() {
             _items.clear();
 
-            List<UITableViewCell.CellModel> items = null;
+            List<? extends UITableViewCell.CellModel> items = null;
             if (_delegate != null) {
                 items = _delegate.tableViewLoadCells(this);
             }
