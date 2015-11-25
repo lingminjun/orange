@@ -417,8 +417,8 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             UITableViewCell.CellModel cellModel = this.getItem(i);
 //            Log.e("getView","idx="+i+"model="+cellModel.getClass().getSimpleName());
             if (cellModel == null) {
-                if (_nonReusable || view == null) {
-                    return new View(viewGroup.getContext());
+                if (_nonReusable || view == null) {//防止cell构建异常
+                    return new TextView(viewGroup.getContext());
                 }
                 return view;
             }
@@ -428,13 +428,19 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
                 cell = (UITableViewCell)view;
             }
             else {
-                cell = UITableViewCell.newInstance(cellModel,_tableView.getContext());
+                cell = UITableViewCell.newInstance(cellModel,viewGroup.getContext());
             }
 
             //展示内容
-            UITableViewCell.displayCell(cell,cellModel,i);
+            if (cell != null) {
+                UITableViewCell.displayCell(cell, cellModel, i);
+            }
 
-            return cell;
+            if (cell == null) {//防止cell构建异常
+                return new TextView(viewGroup.getContext());
+            } else {
+                return cell;
+            }
         }
 
         /**
