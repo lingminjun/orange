@@ -17,6 +17,7 @@ import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
+import com.juzistar.m.view.Keyboard;
 import com.juzistar.m.view.pop.BubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
@@ -78,11 +79,7 @@ public class PopViewController extends BaseTableViewController {
 //        tableViewAdapter().setPullRefreshEnabled(false);
 
 //        addObserver();
-        LayoutInflater inflater = LayoutInflater.from(Res.context());
-        View view = inflater.inflate(R.layout.sub_keyboard_layout, null);
-        UIKeyboard.shareInstance().setKeyboardBody(view);
-        UIKeyboard.shareInstance().setBackgroundResource(R.drawable.button_keyboard_switch_icon);
-        UIKeyboard.shareInstance().setKeyboardListener(keyboardListener);
+        Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
@@ -127,7 +124,7 @@ public class PopViewController extends BaseTableViewController {
     PageCenter.AuthCallBack sendAuthCallback = new PageCenter.AuthCallBack() {
         @Override
         public void auth(String account) {
-            UIKeyboard.shareInstance().show(PopViewController.this);
+            Keyboard.barrageKeyboard().show(PopViewController.this);
         }
     };
 
@@ -206,7 +203,7 @@ public class PopViewController extends BaseTableViewController {
                 super.onSuccess(boolModel);
 
                 //清除输入
-                UIKeyboard.shareInstance().setText("");
+                Keyboard.barrageKeyboard().setText("");
 
                 SendBubbleCellModel model = new SendBubbleCellModel();
                 model.message = msg;

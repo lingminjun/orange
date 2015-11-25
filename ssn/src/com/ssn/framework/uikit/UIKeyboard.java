@@ -90,7 +90,7 @@ public final class UIKeyboard extends LinearLayout {
 
 
     private FrameLayout _keyboardPanel;
-    private RelativeLayout _inputPanel;
+    private ViewGroup _inputPanel;
     private TextView _rightButton;
     private TextView _wordLimitText;
     private EditText _input;
@@ -205,10 +205,9 @@ public final class UIKeyboard extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_keyboard, this);
-        this.setBackgroundResource(R.color.ssn_white);
 
         _keyboardPanel = (FrameLayout)findViewById(R.id.ssn_keyboard_panel);
-        _inputPanel = (RelativeLayout)findViewById(R.id.ssn_input_panel);
+        _inputPanel = (ViewGroup)findViewById(R.id.ssn_input_panel);
         _wordLimitText = (TextView)findViewById(R.id.ssn_word_limit_label);
         _rightButton = (TextView)findViewById(R.id.ssn_keyboard_right_button);
         _input = (EditText)findViewById(R.id.ssn_input_text);
