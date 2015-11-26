@@ -367,11 +367,11 @@ public final class UIKeyboard extends LinearLayout {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) _keyboardPanel.getLayoutParams();
 
         //展示系统键盘
-        if (_showSystemKeyboard) {
+//        if (_showSystemKeyboard) {
             params.height = Density.dipTopx(_keyboard_height);
-        } else {
-            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        }
+//        } else {
+//            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//        }
     }
 
     private void showSystemKeyboard() {

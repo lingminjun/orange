@@ -17,7 +17,8 @@
                   android:id="@+id/ssn_input_panel">
         <RelativeLayout android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp">
             <com.ssn.framework.uikit.inc.InputText
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -25,11 +26,11 @@
                     android:paddingLeft="4dp"
                     android:paddingBottom="8dp"
                     android:paddingTop="8dp"
+                    android:paddingRight="4dp"
                     android:textSize="@dimen/ssn_normal_font"
                     android:textColor="@color/ssn_normal_text"
                     android:hint="@string/app_name"
                     android:background="@drawable/ssn_keyboard_input_bg"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
                     android:cursorVisible="true"
                     android:textCursorDrawable="@null"
