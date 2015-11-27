@@ -49,7 +49,8 @@
         </RelativeLayout>
         <TextView android:layout_width="28dp"
                   android:layout_height="28dp"
-                  android:textSize="@dimen/ssn_normal_font"
+                  android:textSize="@dimen/normal_small_font"
+                  android:autoText="true"
                   android:textColor="@color/ssn_normal_text"
                   android:id="@+id/ssn_keyboard_right_button"
                   android:text=""

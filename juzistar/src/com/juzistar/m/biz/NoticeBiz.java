@@ -21,7 +21,21 @@ public final class NoticeBiz {
 
     public static final class NoticeType {
         public static final String TEMP = "temp";
+
         public static final String NORMAL = "normal";
+
+        public static final String LOVE = "love";
+        public static final String BOOK = "book";
+        public static final String EAT  = "eat";
+        public static final String TEST = "test";
+        public static final String HOME = "home";
+        public static final String FLOWER = "flower";
+        public static final String HELP = "help";
+        public static final String DATING = "dating";
+        public static final String CAR = "car";
+        public static final String WEAR = "wear";
+        public static final String SPORT = "sport";
+        public static final String MOVIE = "movie";
     }
 
     public static class Notice extends BaseModel {

@@ -179,6 +179,17 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
         public UITableView tableView() {return _tableView;}
 
+        /**
+         * 返回cellModel对应的行
+         * @param cellModel
+         * @return
+         */
+        public int row(UITableViewCell.CellModel cellModel) {
+            if (cellModel == null) {return -1;}
+
+            return this._items.indexOf(cellModel);
+        }
+
         @Deprecated
         public void setItems(List<UITableViewCell.CellModel> items) {
             this._items.clear();

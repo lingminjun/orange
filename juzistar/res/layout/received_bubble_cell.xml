@@ -38,10 +38,12 @@
                   android:ellipsize="end"
                   android:text="标题"/>
     </LinearLayout>
-    <ImageView android:id="@+id/right_icon"
+    <TextView android:id="@+id/right_icon"
                android:layout_marginLeft="10dp"
                android:layout_width="@dimen/tag_icon_size"
                android:layout_height="@dimen/tag_icon_size"
-               android:background="@color/blue_tag"
+               android:textSize="@dimen/ssn_assist_text"
+               android:textColor="@color/ssn_white"
+               android:gravity="center"
                android:scaleType="fitCenter"/>
 </LinearLayout>

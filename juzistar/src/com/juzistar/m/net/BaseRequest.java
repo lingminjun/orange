@@ -3,6 +3,7 @@ package com.juzistar.m.net;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.juzistar.m.R;
+import com.juzistar.m.biz.UserCenter;
 import com.ssn.framework.foundation.*;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
@@ -36,9 +37,9 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     }
 
     private static class HTTPError extends BaseModel {
-        private int errorCode;
-        private String name;
-        private String message;
+        public int errorCode;
+        public String name;
+        public String message;
 
         private APIException exception() {
             APIException exception = new APIException(message == null ? name : message);
@@ -132,6 +133,11 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
                 error.errorCode = -1;
                 error.message = Res.localized(R.string.unknown_exception);
                 error.name = "UNKNOWN_EXCEPTION";
+            }
+
+            //需要刷新token重新来一遍
+            if (error.errorCode == 103) {
+
             }
 
             //最后抛出错误
@@ -230,5 +236,48 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
 //        }
 //
 //        return params;
+//    }
+
+//    private static class BaseTokenModel extends BaseModel {
+//        public long id;
+//        public String refreshToken;
+//        public String token;
+//        public String nickname;
+//        public String mobile;
+//    }
+//    public static RPC.Cancelable refreshToken(final String mobile, final String token, final String refreshToken, final RPC.Response<BaseTokenModel> response){
+//
+//        BaseRequest<BaseTokenModel> request = new BaseRequest<BaseTokenModel>() {
+//            @Override
+//            public String path() {
+//                return "refreshToken";
+//            }
+//
+//            @Override
+//            public HTTPAccessor.REST_METHOD method() {
+//                return HTTPAccessor.REST_METHOD.PUT;
+//            }
+//
+//            @Override
+//            public void params(HashMap<String, Object> params) {
+//                params.put("mobile",mobile);
+//                params.put("token",token);
+//                params.put("refreshToken",refreshToken);
+//            }
+//
+//            @Override
+//            public BaseTokenModel call() throws Exception {
+//                BaseTokenModel token = super.call();
+//                UserCenter.shareInstance().saveToken(token);
+//                return token;
+//            }
+//
+//            @Override
+//            public AUTH_LEVEL authLevel() {
+//                return AUTH_LEVEL.TOKEN;
+//            }
+//        };
+//
+//        return RPC.call(request,response);
 //    }
 }

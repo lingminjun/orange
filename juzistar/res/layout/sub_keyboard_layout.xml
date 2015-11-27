@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ht="http://schemas.android.com/apk/res-auto"
                 android:background="@color/white"
                 android:clickable="true"
                 android:layout_width="match_parent"
@@ -8,58 +9,107 @@
                 android:orientation="vertical">
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp"
-                  android:layout_marginBottom="4dp"
+                  android:gravity="center_vertical"
+                  android:layout_marginTop="15dp"
                   android:orientation="horizontal">
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_00"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_01"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_02"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_03"/>
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_red_icon"
+                ht:title="@string/love"
+                android:id="@+id/button_00" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_green_icon"
+                ht:title="@string/book"
+                android:id="@+id/button_01" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_yellow_icon"
+                ht:title="@string/eat"
+                android:id="@+id/button_02" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_blue_icon"
+                ht:title="@string/test"
+                android:id="@+id/button_03" />
+        <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp"
-                  android:layout_marginBottom="4dp"
+                  android:gravity="center_vertical"
+                  android:layout_marginTop="15dp"
                   android:orientation="horizontal">
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_10"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_11"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_12"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_13"/>
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_blue_icon"
+                ht:title="@string/home"
+                android:id="@+id/button_10" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_purple_icon"
+                ht:title="@string/flower"
+                android:id="@+id/button_11" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_red_icon"
+                ht:title="@string/help"
+                android:id="@+id/button_12" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_yellow_icon"
+                ht:title="@string/dating"
+                android:id="@+id/button_13" />
+        <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp"
-                  android:layout_marginBottom="4dp"
+                  android:gravity="center_vertical"
+                  android:layout_marginTop="15dp"
                   android:orientation="horizontal">
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_20"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_21"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_22"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_23"/>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="4dp"
-                  android:layout_marginBottom="4dp"
-                  android:orientation="horizontal">
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_30"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_31"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_32"/>
-        <include layout="@layout/sub_keyboard_button"
-                 android:id="@+id/button_33"/>
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_green_icon"
+                ht:title="@string/car"
+                android:id="@+id/button_20" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_yellow_icon"
+                ht:title="@string/wear"
+                android:id="@+id/button_21" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_blue_icon"
+                ht:title="@string/sport"
+                android:id="@+id/button_22" />
+        <include layout="@layout/ssn_horizontal_fill"/>
+        <com.juzistar.m.view.com.KeyboardButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ht:icon="@drawable/tag_green_icon"
+                ht:title="@string/movie"
+                android:id="@+id/button_23" />
+        <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
 </LinearLayout>

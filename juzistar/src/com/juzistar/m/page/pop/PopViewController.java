@@ -11,14 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
+import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
-import com.juzistar.m.view.Keyboard;
-import com.juzistar.m.view.pop.BubbleCellModel;
+import com.juzistar.m.view.com.Keyboard;
+import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
 import com.ssn.framework.uikit.*;
@@ -76,9 +77,6 @@ public class PopViewController extends BaseTableViewController {
     public void onViewDidLoad() {
         super.onViewDidLoad();
 
-//        tableViewAdapter().setPullRefreshEnabled(false);
-
-//        addObserver();
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
@@ -105,8 +103,16 @@ public class PopViewController extends BaseTableViewController {
             @Override
             public void fire(String flag) {
                 {
-                    BubbleCellModel model = new BubbleCellModel();
-                    model.message = "这仅仅只为测试"+test_count;
+                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+                    notice.type = Convert.noticeType(Keyboard.KEY.LOVE);
+                    notice.content = "这仅仅只为测试"+test_count;
+                    notice.creator = "xxxx";
+                    notice.creatorId = test_count+101;
+                    notice.longitude = Double.toString(31.2117411154);
+                    notice.latitude = Double.toString(121.4596178033);
+
+                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
+                    model.notice = notice;
                     test_count++;
 
                     tableViewAdapter().appendCell(model);
@@ -117,6 +123,14 @@ public class PopViewController extends BaseTableViewController {
                 }
             }
         },"dd");
+    }
+
+    @Override
+    public void onViewDidAppear() {
+        super.onViewDidAppear();
+
+        //进入时不展示键盘
+        Keyboard.barrageKeyboard().dismiss(false);
     }
 
     private int test_count;
@@ -131,13 +145,18 @@ public class PopViewController extends BaseTableViewController {
     UIKeyboard.KeyboardListener keyboardListener = new UIKeyboard.KeyboardListener() {
         @Override
         public void onSendButtonClick(UIKeyboard keyboard, View sender) {
-            sendAction(keyboard.text());//发送消息
+            sendAction(keyboard.text(),Keyboard.KEY.NAN);//发送消息
         }
 
         @Override
         public boolean onRightButtonClick(UIKeyboard keyboard, View sender) {
 
             return false;
+        }
+
+        @Override
+        public void onCustomButtonClick(UIKeyboard keyboard, View sender, int buttonKey) {
+            sendAction(keyboard.text(),buttonKey);//发送消息
         }
 
         @Override
@@ -171,7 +190,7 @@ public class PopViewController extends BaseTableViewController {
         BroadcastCenter.shareInstance().addObserver(this, UIEvent.UIKeyboardWillHideNotification, method);
     }
 
-    public void sendAction(final String msg) {
+    public void sendAction(final String msg, final int tag) {
         if (TextUtils.isEmpty(msg)) {
             App.toast(Res.localized(R.string.please_input_content));
             return;
@@ -180,40 +199,71 @@ public class PopViewController extends BaseTableViewController {
         PageCenter.checkAuth(new PageCenter.AuthCallBack() {
             @Override
             public void auth(String account) {
-                sendNotice(msg);
+                sendNotice(msg,tag);
             }
         });
     }
 
-    private void sendNotice(final String msg) {
-        UIKeyboard.shareInstance().dismiss(false);
+    private void sendNotice(final String msg, final int tag) {
+        Keyboard.barrageKeyboard().dismiss(false);
 
         UserCenter.User user = UserCenter.shareInstance().user();
 
-        NoticeBiz.Notice notice = new NoticeBiz.Notice();
+        /**
+         * 构建消息
+         */
+        final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+        notice.type = NoticeBiz.NoticeType.TEMP;//Convert.noticeType(tag);
         notice.content = msg;
         notice.creator = user.nick;
         notice.creatorId = user.uid;
         notice.longitude = Double.toString(31.2117411154);
         notice.latitude = Double.toString(121.4596178033);
+        notice.id = "sending:" + Utils.getServerTime();
+
+        //清除输入
+        Keyboard.barrageKeyboard().setText("");
+
+        final SendBubbleCellModel model = new SendBubbleCellModel();
+        model.notice = notice;
+        tableViewAdapter().appendCell(model);
 
         NoticeBiz.create(notice,new RPC.Response<BoolModel>(){
+            @Override
+            public void onStart() {
+                super.onStart();
+                UILoading.show(getActivity());
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                UILoading.dismiss(getActivity());
+            }
+
             @Override
             public void onSuccess(BoolModel boolModel) {
                 super.onSuccess(boolModel);
 
-                //清除输入
-                Keyboard.barrageKeyboard().setText("");
+                notice.id = "" + Utils.getServerTime();
 
-                SendBubbleCellModel model = new SendBubbleCellModel();
-                model.message = msg;
-                tableViewAdapter().appendCell(model);
+                int row = tableViewAdapter().row(model);
+                if (row >= 0) {
+                    tableViewAdapter().updateCell(model,row);
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
                 super.onFailure(e);
                 Utils.toastException(e,Res.localized(R.string.send_failed));
+
+                notice.id = "";
+
+                int row = tableViewAdapter().row(model);
+                if (row >= 0) {
+                    tableViewAdapter().updateCell(model,row);
+                }
             }
         });
     }
@@ -247,44 +297,7 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
         super.onTableViewCellClick(adapter, cellModel, row);
-        UIKeyboard.shareInstance().dismiss(false);
+        Keyboard.barrageKeyboard().dismiss(false);
     }
 
-    //http://www.tuicool.com/articles/raqY7z
-    /*
-    singleTouchView.getViewTreeObserver().addOnGlobalLayoutListener(
-            new ViewTreeObserver.OnGlobalLayoutListener() {
-
-        private int heightDifference;
-
-//        <a href="http://home.51cto.com/index.php?s=/space/5017954" target="_blank">@Override</a>
-        public void onGlobalLayout() {
-            // TODO Auto-generated method stub
-            Rect r = new Rect();
-
-            layout.getWindowVisibleDisplayFrame(r);
-
-            int screenHeight = layout.getRootView().getHeight();
-            //键盘高度
-            heightDifference = screenHeight - (r.bottom - r.top);
-
-
-            if (heightDifference != 0) {
-                tl.setLayoutParams(new AbsoluteLayout.LayoutParams(
-                        mWidth, mBottomHeight, 0, mHeight
-                        - heightDifference - mBottomHeight));
-                tl.setVisibility(View.VISIBLE);
-            } else {
-                tl.clearAnimation();
-                tl.setVisibility(View.INVISIBLE);
-            }
-        }
-    });
-    */
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        return super.dispatchTouchEvent(ev);
-//    }
-//
 }

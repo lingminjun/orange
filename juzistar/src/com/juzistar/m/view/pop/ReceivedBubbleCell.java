@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.juzistar.m.R;
+import com.juzistar.m.view.com.UIDic;
+import com.ssn.framework.foundation.TR;
 import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UITableViewCell;
 
@@ -19,7 +21,7 @@ public class ReceivedBubbleCell extends UITableViewCell {
     private View panel;
     private ImageView mIconView;
     private TextView mTitleView;
-    private ImageView mRightIcon;
+    private TextView mRightIcon;
 
 
     public ReceivedBubbleCell(Context context) {
@@ -35,7 +37,8 @@ public class ReceivedBubbleCell extends UITableViewCell {
 
     @Override
     public void onPrepareForReuse() {
-        mTitleView.setText("");;
+        mTitleView.setText("");
+        mRightIcon.setVisibility(GONE);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class ReceivedBubbleCell extends UITableViewCell {
         panel.setOnClickListener(UIEvent.click(click));
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
         mTitleView = (TextView) view.findViewById(R.id.title_label);
-        mRightIcon = (ImageView) view.findViewById(R.id.right_icon);
+        mRightIcon = (TextView) view.findViewById(R.id.right_icon);
         return view;
     }
 
@@ -54,12 +57,23 @@ public class ReceivedBubbleCell extends UITableViewCell {
     protected void onDisplay(CellModel cellModel, int row) {
         super.onDisplay(cellModel, row);
 
-        BubbleCellModel mEntity = (BubbleCellModel)cellModel;
+        ReceivedBubbleCellModel mEntity = (ReceivedBubbleCellModel)cellModel;
 
-        if (mEntity.message != null) {
-            mTitleView.setText(mEntity.message);
-        } else {
-            mTitleView.setText("");
+        if (mEntity.notice == null) {return;}
+
+        //设置内容
+        mTitleView.setText(TR.string(mEntity.notice.content));
+
+        //头像
+        mIconView.setBackgroundResource(UIDic.avatarResourceId(mEntity.notice.creatorId));
+
+        int resId = UIDic.bubbleResourceId(mEntity.notice.type,false);
+        if (resId != 0) {
+            mRightIcon.setVisibility(VISIBLE);
+            mRightIcon.setBackgroundResource(resId);
+
+            //文案
+            mRightIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.type));
         }
 
     }

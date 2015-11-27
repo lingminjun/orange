@@ -16,6 +16,7 @@ import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIEvent;
+import com.ssn.framework.uikit.UILoading;
 import com.ssn.framework.uikit.UIViewController;
 
 /**
@@ -76,6 +77,18 @@ public class ResetPassworViewController extends BaseViewController {
                 }
 
                 UserBiz.resetPassword(mobile, smsCode, password, new RPC.Response<UserBiz.TokenModel>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        UILoading.show(getActivity());
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        UILoading.dismiss(getActivity());
+                    }
+
                     @Override
                     public void onSuccess(UserBiz.TokenModel tokenModel) {
                         super.onSuccess(tokenModel);

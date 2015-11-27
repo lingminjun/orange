@@ -20,7 +20,7 @@ public final class UserBiz {
     "mobile":"13761067386"}
     */
     public static class TokenModel extends BaseModel {
-        public int id;
+        public long id;
         public String refreshToken;
         public String token;
         public String nickname;

@@ -2,9 +2,7 @@ package com.ssn.framework.uikit;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Build;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -20,7 +18,6 @@ import com.ssn.framework.R;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TR;
-import org.w3c.dom.Text;
 
 /**
  * Created by lingminjun on 15/11/21.
@@ -40,6 +37,15 @@ public final class UIKeyboard extends LinearLayout {
          * @return 返回yes表示事件已经处理，返回false表示采用控件默认
          */
         public boolean onRightButtonClick(UIKeyboard keyboard, View sender);
+
+        /**
+         /**
+         * 自定义按钮事件
+         * @param keyboard
+         * @param sender 自定义按钮
+         * @param buttonKey 自定义按钮的key
+         */
+        public void onCustomButtonClick(UIKeyboard keyboard, View sender, int buttonKey);
 
         /**
          * 键盘高度变化
@@ -64,33 +70,14 @@ public final class UIKeyboard extends LinearLayout {
         init();
     }
 
-    private static UIKeyboard _instance = null;
-    /**
-     * 用户中心
-     * @return 唯一实例
-     */
-    static public UIKeyboard shareInstance() {
-        if (_instance != null) return _instance;
-        synchronized(UIKeyboard.class){
-            if (_instance != null) return _instance;
-            _instance = newInstance();
-            return _instance;
-        }
-    }
-
-    private static UIKeyboard newInstance() {
-        return new UIKeyboard(Res.context());
-    }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public UIKeyboard(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-
     private FrameLayout _keyboardPanel;
-    private ViewGroup _inputPanel;
+//    private ViewGroup _inputPanel;
     private TextView _rightButton;
     private TextView _wordLimitText;
     private EditText _input;
@@ -107,39 +94,13 @@ public final class UIKeyboard extends LinearLayout {
             }
 
             if (!done) {
-
-                InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                if (_showSystemKeyboard) {
-                    boolean ret = imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
-                    if (ret) {
-                        hideSystemKeyboard(true);
-                    } else {
-                        _showSystemKeyboard = false;
-                        showSystemKeyboard();
-                    }
-                    Log.e("UIKeyboard","hide="+ret);
-                } else {
-                    boolean ret = imm.showSoftInput(_input, InputMethodManager.SHOW_IMPLICIT);
-                    if (ret) {
-                        showSystemKeyboard();
-                    } else {
-                        _showSystemKeyboard = true;
-                        hideSystemKeyboard(true);
-                    }
-                    Log.e("UIKeyboard","show="+ret);
-                }
-
-                _showSystemKeyboard = !_showSystemKeyboard;
-                _rightButton.setSelected(!_showSystemKeyboard);
+                switchKeyboardStatus();
             }
         }
     };
 
     private KeyboardListener listener;
     private View _customView;
-
-    private int _rightButtonResourceId;
 
     private TextView.OnEditorActionListener editorListener = new TextView.OnEditorActionListener() {
         @Override
@@ -207,7 +168,7 @@ public final class UIKeyboard extends LinearLayout {
         inflater.inflate(R.layout.ssn_keyboard, this);
 
         _keyboardPanel = (FrameLayout)findViewById(R.id.ssn_keyboard_panel);
-        _inputPanel = (ViewGroup)findViewById(R.id.ssn_input_panel);
+//        _inputPanel = (ViewGroup)findViewById(R.id.ssn_input_panel);
         _wordLimitText = (TextView)findViewById(R.id.ssn_word_limit_label);
         _rightButton = (TextView)findViewById(R.id.ssn_keyboard_right_button);
         _input = (EditText)findViewById(R.id.ssn_input_text);
@@ -238,16 +199,21 @@ public final class UIKeyboard extends LinearLayout {
     }
 
     public void setRightButtonResourceId(int resId) {
-        _rightButtonResourceId = resId;
         if (_rightButton != null) {
             _rightButton.setBackgroundResource(resId);
+        }
+    }
+
+    public void setRightButtonTitle(String title) {
+        if (_rightButton != null) {
+            _rightButton.setText(title);
         }
     }
 
     public void setKeyboardListener(KeyboardListener listener) {
         this.listener = listener;
     }
-
+    public KeyboardListener keyboardListener() {return this.listener;}
 
     public String text() {
         if (_input != null) {
@@ -305,7 +271,7 @@ public final class UIKeyboard extends LinearLayout {
         _keyboardPanel.setVisibility(VISIBLE);//键盘的body展示出来
         _showSystemKeyboard = true;
 
-        showSystemKeyboard();
+        innerShowSystemKeyboard();
 
         if (listener != null) {
             try {
@@ -320,7 +286,7 @@ public final class UIKeyboard extends LinearLayout {
         if (isDock) {
             _showSystemKeyboard = false;
         }
-        hideSystemKeyboard(isDock);
+        innerHideSystemKeyboard(isDock);
 
         int keyboard_height = 0;
         if (!isDock) {
@@ -344,6 +310,40 @@ public final class UIKeyboard extends LinearLayout {
 
     public boolean isSystemKeyboardShow() {
         return _showSystemKeyboard;
+    }
+
+    public void showSystemKeyboard() {
+        if (!isShow()) {return;}
+
+        //切换键盘状态
+        switchKeyboardStatus();
+    }
+
+    private void switchKeyboardStatus() {
+        InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (_showSystemKeyboard) {
+            boolean ret = imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
+            if (ret) {
+                innerHideSystemKeyboard(true);
+            } else {
+                _showSystemKeyboard = false;
+                innerShowSystemKeyboard();
+            }
+            Log.e("UIKeyboard","hide="+ret);
+        } else {
+            boolean ret = imm.showSoftInput(_input, InputMethodManager.SHOW_IMPLICIT);
+            if (ret) {
+                innerShowSystemKeyboard();
+            } else {
+                _showSystemKeyboard = true;
+                innerHideSystemKeyboard(true);
+            }
+            Log.e("UIKeyboard","show="+ret);
+        }
+
+        _showSystemKeyboard = !_showSystemKeyboard;
+        _rightButton.setSelected(!_showSystemKeyboard);
     }
 
     private String getTextString() {
@@ -374,7 +374,7 @@ public final class UIKeyboard extends LinearLayout {
 //        }
     }
 
-    private void showSystemKeyboard() {
+    private void innerShowSystemKeyboard() {
         //弹起键盘
         _input.requestFocus();
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -390,7 +390,7 @@ public final class UIKeyboard extends LinearLayout {
         adjustKeyboardHeight();
     }
 
-    private void hideSystemKeyboard(boolean keepFocus) {
+    private void innerHideSystemKeyboard(boolean keepFocus) {
         //隐藏键盘
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);

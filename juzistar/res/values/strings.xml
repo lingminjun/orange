@@ -40,4 +40,16 @@
     <string name="account_or_password_error">用户名或者密码错误</string>
     <string name="x_second_can_send">%d秒后重发</string>
     <string name="send_failed">发送失败！</string>
+    <string name="love">爱</string>
+    <string name="book">书</string>
+    <string name="eat">吃饭</string>
+    <string name="test">考试</string>
+    <string name="home">住</string>
+    <string name="flower">花</string>
+    <string name="help">Help</string>
+    <string name="dating">约吗</string>
+    <string name="car">车</string>
+    <string name="wear">穿</string>
+    <string name="sport">运动</string>
+    <string name="movie">电影</string>
 </resources>

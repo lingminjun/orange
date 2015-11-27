@@ -20,6 +20,7 @@ import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIEvent;
+import com.ssn.framework.uikit.UILoading;
 import com.ssn.framework.uikit.UIViewController;
 
 /**
@@ -70,6 +71,7 @@ public class LoginViewController extends BaseViewController {
                     @Override
                     public void onStart() {
                         super.onStart();
+                        UILoading.show(getActivity());
                     }
 
                     @Override
@@ -93,6 +95,7 @@ public class LoginViewController extends BaseViewController {
                     @Override
                     public void onFinish() {
                         super.onFinish();
+                        UILoading.dismiss(getActivity());
                     }
                 };
                 UserBiz.login(account,password,response);

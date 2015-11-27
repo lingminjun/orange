@@ -21,7 +21,7 @@ import java.util.Set;
  * 用于控制显示loading，每个context只有一个菊花
  * Created by lingminjun on 15/6/25.
  */
-public class UILoading {
+public final class UILoading {
 
     /**
      * 对activity支持

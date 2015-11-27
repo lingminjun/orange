@@ -93,7 +93,7 @@ public final class UserCenter {
      * 返回用户id
      * @return
      */
-    public int UID() {
+    public long UID() {
         return _uid;
     }
 
@@ -113,7 +113,7 @@ public final class UserCenter {
         return us;
     }
 
-    private int _uid;
+    private long _uid;
     private Application _application;
     private static final String TOKEN_INFO_DIR  = "/users/";
     private static final String UID_MD5         = "sfht.user.uid.md5";

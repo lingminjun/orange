@@ -1,23 +1,11 @@
 package com.juzistar.m.view.pop;
 
-import android.content.Context;
+import com.juzistar.m.biz.NoticeBiz;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
- * Created by lingminjun on 15/4/24.
+ * Created by lingminjun on 15/11/27.
  */
-public class BubbleCellModel extends UITableViewCell.CellModel {
-
-    public String message;
-
-    public BubbleCellModel() {
-        hiddenRightArrow = true;
-        hiddenSeparateLine = true;
-    }
-
-    @Override
-    protected UITableViewCell createCell(Context context) {
-        return new ReceivedBubbleCell(context);
-    }
-
+public abstract class BubbleCellModel extends UITableViewCell.CellModel {
+    public NoticeBiz.Notice notice;//消息
 }
