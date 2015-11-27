@@ -23,8 +23,8 @@ import com.ssn.framework.foundation.TR;
  * Created by lingminjun on 15/11/21.
  */
 public final class UIKeyboard extends LinearLayout {
-    private static final int COMMENT_MAX_LENGTH = 300;//最多输入字数
-    private static final int COMMENT_EDIT_MAX_LINES = 3;//内容最多输入行数
+    private static final int COMMENT_MAX_LENGTH = 200;//最多输入字数
+    private static final int COMMENT_EDIT_MAX_LINES = 2;//内容最多输入行数
     private static final int COMMENT_EDIT_HINT_MAX_LINES = 1;//hint最多输入行数
 
     public static interface KeyboardListener {

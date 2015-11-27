@@ -25,21 +25,21 @@ public final class PageCenter {
             ArrayList<BaseTabActivity.IntentTabItem> list = new ArrayList<BaseTabActivity.IntentTabItem>();
             {
                 BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-                tabItem.url = "http://m.juzistar.com/pop.html";
+                tabItem.url = PageURLs.POP_URL;
                 tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
                 list.add(tabItem);
             }
 
             {
                 BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-                tabItem.url = "http://m.juzistar.com/chat.html";
+                tabItem.url = PageURLs.CHAT_LIST_URL;
                 tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
                 list.add(tabItem);
             }
 
             {
                 BaseTabActivity.IntentTabItem tabItem = new BaseTabActivity.IntentTabItem();
-                tabItem.url = "http://m.juzistar.com/me.html";
+                tabItem.url = PageURLs.ME_URL;
                 tabItem.viewControllerClass = Navigator.shareInstance().fragmentClassForURL(tabItem.url);
                 list.add(tabItem);
             }

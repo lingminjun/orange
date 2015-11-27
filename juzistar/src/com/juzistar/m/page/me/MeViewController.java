@@ -8,6 +8,7 @@ import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.me.IconTitleCellModel;
 import com.juzistar.m.view.me.TestCellModel;
+import com.juzistar.m.view.me.UserHeaderCellModel;
 import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.*;
 
@@ -57,6 +58,8 @@ public class MeViewController extends BaseTableViewController {
     @Override
     public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
+
+        list.add(new UserHeaderCellModel());
 
         for (int i = 0; i< 100;i++) {
             {

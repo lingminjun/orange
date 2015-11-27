@@ -13,6 +13,13 @@ public class PageURLs {
     //主页
     public static final String MAIN_URL = "http://m.juzistar.com/main.html";
 
+    //泡泡页
+    public static final String POP_URL = "http://m.juzistar.com/pop.html";
 
+    //遇见页
+    public static final String CHAT_LIST_URL = "http://m.juzistar.com/chat_list.html";
+
+    //个人中心
+    public static final String ME_URL = "http://m.juzistar.com/me.html";
     public static final String EDIT_HEADER_URL = "http://m.juzistar.com/edit_header.html";
 }

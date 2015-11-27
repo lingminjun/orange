@@ -13,10 +13,14 @@
           description="泡泡"/>
 
     <!--邂逅-->
+    <item url="http://m.juzistar.com/chat_list.html"
+          fragmentclass="com.juzistar.m.page.chat.ChatListViewController"
+          activityclass=""
+          description="邂逅"/>
     <item url="http://m.juzistar.com/chat.html"
           fragmentclass="com.juzistar.m.page.chat.ChatViewController"
           activityclass=""
-          description="邂逅"/>
+          description="私信"/>
 
     <!--我-->
     <item url="http://m.juzistar.com/me.html"

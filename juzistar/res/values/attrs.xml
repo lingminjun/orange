@@ -4,4 +4,19 @@
         <attr name="icon" format="integer"/>
         <attr name="title" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="RoundedImageView">
+        <attr name="corner_radius" format="dimension"/>
+        <attr name="border_width" format="dimension"/>
+        <attr name="border_color" format="color"/>
+        <attr name="round_background" format="boolean"/>
+        <attr name="is_oval" format="boolean"/>
+        <attr name="android:scaleType"/>
+    </declare-styleable>
+    <declare-styleable name="RoundAngleImageView">
+        <attr name="strokeWidth" format="dimension"></attr>
+        <attr name="radius" format="dimension"></attr>
+        <attr name="strokeColor" format="color"></attr>
+        <attr name="hiddenStroke" format="boolean"></attr>
+    </declare-styleable>
 </resources>

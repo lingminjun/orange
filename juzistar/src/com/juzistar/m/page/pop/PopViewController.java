@@ -245,6 +245,7 @@ public class PopViewController extends BaseTableViewController {
             public void onSuccess(BoolModel boolModel) {
                 super.onSuccess(boolModel);
 
+                model.disabled = true;
                 notice.id = "" + Utils.getServerTime();
 
                 int row = tableViewAdapter().row(model);
@@ -259,6 +260,7 @@ public class PopViewController extends BaseTableViewController {
                 Utils.toastException(e,Res.localized(R.string.send_failed));
 
                 notice.id = "";
+                model.disabled = false;
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
