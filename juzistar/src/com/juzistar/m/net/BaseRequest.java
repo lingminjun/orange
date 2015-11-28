@@ -75,7 +75,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
 
 
     @Override
-    public T call() throws Exception {
+    public T call(RPC.Retry retry) throws Exception {
 
 
 //        System.out.println("\ntestGetByJSON\n-----------------------------");
@@ -100,8 +100,12 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             Log.e("res:",content);
         }
         */
-
-        HTTPAccessor.ServerResponse response = HTTPAccessor.access(this);
+        HTTPAccessor.ServerResponse response = null;
+        if (isSingleChannel()) {//单通道调用
+            response = HTTPAccessor.singleChannelAccess(this);
+        } else {
+            response = HTTPAccessor.access(this);
+        }
 
         //获取返回值，开始解析
         T object = null;
@@ -136,12 +140,14 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             }
 
             //需要刷新token重新来一遍
-            if (error.errorCode == 103) {
-
+            if (error.errorCode == 103 && retry.canRetry()) {
+                refreshToken();
+                retry.retryTimes = 1;
+                return null;
+            } else {
+                //最后抛出错误
+                throw error.exception();
             }
-
-            //最后抛出错误
-            throw error.exception();
         }
 
         //数据转换
@@ -208,6 +214,14 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     }
 
     /**
+     * 是否为单通道调用
+     * @return
+     */
+    protected boolean isSingleChannel() {
+        return false;
+    }
+
+    /**
      * 设备权限认证
      * @param token
      */
@@ -238,46 +252,58 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
 //        return params;
 //    }
 
-//    private static class BaseTokenModel extends BaseModel {
-//        public long id;
-//        public String refreshToken;
-//        public String token;
-//        public String nickname;
-//        public String mobile;
-//    }
-//    public static RPC.Cancelable refreshToken(final String mobile, final String token, final String refreshToken, final RPC.Response<BaseTokenModel> response){
-//
-//        BaseRequest<BaseTokenModel> request = new BaseRequest<BaseTokenModel>() {
-//            @Override
-//            public String path() {
-//                return "refreshToken";
-//            }
-//
-//            @Override
-//            public HTTPAccessor.REST_METHOD method() {
-//                return HTTPAccessor.REST_METHOD.PUT;
-//            }
-//
-//            @Override
-//            public void params(HashMap<String, Object> params) {
-//                params.put("mobile",mobile);
-//                params.put("token",token);
-//                params.put("refreshToken",refreshToken);
-//            }
-//
-//            @Override
-//            public BaseTokenModel call() throws Exception {
-//                BaseTokenModel token = super.call();
-//                UserCenter.shareInstance().saveToken(token);
-//                return token;
-//            }
-//
-//            @Override
-//            public AUTH_LEVEL authLevel() {
-//                return AUTH_LEVEL.TOKEN;
-//            }
-//        };
-//
-//        return RPC.call(request,response);
-//    }
+    public static class Token extends BaseModel {
+        public String refreshToken;
+        public String token;
+    }
+
+    /**
+     * 刷新token
+     * @return
+     */
+    private static RPC.Cancelable refreshToken(){
+
+        RPC.Response<Token> response = new RPC.Response<>();
+
+        BaseRequest<Token> request = new BaseRequest<Token>() {
+            @Override
+            public String path() {
+                return "user/refreshToken";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.PUT;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                Token token = UserCenter.shareInstance().getToken();
+
+                if (token != null) {
+                    params.put("token", token.token);
+                    params.put("refreshToken", token.refreshToken);
+                }
+            }
+
+            @Override
+            public Token call(RPC.Retry retry) throws Exception {
+                Token token = super.call(retry);
+                UserCenter.shareInstance().saveToken(token);
+                return token;
+            }
+
+            @Override
+            public AUTH_LEVEL authLevel() {
+                return AUTH_LEVEL.TOKEN;
+            }
+
+            @Override
+            protected boolean isSingleChannel() {
+                return true;
+            }
+        };
+
+        return RPC.call(request,response,true);//阻塞调用
+    }
 }

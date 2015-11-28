@@ -258,6 +258,28 @@ public final class HTTPAccessor {
         _auth_token = TR.string(token);
     }
 
+
+    private static volatile boolean isSingleChannel = false;
+    /**
+     * 单通道同步调用，将阻塞所有其他请求，慎用
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static ServerResponse singleChannelAccess(HTTPRequest request) throws Exception {
+        ServerResponse response = null;
+        try {
+            isSingleChannel = true;
+
+            response = _access(request);
+        } catch (Throwable e) {
+            throw  e;
+        } finally {
+            isSingleChannel = false;
+        }
+        return response;
+    }
+
     /**
      * 同步发起请求
      * @param request
@@ -265,6 +287,26 @@ public final class HTTPAccessor {
      * @throws Exception
      */
     public static ServerResponse access(HTTPRequest request) throws Exception {
+        return _access(request);
+    }
+
+    /**
+     * 若设置为单通道后，所有请求被锁住
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public static ServerResponse _access(HTTPRequest request) throws Exception {
+        if (isSingleChannel) {
+            synchronized (HTTPAccessor.class) {
+                return _accessIMP(request);
+            }
+        } else {
+            return _accessIMP(request);
+        }
+    }
+
+    public static ServerResponse _accessIMP(HTTPRequest request) throws Exception {
         if (_debug) {
             if (Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper()) {
                 System.exit(-1);

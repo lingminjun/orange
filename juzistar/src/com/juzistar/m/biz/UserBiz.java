@@ -19,12 +19,21 @@ public final class UserBiz {
     "nickname":"?? ???nickname???",
     "mobile":"13761067386"}
     */
-    public static class TokenModel extends BaseModel {
+    public static class TokenModel extends BaseRequest.Token {
         public long id;
-        public String refreshToken;
-        public String token;
-        public String nickname;
         public String mobile;
+        public String nickname;
+
+        @Override
+        public boolean fillFromOther(Object obj) {
+            if (obj != null && obj instanceof BaseRequest.Token) {//仅仅修改这两个值
+                this.refreshToken = ((BaseRequest.Token) obj).refreshToken;
+                this.token = ((BaseRequest.Token) obj).token;
+                return true;
+            } else {
+                return super.fillFromOther(obj);
+            }
+        }
     }
 
     public static class SMSCodeModel extends BaseModel {
@@ -70,8 +79,8 @@ public final class UserBiz {
             }
 
             @Override
-            public TokenModel call() throws Exception {
-                TokenModel token = super.call();
+            public TokenModel call(RPC.Retry retry) throws Exception {
+                TokenModel token = super.call(retry);
                 UserCenter.shareInstance().saveToken(token);
                 return token;
             }
@@ -100,46 +109,10 @@ public final class UserBiz {
             }
 
             @Override
-            public TokenModel call() throws Exception {
-                TokenModel token = super.call();
+            public TokenModel call(RPC.Retry retry) throws Exception {
+                TokenModel token = super.call(retry);
                 UserCenter.shareInstance().saveToken(token);
                 return token;
-            }
-        };
-
-        return RPC.call(request,response);
-    }
-
-    public static RPC.Cancelable refreshToken(final String mobile, final String token, final String refreshToken, final RPC.Response<TokenModel> response){
-
-        BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
-            @Override
-            public String path() {
-                return "refreshToken";
-            }
-
-            @Override
-            public HTTPAccessor.REST_METHOD method() {
-                return HTTPAccessor.REST_METHOD.PUT;
-            }
-
-            @Override
-            public void params(HashMap<String, Object> params) {
-                params.put("mobile",mobile);
-                params.put("token",token);
-                params.put("refreshToken",refreshToken);
-            }
-
-            @Override
-            public TokenModel call() throws Exception {
-                TokenModel token = super.call();
-                UserCenter.shareInstance().saveToken(token);
-                return token;
-            }
-
-            @Override
-            public AUTH_LEVEL authLevel() {
-                return AUTH_LEVEL.TOKEN;
             }
         };
 

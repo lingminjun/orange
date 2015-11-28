@@ -22,6 +22,22 @@ public class RPC {
     }
 
     /**
+     * 重试次数告知，如果修改retryTimes,表示不再重试，重试只在第一次有效
+     */
+    public static final class Retry {
+        public int retryTimes;
+
+        /**
+         * 是否可以重复试，若不能重试时，因改返回错误
+         * @return
+         */
+        public boolean canRetry() {
+            return !isLast;
+        }
+        private boolean isLast;
+    }
+
+    /**
      * 请求接口
      * @param <T>
      */
@@ -40,9 +56,11 @@ public class RPC {
 
         /**
          * 请求调用
+         * @param retry 返回值不为null时retry被忽略
          * @return
+         * @throws Exception
          */
-        public abstract T call() throws Exception;
+        public abstract T call(Retry retry) throws Exception;
     }
 
     /**
@@ -81,73 +99,106 @@ public class RPC {
      * @return
      */
     public static <T> Cancelable call(final Request<T> req, final Response<T> res) {
+        return call(req,res,false);
+    }
+
+    /**
+     * 调用过程，调用发生在异步线程，回调在ui线程
+     * @param req
+     * @param res
+     * @param <T>
+     * @return
+     */
+    public static <T> Cancelable call(final Request<T> req, final Response<T> res, final boolean block) {
 
         if (req == null || res == null) {
             return null;
         }
 
-        Runnable reqRun = new Runnable() {
-            @Override
-            public void run() {
+        if (block) {
 
-                //检查是否取消请求
-                if (req._cancel) {
-                    return;
+            callIMP(req, res);
+
+        } else {
+
+            Runnable reqRun = new Runnable() {
+                @Override
+                public void run() {
+                    callIMP(req,res);
                 }
+            };
 
-                //开始请求
-                TaskQueue.mainQueue().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        res.onStart();
-                    }
-                });
-
-                try {
-                    final T t = req.call();
-                    //成功回调
-                    TaskQueue.mainQueue().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            res.onSuccess(t);
-                        }
-                    });
-                } catch (final Exception e) {
-                    APPLog.error("rpc error", e.toString());
-
-                    //异常回调
-                    TaskQueue.mainQueue().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            res.onFailure(e);
-                        }
-                    });
-                } catch (Throwable throwable){
-                    APPLog.error("rpc error", throwable.toString());
-                    final RuntimeException e = new RuntimeException(throwable);
-
-                    //异常回调
-                    TaskQueue.mainQueue().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            res.onFailure(e);
-                        }
-                    });
-                }finally {
-                    //最终回调
-                    TaskQueue.mainQueue().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            res.onFinish();
-                        }
-                    });
-                }
-            }
-        };
-
-        TaskQueue.commonQueue().execute(reqRun);
+            TaskQueue.commonQueue().execute(reqRun);
+        }
 
         return req;
+    }
+
+    public static <T> void callIMP(final Request<T> req, final Response<T> res) {
+        //检查是否取消请求
+        if (req._cancel) {
+            return;
+        }
+
+        //开始请求
+        TaskQueue.mainQueue().execute(new Runnable() {
+            @Override
+            public void run() {
+                res.onStart();
+            }
+        });
+
+        try {
+            Retry retry = new Retry();
+            T o = req.call(retry);
+            int times = retry.retryTimes;
+
+            //开始重试
+            while (times > 0 && o == null) {
+                APPLog.error("rpc retry", req.toString());
+                times--;
+                retry.isLast = times == 0;
+                o = req.call(retry);
+            }
+
+            //成功回调
+            final T t = o;
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onSuccess(t);
+                }
+            });
+        } catch (final Exception e) {
+            APPLog.error("rpc error", e.toString());
+
+            //异常回调
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFailure(e);
+                }
+            });
+        } catch (Throwable throwable){
+            APPLog.error("rpc error", throwable.toString());
+            final RuntimeException e = new RuntimeException(throwable);
+
+            //异常回调
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFailure(e);
+                }
+            });
+        }finally {
+            //最终回调
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFinish();
+                }
+            });
+        }
     }
 
 }

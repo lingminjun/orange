@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Base64;
 import com.alibaba.fastjson.JSON;
+import com.juzistar.m.net.BaseRequest;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.HTTPAccessor;
@@ -119,12 +120,14 @@ public final class UserCenter {
     private static final String UID_MD5         = "sfht.user.uid.md5";
 
     //将数据存储下来
-    public void saveToken(UserBiz.TokenModel tokenModel) {
+    public void saveToken(BaseRequest.Token tokenModel) {
+        UserBiz.TokenModel token = null;
         synchronized (this) {
-            _token = new UserBiz.TokenModel();
-            _token.fillFromOther(tokenModel);//采用copy的方式
+            token = new UserBiz.TokenModel();
+            token.fillFromOther(tokenModel);
+            _token = token;//采用copy的方式
             if (tokenModel != null) {
-                _uid = tokenModel.id;
+                _uid = token.id;
                 String json = JSON.toJSONString(tokenModel);
                 UserDefaults.getInstance().putJSONString(USER_TOKEN_KEY, json);
             }
@@ -135,9 +138,21 @@ public final class UserCenter {
         }
 
         //抛出成功通知
-        if (tokenModel != null && tokenModel.token != null && tokenModel.token.length() > 0 && tokenModel.id > 0) {
+        if (tokenModel != null && tokenModel.token != null && tokenModel.token.length() > 0 && token.id > 0) {
             BroadcastCenter.shareInstance().postBroadcast(new Intent(USER_LOGIN_NOTIFICATION));
         }
+    }
+
+    public BaseRequest.Token getToken() {
+        if (!isLogin()) {
+            return null;
+        }
+
+        BaseRequest.Token token = new BaseRequest.Token();
+        token.token = _token.token;
+        token.refreshToken = _token.refreshToken;
+
+        return token;
     }
 
     private static final String USER_TOKEN_KEY = "_user_token";
