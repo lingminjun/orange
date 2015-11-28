@@ -35,6 +35,7 @@ public class MeViewController extends BaseTableViewController {
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
         UITableView.TableViewAdapter adapter = new UITableView.TableViewAdapter(tableView);
         setTableView(tableView,adapter);
+        tableView.setBackgroundColor(Res.color(R.color.page_bg));
         return view;
     }
 
