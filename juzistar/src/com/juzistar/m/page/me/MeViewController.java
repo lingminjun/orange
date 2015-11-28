@@ -68,6 +68,7 @@ public class MeViewController extends BaseTableViewController {
             model.mTitle = Res.localized(R.string.setting_message_title);
             model.isSwitch = true;
             model.switchValue = true;
+            list.add(model);
         }
 
         {
@@ -76,6 +77,7 @@ public class MeViewController extends BaseTableViewController {
             model.mTitle = Res.localized(R.string.setting_location_title);
             model.isSwitch = true;
             model.switchValue = true;
+            list.add(model);
         }
 
         list.add(new BlankCellModel());
@@ -84,6 +86,7 @@ public class MeViewController extends BaseTableViewController {
             SettingCellModel model = new SettingCellModel();
             model.mIconId = R.drawable.setting_advice_icon;
             model.mTitle = Res.localized(R.string.setting_advice_title);
+            list.add(model);
         }
 
         return list;

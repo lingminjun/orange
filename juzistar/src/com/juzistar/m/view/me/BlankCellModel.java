@@ -8,6 +8,11 @@ import com.ssn.framework.uikit.UITableViewCell;
  */
 public class BlankCellModel extends UITableViewCell.CellModel {
 
+    public BlankCellModel() {
+        height = 20;
+        hiddenRightArrow = true;
+    }
+
     @Override
     protected UITableViewCell createCell(Context context) {
         return new BlankCell(context);

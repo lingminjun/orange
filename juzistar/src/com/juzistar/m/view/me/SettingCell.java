@@ -30,7 +30,7 @@ public class SettingCell extends UITableViewCell {
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
         View view = inflate(inflate,R.layout.setting_cell, containerView);
         mHeaderIcon = (TextView) view.findViewById(R.id.header_icon);
-        mTextLabel = (TextView) view.findViewById(R.id.title_label);
+        mTextLabel = (TextView) view.findViewById(R.id.text_label);
         mSubLabel = (TextView) view.findViewById(R.id.sub_label);
         switchButton = (TextView)view.findViewById(R.id.switch_button);
         return view;
