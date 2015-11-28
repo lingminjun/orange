@@ -19,6 +19,7 @@ import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
+import com.juzistar.m.view.com.UIDic;
 import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
@@ -35,7 +36,6 @@ public class PopViewController extends BaseTableViewController {
     LinearLayout bottom;
 
     LinearLayout buttonBar;
-    LinearLayout bottomBar;
 
     LinearLayout switchBtnPanel;
     TextView switchBtn;
@@ -142,10 +142,11 @@ public class PopViewController extends BaseTableViewController {
         }
     };
 
+    private int customButtonKey;
     UIKeyboard.KeyboardListener keyboardListener = new UIKeyboard.KeyboardListener() {
         @Override
         public void onSendButtonClick(UIKeyboard keyboard, View sender) {
-            sendAction(keyboard.text(),Keyboard.KEY.NAN);//发送消息
+            sendAction(keyboard.text(),customButtonKey);//发送消息
         }
 
         @Override
@@ -156,39 +157,27 @@ public class PopViewController extends BaseTableViewController {
 
         @Override
         public void onCustomButtonClick(UIKeyboard keyboard, View sender, int buttonKey) {
-            sendAction(keyboard.text(),buttonKey);//发送消息
+
+            if (buttonKey == customButtonKey) {
+                customButtonKey = 0;
+                Keyboard.barrageKeyboard().setRightButtonTitle("");
+                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+            } else {
+                customButtonKey = buttonKey;
+
+                //设置键盘文案
+                String keyName = UIDic.bubbleTagResourceId(Convert.noticeType(buttonKey));
+                Keyboard.barrageKeyboard().setRightButtonTitle(keyName);
+
+                //设置键盘右按钮背景图标
+                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.tag_icon_bg);
+            }
         }
 
         @Override
-        public void onKeyboardChanged(int newHeight, int oldHeight) {
-            int tab_height = Density.dipTopx(50);
-            if (newHeight > tab_height) {
-                tableView().setFooterHeight(newHeight - tab_height);
-            } else {
-                tableView().setFooterHeight(0);
-            }
-        }
+        public void onKeyboardChanged(int newHeight, int oldHeight) {}
     };
 
-    private void addObserver() {
-
-        BroadcastCenter.Method<PopViewController> method = new BroadcastCenter.Method<PopViewController>() {
-            @Override
-            public void onReceive(PopViewController observer, Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(UIEvent.UIKeyboardWillShowNotification)) {
-                    buttonBar.setVisibility(View.GONE);
-                }
-                else if (action.equals(UIEvent.UIKeyboardWillHideNotification)) {
-                    buttonBar.setVisibility(View.VISIBLE);
-                }
-
-            }
-        };
-
-        BroadcastCenter.shareInstance().addObserver(this, UIEvent.UIKeyboardWillShowNotification, method);
-        BroadcastCenter.shareInstance().addObserver(this, UIEvent.UIKeyboardWillHideNotification, method);
-    }
 
     public void sendAction(final String msg, final int tag) {
         if (TextUtils.isEmpty(msg)) {
@@ -223,6 +212,9 @@ public class PopViewController extends BaseTableViewController {
 
         //清除输入
         Keyboard.barrageKeyboard().setText("");
+        Keyboard.barrageKeyboard().setRightButtonTitle("");
+        Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+        customButtonKey = 0;
 
         final SendBubbleCellModel model = new SendBubbleCellModel();
         model.notice = notice;

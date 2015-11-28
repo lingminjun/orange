@@ -95,7 +95,7 @@ public final class Keyboard {
             //10~13
             {
                 KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_10);
-                btn.setKey(KEY.CAR);
+                btn.setKey(KEY.HOME);
                 btn.setOnClickListener(click);
             }
 
@@ -120,7 +120,7 @@ public final class Keyboard {
             //20~23
             {
                 KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_20);
-                btn.setKey(KEY.HOME);
+                btn.setKey(KEY.CAR);
                 btn.setOnClickListener(click);
             }
 
