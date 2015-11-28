@@ -170,6 +170,7 @@ public final class UIKeyboard extends LinearLayout {
         _keyboardPanel = (FrameLayout)findViewById(R.id.ssn_keyboard_panel);
 //        _inputPanel = (ViewGroup)findViewById(R.id.ssn_input_panel);
         _wordLimitText = (TextView)findViewById(R.id.ssn_word_limit_label);
+        _wordLimitText.setText(String.format("%d/%d", 0, COMMENT_MAX_LENGTH));
         _rightButton = (TextView)findViewById(R.id.ssn_keyboard_right_button);
         _input = (EditText)findViewById(R.id.ssn_input_text);
 

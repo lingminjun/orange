@@ -44,7 +44,7 @@
                       android:layout_alignBottom="@+id/ssn_input_text"
                       android:layout_alignRight="@+id/ssn_input_text"
                       android:layout_marginRight="1dp"
-                      android:text="20/300"
+                      android:text=""
                       android:id="@+id/ssn_word_limit_label"/>
         </RelativeLayout>
         <TextView android:layout_width="28dp"

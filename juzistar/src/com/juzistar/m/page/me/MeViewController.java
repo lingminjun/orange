@@ -6,9 +6,8 @@ import android.view.View;
 import com.juzistar.m.R;
 import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
-import com.juzistar.m.view.me.IconTitleCellModel;
-import com.juzistar.m.view.me.TestCellModel;
-import com.juzistar.m.view.me.UserHeaderCellModel;
+import com.juzistar.m.view.me.*;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
 import com.ssn.framework.uikit.*;
 
@@ -61,35 +60,30 @@ public class MeViewController extends BaseTableViewController {
 
         list.add(new UserHeaderCellModel());
 
-        for (int i = 0; i< 100;i++) {
-            {
-                IconTitleCellModel model = new IconTitleCellModel();
-                model.mIconId = R.drawable.icon_me_normal;
-                model.mTitle = "这仅仅只为测试"+i;
-//                model.disabled = true;
-                model.click = UIEvent.click(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                        UIAlert.showAlert(getActivity(),"这是标题","随便写点啥，看看换行的效果，可能还不够长，必须凑个字数","确定","取消",null);
-//                        UIActionSheet.showActionSheet(getActivity(), new String[]{"随便写写", "看着办", "还写一个"}, null, new UIAlertButtonClick() {
-//                            @Override
-//                            public void onClick(Dialog dialog, String btnTitle) {
-//                                Log.e("action sheet","action="+btnTitle);
-//                            }
-//                        });
+        list.add(new BlankCellModel());
 
-                        Navigator.shareInstance().openURL(PageURLs.EDIT_HEADER_URL);
-                    }
-                });
+        {
+            SettingCellModel model = new SettingCellModel();
+            model.mIconId = R.drawable.setting_message_icon;
+            model.mTitle = Res.localized(R.string.setting_message_title);
+            model.isSwitch = true;
+            model.switchValue = true;
+        }
 
+        {
+            SettingCellModel model = new SettingCellModel();
+            model.mIconId = R.drawable.setting_location_icon;
+            model.mTitle = Res.localized(R.string.setting_location_title);
+            model.isSwitch = true;
+            model.switchValue = true;
+        }
 
+        list.add(new BlankCellModel());
 
-                list.add(model);
-            }
-            {
-                TestCellModel model = new TestCellModel();
-                list.add(model);
-            }
+        {
+            SettingCellModel model = new SettingCellModel();
+            model.mIconId = R.drawable.setting_advice_icon;
+            model.mTitle = Res.localized(R.string.setting_advice_title);
         }
 
         return list;
