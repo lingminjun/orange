@@ -19,14 +19,12 @@ import java.util.List;
  */
 public class MeViewController extends BaseTableViewController {
 
-    private int count = 0;
-
     @Override
     public void onInit(Bundle args) {
         super.onInit(args);
 
-        navigationItem().setTitle("我");
-        tabItem().setTabName("我");
+        navigationItem().setTitle(Res.localized(R.string.me));
+        tabItem().setTabName(Res.localized(R.string.me));
         navigationItem().setHidden(true);
         tabItem().setTabImage(R.drawable.tab_selector_me);
     }
@@ -50,8 +48,6 @@ public class MeViewController extends BaseTableViewController {
     @Override
     public void onViewDidAppear() {
         super.onViewDidAppear();
-
-        tabItem().setBadgeValue(Integer.toString(count++));
     }
 
     @Override
@@ -68,6 +64,8 @@ public class MeViewController extends BaseTableViewController {
             model.mTitle = Res.localized(R.string.setting_message_title);
             model.isSwitch = true;
             model.switchValue = true;
+            model.listener = switchListener;
+            model.separateLineLeftPadding = 52;
             list.add(model);
         }
 
@@ -77,6 +75,7 @@ public class MeViewController extends BaseTableViewController {
             model.mTitle = Res.localized(R.string.setting_location_title);
             model.isSwitch = true;
             model.switchValue = true;
+            model.listener = switchListener;
             list.add(model);
         }
 
@@ -92,13 +91,11 @@ public class MeViewController extends BaseTableViewController {
         return list;
     }
 
-    @Override
-    public void onTableViewPullDownRefresh(final UITableView.TableViewAdapter adapter) {
-        TaskQueue.mainQueue().executeDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.completedLoad();
-            }
-        },3000);
-    }
+    public SettingCellModel.SettingCellListener switchListener = new SettingCellModel.SettingCellListener() {
+        @Override
+        public void onSwitchChanged(SettingCellModel model, boolean switchValue) {
+            int row = tableViewAdapter().row(model);
+            tableViewAdapter().updateCell(model,row);
+        }
+    };
 }

@@ -7,6 +7,16 @@ import com.ssn.framework.uikit.UITableViewCell;
  * Created by lingminjun on 15/4/24.
  */
 public class SettingCellModel extends UITableViewCell.CellModel {
+
+    public static interface SettingCellListener {
+        /**
+         * 开关点击事件
+         * @param model
+         * @param switchValue 点击后改变的值
+         */
+        public void onSwitchChanged(SettingCellModel model, boolean switchValue);
+    }
+
     /**
      * icon id
      */
@@ -32,6 +42,11 @@ public class SettingCellModel extends UITableViewCell.CellModel {
      */
     public boolean isSwitch;
 
+
+    /**
+     * 事件
+     */
+    public SettingCellListener listener;
 
     @Override
     protected UITableViewCell createCell(Context context) {

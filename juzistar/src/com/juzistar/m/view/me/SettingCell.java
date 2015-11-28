@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
@@ -26,6 +27,17 @@ public class SettingCell extends UITableViewCell {
         super(context);
     }
 
+    public OnClickListener switchClick = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            SettingCellModel model = (SettingCellModel)cellModel();
+            if (model != null && model.listener != null) {
+                model.switchValue = !model.switchValue;
+                model.listener.onSwitchChanged(model,model.switchValue);
+            }
+        }
+    };
+
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate,ViewGroup containerView) {
         View view = inflate(inflate,R.layout.setting_cell, containerView);
@@ -33,6 +45,7 @@ public class SettingCell extends UITableViewCell {
         mTextLabel = (TextView) view.findViewById(R.id.text_label);
         mSubLabel = (TextView) view.findViewById(R.id.sub_label);
         switchButton = (TextView)view.findViewById(R.id.switch_button);
+        switchButton.setOnClickListener(UIEvent.click(switchClick));
         return view;
     }
 
