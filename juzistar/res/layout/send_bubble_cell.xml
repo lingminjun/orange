@@ -16,6 +16,7 @@
     <TextView android:id="@+id/left_icon"
               android:layout_width="@dimen/tag_icon_size"
               android:layout_height="@dimen/tag_icon_size"
+              android:layout_marginRight="10dp"
               android:textSize="@dimen/ssn_assist_text"
               android:textColor="@color/ssn_white"
               android:gravity="center"

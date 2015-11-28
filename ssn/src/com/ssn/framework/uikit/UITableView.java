@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -44,6 +45,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
         private TableViewDelegate _delegate;
         private int _viewTypeCount;//cell类型个数
         private boolean _nonReusable;//cell可复用
+        private boolean _disableScroll;//不能滑动
 
         public TableViewDelegate delegate() {return _delegate;}
         public void setDelegate(TableViewDelegate delegate) {_delegate = delegate;}
@@ -159,6 +161,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
 
         @Override
         public void onScroll(AbsListView absListView, int i, int i1, int i2) {}
+
 
         /**
          * PullToRefreshBase.OnRefreshListener2<ListView> 实现
@@ -609,6 +612,27 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
     }
 
     /**
+     * 设置是否可以滑动，默认可以滑动
+     * @param enable
+     */
+    public void setScrollEnable(boolean enable) {
+        disabledScroll = !enable;
+    }
+
+    private boolean disabledScroll;
+    
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (disabledScroll) {
+            if (ev.getAction() == MotionEvent.ACTION_HOVER_MOVE
+                    || ev.getAction() == MotionEvent.ACTION_MOVE) {
+                return false;
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
      * 不满屏幕时，显示在最底下
      * @param bottom
      */
@@ -665,4 +689,5 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
     private PullToRefreshListView _tableView;
     private FrameLayout _headerLayout;
     private FrameLayout _footerLayout;
+
 }

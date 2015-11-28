@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
@@ -34,8 +35,7 @@ import java.util.List;
 public class PopViewController extends BaseTableViewController {
 
     LinearLayout bottom;
-
-    LinearLayout buttonBar;
+    LinearLayout topHintBar;
 
     LinearLayout switchBtnPanel;
     TextView switchBtn;
@@ -58,7 +58,11 @@ public class PopViewController extends BaseTableViewController {
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
         tableView.setCacheColorHint(Color.TRANSPARENT);
         tableView.setStackFromBottom(true);
+        tableView.setScrollEnable(false);
         setTableView(tableView);
+
+        topHintBar = (LinearLayout)view.findViewById(R.id.top_hint_bar);
+        topHintBar.setOnClickListener(UIEvent.click(lookOverTagMsg));
 
         //底部发送panel
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
@@ -66,8 +70,9 @@ public class PopViewController extends BaseTableViewController {
         switchBtnPanel = (LinearLayout)bottom.findViewById(R.id.close_pop_btn_panel);
         sendBtn = (TextView)bottom.findViewById(R.id.send_pop_btn);
         sendBtnPanel = (LinearLayout)bottom.findViewById(R.id.send_pop_btn_panel);
-        buttonBar = (LinearLayout)bottom.findViewById(R.id.button_bar);
         tableView.setFooterView(bottom);
+
+        tableView.setOnClickListener(UIEvent.click(disKeyboard));
 
         return view;
     }
@@ -76,6 +81,8 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
+
+
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
@@ -132,6 +139,22 @@ public class PopViewController extends BaseTableViewController {
         //进入时不展示键盘
         Keyboard.barrageKeyboard().dismiss(false);
     }
+
+    View.OnClickListener lookOverTagMsg = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    View.OnClickListener disKeyboard = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Keyboard.barrageKeyboard().dismiss(false);
+        }
+    };
+
+
 
     private int test_count;
 
@@ -194,7 +217,6 @@ public class PopViewController extends BaseTableViewController {
     }
 
     private void sendNotice(final String msg, final int tag) {
-        Keyboard.barrageKeyboard().dismiss(false);
 
         UserCenter.User user = UserCenter.shareInstance().user();
 
@@ -202,19 +224,13 @@ public class PopViewController extends BaseTableViewController {
          * 构建消息
          */
         final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-        notice.type = NoticeBiz.NoticeType.TEMP;//Convert.noticeType(tag);
+        notice.type = Convert.noticeType(tag);
         notice.content = msg;
         notice.creator = user.nick;
         notice.creatorId = user.uid;
         notice.longitude = Double.toString(31.2117411154);
         notice.latitude = Double.toString(121.4596178033);
         notice.id = "sending:" + Utils.getServerTime();
-
-        //清除输入
-        Keyboard.barrageKeyboard().setText("");
-        Keyboard.barrageKeyboard().setRightButtonTitle("");
-        Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
-        customButtonKey = 0;
 
         final SendBubbleCellModel model = new SendBubbleCellModel();
         model.notice = notice;
@@ -236,6 +252,13 @@ public class PopViewController extends BaseTableViewController {
             @Override
             public void onSuccess(BoolModel boolModel) {
                 super.onSuccess(boolModel);
+
+                //发送成功则将键盘收起来，清除输入
+                Keyboard.barrageKeyboard().dismiss(false);
+                Keyboard.barrageKeyboard().setText("");
+                Keyboard.barrageKeyboard().setRightButtonTitle("");
+                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+                customButtonKey = 0;
 
                 model.disabled = true;
                 notice.id = "" + Utils.getServerTime();

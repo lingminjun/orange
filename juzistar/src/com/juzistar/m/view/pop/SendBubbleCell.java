@@ -71,7 +71,7 @@ public class SendBubbleCell extends UITableViewCell {
         //头像
         mIconView.setBackgroundResource(UIDic.avatarResourceId(mEntity.notice.creatorId));
 
-        int resId = UIDic.bubbleResourceId(mEntity.notice.type,false);
+        int resId = UIDic.bubbleResourceId(mEntity.notice.type,true);
         if (resId != 0) {
             mLeftIcon.setVisibility(VISIBLE);
             mLeftIcon.setBackgroundResource(resId);
