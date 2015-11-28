@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ public class PopViewController extends BaseTableViewController {
 
         topHintBar = (LinearLayout)view.findViewById(R.id.top_hint_bar);
         topHintBar.setOnClickListener(UIEvent.click(lookOverTagMsg));
+        topHintBar.setVisibility(View.INVISIBLE);
 
         //底部发送panel
         bottom = (LinearLayout)inflater.inflate(R.layout.pop_bottom_layout, null);
@@ -81,8 +83,6 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
-
-
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
@@ -140,6 +140,40 @@ public class PopViewController extends BaseTableViewController {
         Keyboard.barrageKeyboard().dismiss(false);
     }
 
+    private int move_y;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean bool = super.dispatchTouchEvent(ev);
+        float y = ev.getY();
+        if (y - move_y > Density.dipTopx(100) && move_y != 0) {//往下滑动一个阀值
+            topHintBar.setVisibility(View.VISIBLE);
+            TaskQueue.mainQueue().cancel(hideTopHintBar);
+            TaskQueue.mainQueue().executeDelayed(hideTopHintBar,3000);
+        }
+
+        int action = ev.getAction();
+        if (action == MotionEvent.ACTION_UP
+                || action == MotionEvent.ACTION_CANCEL
+                || action == MotionEvent.ACTION_HOVER_EXIT
+                || action == MotionEvent.ACTION_OUTSIDE) {
+            move_y = 0;
+        } else if (move_y == 0 && (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_HOVER_ENTER)) {
+            move_y = (int)y;
+        }
+        return bool;
+    }
+
+    private Runnable hideTopHintBar = new Runnable() {
+        @Override
+        public void run() {
+            topHintBar.setVisibility(View.INVISIBLE);
+            move_y = 0;
+        }
+    };
+
+    /**
+     * 查看标签消息
+     */
     View.OnClickListener lookOverTagMsg = new View.OnClickListener() {
         @Override
         public void onClick(View view) {

@@ -620,7 +620,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
     }
 
     private boolean disabledScroll;
-    
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (disabledScroll) {
