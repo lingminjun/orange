@@ -22,7 +22,7 @@
         <item name="android:activityOpenEnterAnimation">@anim/ssn_stay_put</item>
         <item name="android:activityOpenExitAnimation">@anim/ssn_stay_put</item>
         <item name="android:activityCloseEnterAnimation">@anim/ssn_stay_put</item>
-        <item name="android:activityCloseExitAnimation">@anim/ssn_stay_put</item>
+        <item name="android:activityCloseExitAnimation">@anim/ssn_slide_right_out</item>
     </style>
 
     <!--模态渐变-->

@@ -91,9 +91,9 @@ public final class NoticeBiz {
         }
     }
 
-    public static RPC.Cancelable create(final Notice notice, final RPC.Response<BoolModel> response){
+    public static RPC.Cancelable create(final Notice notice, final RPC.Response<NoticeBiz.Notice> response){
 
-        BaseRequest<BoolModel> request = new BaseRequest<BoolModel>() {
+        BaseRequest<NoticeBiz.Notice> request = new BaseRequest<NoticeBiz.Notice>() {
             @Override
             public String path() {
                 return "notice";

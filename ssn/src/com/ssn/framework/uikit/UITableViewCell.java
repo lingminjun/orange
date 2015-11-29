@@ -2,6 +2,7 @@ package com.ssn.framework.uikit;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
@@ -36,6 +37,8 @@ public abstract class UITableViewCell extends RelativeLayout {
         public int separateLineColor;//分割线颜色
         public int separateLineHeight;//默认是1（dp）
         public boolean hiddenRightArrow;//隐藏右边箭头
+
+        public int backgroundColor;
 
         public CellModel() {}
 
@@ -332,7 +335,7 @@ public abstract class UITableViewCell extends RelativeLayout {
                 if (cellModel.separateLineColor != 0) {
                     _separateLine.setBackgroundColor(cellModel.separateLineColor);
                 } else {
-                    _separateLine.setBackgroundColor(Res.color(android.R.color.darker_gray));
+                    _separateLine.setBackgroundColor(Res.color(R.color.ssn_separate_line));
                 }
             } else {
                 _separateLine.setVisibility(GONE);
@@ -353,6 +356,12 @@ public abstract class UITableViewCell extends RelativeLayout {
             } else {
                 _rightArrow.setVisibility(VISIBLE);
             }
+        }
+
+        if (cellModel.backgroundColor != 0) {
+            this.setBackgroundColor(cellModel.backgroundColor);
+        } else {
+            this.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 

@@ -1,6 +1,8 @@
 package com.juzistar.m.view.me;
 
 import android.content.Context;
+import com.juzistar.m.R;
+import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
@@ -53,4 +55,7 @@ public class SettingCellModel extends UITableViewCell.CellModel {
         return new SettingCell(context);
     }
 
+    public SettingCellModel() {
+        backgroundColor = Res.color(R.color.white);
+    }
 }

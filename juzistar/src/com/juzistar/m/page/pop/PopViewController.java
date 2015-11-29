@@ -279,7 +279,7 @@ public class PopViewController extends BaseTableViewController {
         model.notice = notice;
         tableViewAdapter().appendCell(model);
 
-        NoticeBiz.create(notice,new RPC.Response<BoolModel>(){
+        NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
             @Override
             public void onStart() {
                 super.onStart();
@@ -293,8 +293,8 @@ public class PopViewController extends BaseTableViewController {
             }
 
             @Override
-            public void onSuccess(BoolModel boolModel) {
-                super.onSuccess(boolModel);
+            public void onSuccess(NoticeBiz.Notice notice1) {
+                super.onSuccess(notice1);
 
                 //发送成功则将键盘收起来，清除输入
                 Keyboard.barrageKeyboard().dismiss(false);
@@ -304,7 +304,7 @@ public class PopViewController extends BaseTableViewController {
                 customButtonKey = 0;
 
                 model.disabled = true;
-                notice.id = "" + Utils.getServerTime();
+                notice.id = notice1.id;//获取新的id
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {

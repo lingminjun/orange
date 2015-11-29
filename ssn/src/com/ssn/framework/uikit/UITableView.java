@@ -3,6 +3,7 @@ package com.ssn.framework.uikit;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -76,6 +77,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             }
             _tableView._tableView.setMode(PullToRefreshBase.Mode.DISABLED);//默认只开启下拉模式
             _tableView._tableView.setAdapter(this);
+            _tableView._tableView.getRefreshableView().setCacheColorHint(Color.TRANSPARENT);
             updateRefreshLabel();
             setListeners();
         }
