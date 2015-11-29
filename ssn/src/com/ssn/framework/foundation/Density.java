@@ -69,4 +69,16 @@ public class Density {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    /**
+     * 将sp值转换为px值，保证文字大小不变
+     *
+     * @param spValue
+     * （DisplayMetrics类中属性scaledDensity）
+     * @return
+     */
+    public static int spTopx(int spValue) {
+        float fontScale = Res.resources().getDisplayMetrics().scaledDensity;
+        return (int)(spValue * fontScale + 0.5f);
+    }
+
 }

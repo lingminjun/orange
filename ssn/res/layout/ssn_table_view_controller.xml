@@ -5,7 +5,7 @@
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:fadingEdge="none"
         android:background="@android:color/white"
-        ptr:ptrAnimationStyle="fish"
+        ptr:ptrAnimationStyle="rotate"
         ptr:ptrScrollingWhileRefreshingEnabled="true"
         ptr:ptrMode="both"
         android:layout_width="match_parent"

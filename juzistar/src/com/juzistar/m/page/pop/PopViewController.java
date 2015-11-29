@@ -1,5 +1,7 @@
 package com.juzistar.m.page.pop;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -82,6 +84,84 @@ public class PopViewController extends BaseTableViewController {
         return view;
     }
 
+    @Override
+    public void onViewDidLoad() {
+        super.onViewDidLoad();
+
+        Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
+        Clock.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+
+        navigationItem().rightItem().setOnClick(UIEvent.click(rightClick));
+        navigationItem().rightItem().setImage(R.drawable.refresh_icon);
+        navigationItem().setTitleImage(R.drawable.location_icon);
+        navigationItem().setTitleClick(titleClick);
+
+        String addr = LBService.shareInstance().getLatestSimpleAddress();
+        if (!TextUtils.isEmpty(addr)) {
+            navigationItem().setTitle(addr);
+        }
+
+        switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (BarrageCenter.shareInstance().isOpenService()) {
+                    BarrageCenter.shareInstance().stopService();
+                    switchBtn.setSelected(true);
+                } else {
+                    BarrageCenter.shareInstance().startService();
+                    switchBtn.setSelected(false);
+                }
+            }
+        }));
+
+        sendBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PageCenter.checkAuth(sendAuthCallback);
+            }
+        }));
+
+
+        BroadcastCenter.shareInstance().addObserver(this, BarrageCenter.RECEIVED_BARRAGE_NOTIFICATION, receivedMethod);
+
+        //默认打开
+        BarrageCenter.shareInstance().startService();
+
+//        Clock.shareInstance().addListener(new Clock.Listener() {
+//            @Override
+//            public void fire(String flag) {
+//                {
+//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+//                    notice.type = NoticeBiz.NoticeType.NORMAL;
+//                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
+//                    notice.content = "这仅仅只为测试"+test_count;
+//                    notice.creator = "xxxx";
+//                    notice.creatorId = test_count+101;
+//                    notice.longitude = Double.toString(31.2117411154);
+//                    notice.latitude = Double.toString(121.4596178033);
+//
+//                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
+//                    model.notice = notice;
+//                    test_count++;
+//
+//                    tableViewAdapter().appendCell(model);
+//
+//                    if (test_count > 20) {
+//                        Clock.shareInstance().removeListener("dd");
+//                    }
+//                }
+//            }
+//        },"dd");
+    }
+
+    @Override
+    public void onViewDidAppear() {
+        super.onViewDidAppear();
+
+        //进入时不展示键盘
+        Keyboard.barrageKeyboard().dismiss(false);
+    }
+
     Clock.Listener timerListener = new Clock.Listener() {
         @Override
         public void fire(String flag) {
@@ -132,77 +212,20 @@ public class PopViewController extends BaseTableViewController {
         }
     };
 
-    @Override
-    public void onViewDidLoad() {
-        super.onViewDidLoad();
+    //接收pop消息
+    BroadcastCenter.Method<PopViewController> receivedMethod = new BroadcastCenter.Method<PopViewController>() {
+        @Override
+        public void onReceive(PopViewController observer, Context context, Intent intent) {
 
-        Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
-        Clock.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+            NoticeBiz.Notice notice = (NoticeBiz.Notice)intent.getSerializableExtra(BarrageCenter.BARRAGE_KEY);
 
-        navigationItem().rightItem().setOnClick(UIEvent.click(rightClick));
-        navigationItem().rightItem().setImage(R.drawable.refresh_icon);
-        navigationItem().setTitleImage(R.drawable.location_icon);
-        navigationItem().setTitleClick(titleClick);
-
-        String addr = LBService.shareInstance().getLatestSimpleAddress();
-        if (!TextUtils.isEmpty(addr)) {
-            navigationItem().setTitle(addr);
+            //刷新界面
+            ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
+            model.notice = notice;
+            tableViewAdapter().appendCell(model);
         }
+    };
 
-        switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (BarrageCenter.shareInstance().isOpenService()) {
-                    BarrageCenter.shareInstance().stopService();
-                    switchBtn.setSelected(true);
-                } else {
-                    BarrageCenter.shareInstance().startService();
-                    switchBtn.setSelected(false);
-                }
-            }
-        }));
-
-        sendBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PageCenter.checkAuth(sendAuthCallback);
-            }
-        }));
-
-        Clock.shareInstance().addListener(new Clock.Listener() {
-            @Override
-            public void fire(String flag) {
-                {
-                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                    notice.type = NoticeBiz.NoticeType.NORMAL;
-                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
-                    notice.content = "这仅仅只为测试"+test_count;
-                    notice.creator = "xxxx";
-                    notice.creatorId = test_count+101;
-                    notice.longitude = Double.toString(31.2117411154);
-                    notice.latitude = Double.toString(121.4596178033);
-
-                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
-                    model.notice = notice;
-                    test_count++;
-
-                    tableViewAdapter().appendCell(model);
-
-                    if (test_count > 20) {
-                        Clock.shareInstance().removeListener("dd");
-                    }
-                }
-            }
-        },"dd");
-    }
-
-    @Override
-    public void onViewDidAppear() {
-        super.onViewDidAppear();
-
-        //进入时不展示键盘
-        Keyboard.barrageKeyboard().dismiss(false);
-    }
 
     private int move_y;
     @Override

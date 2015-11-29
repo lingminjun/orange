@@ -129,6 +129,15 @@ public final class Store {
     }
 
 
+    /**
+     * 移除存储数据
+     * @param key
+     */
+    public void remove(String key) {
+        String path = path(key);
+        if (TextUtils.isEmpty(path)) {return;}
+        _remove(path);
+    }
 
 
     ////////////////////////////////////////////////////////////
@@ -165,6 +174,19 @@ public final class Store {
             exp.writeLong(now());//存储访问时间
             exp.writeLong(expire);//过期时长
             exp.close();
+        }
+    }
+
+    private void _remove(String path) {
+        File file = new File(path);
+        if (file.exists()) { //删除已存在文件
+            file.delete();
+        }
+
+        String tail = path + STORE_TAIL;
+        file = new File(tail);
+        if (file.exists()) {
+            file.delete();
         }
     }
 

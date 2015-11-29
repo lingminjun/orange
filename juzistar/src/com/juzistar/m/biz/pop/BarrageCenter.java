@@ -1,11 +1,11 @@
 package com.juzistar.m.biz.pop;
 
+import android.content.Intent;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
+import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.net.BaseModelList;
-import com.ssn.framework.foundation.Clock;
-import com.ssn.framework.foundation.RPC;
-import com.ssn.framework.foundation.UserDefaults;
+import com.ssn.framework.foundation.*;
 
 import java.util.Random;
 import java.util.Set;
@@ -15,6 +15,9 @@ import java.util.Set;
  * 弹幕接受与播发
  */
 public final class BarrageCenter {
+
+    public final static String RECEIVED_BARRAGE_NOTIFICATION = "received_barrage_notification";
+    public final static String BARRAGE_KEY = "barrage_key";
 
     private static BarrageCenter _instance = null;
 
@@ -71,16 +74,32 @@ public final class BarrageCenter {
 
 
     private void pullBarrage() {
-        long latest_pull_at = UserDefaults.getInstance().get(LATEST_PULL_KEY,0);
-        String longitude = Double.toString(31.2117411154);
-        String latitude = Double.toString(121.4596178033);
+        long latest_pull_at = UserDefaults.getInstance().get(LATEST_PULL_KEY,0l);
+        String longitude = Double.toString(LBService.shareInstance().getLatestLongitude());
+        String latitude = Double.toString(LBService.shareInstance().getLatestLatitude());
         NoticeBiz.getList(latest_pull_at,longitude,latitude,new RPC.Response<NoticeBiz.NoticeList>(){
             @Override
             public void onSuccess(NoticeBiz.NoticeList list) {
                 super.onSuccess(list);
 
-                if (list != null) {
+                if (list == null) {
+                    return;
+                }
 
+                //存储游标
+                UserDefaults.getInstance().put(LATEST_PULL_KEY,list.latestTime);
+
+                int time = 0;
+                for (final NoticeBiz.Notice notice : list.list) {
+                    time += 300;
+                    TaskQueue.mainQueue().executeDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(RECEIVED_BARRAGE_NOTIFICATION);
+                            intent.putExtra(BARRAGE_KEY,notice);
+                            BroadcastCenter.shareInstance().postBroadcast(intent);
+                        }
+                    },time);
                 }
             }
         });
@@ -114,20 +133,20 @@ public final class BarrageCenter {
     private int count;
 //    private Set<msgId>
 
-    private Random random = new Random();
-
-    /**
-     * 获取size以内随机数
-     * @param size
-     * @return
-     */
-    public int getRandom(int size) {
-        if (size > 1) {
-            return random.nextInt() % size;
-        } else {
-            return random.nextInt();
-        }
-    }
+//    private Random random = new Random();
+//
+//    /**
+//     * 获取size以内随机数
+//     * @param size
+//     * @return
+//     */
+//    public int getRandom(int size) {
+//        if (size > 1) {
+//            return random.nextInt() % size;
+//        } else {
+//            return random.nextInt();
+//        }
+//    }
 
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";

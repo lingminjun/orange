@@ -8,6 +8,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.juzistar.m.R;
 import com.juzistar.m.biz.UserCenter;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.UserDefaults;
@@ -207,7 +208,7 @@ public final class LBService {
         String str = getLatestAddress();
         if (TextUtils.isEmpty(str)) {return "";}
 
-        int idx = str.lastIndexOf("区");
+        int idx = str.lastIndexOf(Res.localized(R.string.district));
         if (idx >= 0 && idx < str.length()) {
             return str.substring(idx+1,str.length());
         }
