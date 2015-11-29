@@ -20,6 +20,7 @@
     <TextView android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:gravity="center"
+              android:textColor="@color/ssn_white"
               android:text="test"
               android:id="@+id/ssn_item_name"/>
 </LinearLayout>

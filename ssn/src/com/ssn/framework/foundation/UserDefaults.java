@@ -92,6 +92,16 @@ public final class UserDefaults {
         editor.apply();
     }
 
+    public boolean put(String key, float value) {
+        editor.putFloat(key, value);
+        return editor.commit();
+    }
+
+    public void putAsync(String key, float value) {
+        editor.putFloat(key, value);
+        editor.apply();
+    }
+
     public String get(String key, String defValue) {
         return sp.getString(key, defValue);
     }
@@ -106,6 +116,10 @@ public final class UserDefaults {
 
     public boolean get(String key, boolean defValue) {
         return sp.getBoolean(key, defValue);
+    }
+
+    public float get(String key, float defValue) {
+        return sp.getFloat(key, defValue);
     }
 
     //高级接口

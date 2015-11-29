@@ -15,6 +15,11 @@
           fragmentclass="com.juzistar.m.page.pop.TagPopViewController"
           activityclass=""
           description="标签消息"/>
+    <item url="http://m.juzistar.com/location.html"
+          fragmentclass="com.juzistar.m.page.location.LocationViewController"
+          activityclass=""
+          description="手动定位"/>
+
 
     <!--邂逅-->
     <item url="http://m.juzistar.com/chat_list.html"

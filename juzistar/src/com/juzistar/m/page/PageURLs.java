@@ -16,6 +16,7 @@ public class PageURLs {
     //泡泡页
     public static final String POP_URL = "http://m.juzistar.com/pop.html";
     public static final String TAG_POP_URL = "http://m.juzistar.com/tag_pop.html";
+    public static final String LOCATION_URL = "http://m.juzistar.com/location.html";
 
     //遇见页
     public static final String CHAT_LIST_URL = "http://m.juzistar.com/chat_list.html";

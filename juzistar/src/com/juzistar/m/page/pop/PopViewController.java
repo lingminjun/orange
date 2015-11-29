@@ -8,13 +8,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.biz.pop.BarrageCenter;
-import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
@@ -102,12 +104,50 @@ public class PopViewController extends BaseTableViewController {
         }
     };
 
+    View.OnClickListener rightClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            UILoading.show(getActivity());
+
+                LBService.shareInstance().asyncLocation(new BDLocationListener() {
+                    @Override
+                    public void onReceiveLocation(BDLocation bdLocation) {
+
+                        if (!TextUtils.isEmpty(bdLocation.getAddrStr())) {
+                            navigationItem().setTitle(LBService.shareInstance().getLatestSimpleAddress());
+                        }
+
+                        UILoading.dismiss(getActivity());
+                    }
+                });
+        }
+    };
+
+    View.OnClickListener titleClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //去手动定位页
+            Navigator.shareInstance().openURL(PageURLs.LOCATION_URL);
+        }
+    };
+
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
         Clock.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+
+        navigationItem().rightItem().setOnClick(UIEvent.click(rightClick));
+        navigationItem().rightItem().setImage(R.drawable.refresh_icon);
+        navigationItem().setTitleImage(R.drawable.location_icon);
+        navigationItem().setTitleClick(titleClick);
+
+        String addr = LBService.shareInstance().getLatestSimpleAddress();
+        if (!TextUtils.isEmpty(addr)) {
+            navigationItem().setTitle(addr);
+        }
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
@@ -287,8 +327,8 @@ public class PopViewController extends BaseTableViewController {
         notice.content = msg;
         notice.creator = user.nick;
         notice.creatorId = user.uid;
-        notice.longitude = Double.toString(31.2117411154);
-        notice.latitude = Double.toString(121.4596178033);
+        notice.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
+        notice.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
         notice.id = "sending:" + Utils.getServerTime();
 
         final SendBubbleCellModel model = new SendBubbleCellModel();

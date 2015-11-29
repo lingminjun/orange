@@ -154,7 +154,6 @@ public class UIViewController extends Fragment implements ViewController {
             navigationItem().backItem().setOnClick(UIEvent.click(_backListener));
             navigationItem().backItem().setTitle("    ");
             navigationItem().backItem().setHidden(false);
-            navigationItem().backItem().setView(UINavigationBar.NavigationItem.ButtonItem.createButtonItemView(Res.context()));
         }
         else {
             String close = getArguments().getString(Navigator.NAVIGATOR_VC_CLOSE_KEY);
@@ -163,7 +162,6 @@ public class UIViewController extends Fragment implements ViewController {
                 navigationItem().backItem().setTitle("取消");
                 navigationItem().backItem().setImage(0);
                 navigationItem().backItem().setHidden(false);
-                navigationItem().backItem().setView(UINavigationBar.NavigationItem.ButtonItem.createButtonItemView(Res.context()));
             }
         }
     }

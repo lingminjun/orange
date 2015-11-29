@@ -2,8 +2,12 @@ package com.juzistar.m.application;
 
 import android.content.res.XmlResourceParser;
 import android.text.TextUtils;
+import android.util.Log;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.lbs.LBService;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
@@ -28,6 +32,12 @@ public class AppAplication extends UIApplication {
         //页面路由加载
         loadPageRouter();
 
+        LBService.shareInstance().asyncLocation(new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+                Log.e("定位","定位成功");
+            }
+        });
     }
 
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -83,7 +84,7 @@ public final class UINavigationBar extends RelativeLayout {
             /**
              * 不对外暴露方法
              */
-            protected void setView(View view) {
+            private void setView(View view) {
                 this.view = view;
 
                 this.textView = (TextView) view.findViewById(R.id.ssn_item_name);
@@ -100,6 +101,7 @@ public final class UINavigationBar extends RelativeLayout {
 
             private void display() {
                 if (view == null) {
+                    setView(createButtonItemView(Res.context()));
                     return;
                 }
 
@@ -195,6 +197,9 @@ public final class UINavigationBar extends RelativeLayout {
         public void setTitleColor(int color) {this.textColor = color;displayTitle();}
         public void setTitleFontSize(int size) {this.textSize = size;displayTitle();}
 
+        public void setTitleImage(int image) {this.image = image;display();}
+        public void setTitleClick(View.OnClickListener click) {this.click = click; titleEventCheck();}
+
         public ButtonItem backItem() {
             if (backItem == null) {
                 backItem = ButtonItem.BackButtonItem();
@@ -243,7 +248,9 @@ public final class UINavigationBar extends RelativeLayout {
         private void pushView(UINavigationBar view) {
             this.view = view;
 
-            this.textView = (TextView) view.findViewById(R.id.title_text);
+            this.titlePanel = (ViewGroup)view.findViewById(R.id.title_panel);
+            this.titleText = (TextView) view.findViewById(R.id.title_text);
+            this.titleIcon = (TextView) view.findViewById(R.id.title_icon);
             this.line = view.findViewById(R.id.bottom_line);
             this.leftContainer = (LinearLayout) view.findViewById(R.id.left_layout);
             this.rightContainer = (LinearLayout) view.findViewById(R.id.right_layout);
@@ -259,13 +266,15 @@ public final class UINavigationBar extends RelativeLayout {
          */
         private void popView() {
             this.view = null;
-            this.textView = null;
+            this.titleText = null;
             this.line = null;
             this.leftContainer = null;
             this.rightContainer = null;
         }
 
         private String title;
+        private int image;
+        private OnClickListener click;
         private int textSize;
         private int textColor;
         private int backgroundColor;
@@ -277,7 +286,9 @@ public final class UINavigationBar extends RelativeLayout {
         private List<ButtonItem> rigthItems = new ArrayList<ButtonItem>();
 
         private View view;
-        private TextView textView;
+        private ViewGroup titlePanel;
+        private TextView titleText;
+        private TextView titleIcon;
         private LinearLayout leftContainer;
         private LinearLayout rightContainer;
         private View line;
@@ -309,17 +320,37 @@ public final class UINavigationBar extends RelativeLayout {
         private void displayTitle() {
             if (view == null) {return;}
 
-            if (textView != null) {
-                textView.setText(TR.string(title));
+            if (titleText != null) {
+                titleText.setText(TR.string(title));
 
                 //颜色设置
                 if (textColor != 0) {
-                    textView.setTextColor(textColor);
+                    titleText.setTextColor(textColor);
                 }
 
                 //字体大小
                 if (textSize > 0) {
-                    textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                    titleText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                }
+            }
+
+            if (image != 0) {
+                titleIcon.setVisibility(VISIBLE);
+                titleIcon.setBackgroundResource(image);
+            } else {
+                titleIcon.setVisibility(GONE);
+                titleIcon.setBackgroundResource(android.R.color.transparent);
+            }
+        }
+
+        private void titleEventCheck() {
+            if (view != null) {
+                if (titlePanel != null) {
+                    if (click != null) {
+                        titlePanel.setOnClickListener(UIEvent.click(click));
+                    } else {
+                        titlePanel.setOnClickListener(null);
+                    }
                 }
             }
         }
