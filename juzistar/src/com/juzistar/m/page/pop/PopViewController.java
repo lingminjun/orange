@@ -19,6 +19,7 @@ import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
+import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
 import com.juzistar.m.view.com.UIDic;
@@ -177,7 +178,7 @@ public class PopViewController extends BaseTableViewController {
     View.OnClickListener lookOverTagMsg = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            Navigator.shareInstance().openURL(PageURLs.TAG_POP_URL);
         }
     };
 
@@ -274,13 +275,13 @@ public class PopViewController extends BaseTableViewController {
             @Override
             public void onStart() {
                 super.onStart();
-                UILoading.show(getActivity());
+//                UILoading.show(getActivity());
             }
 
             @Override
             public void onFinish() {
                 super.onFinish();
-                UILoading.dismiss(getActivity());
+//                UILoading.dismiss(getActivity());
             }
 
             @Override

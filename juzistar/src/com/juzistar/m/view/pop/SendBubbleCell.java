@@ -37,6 +37,16 @@ public class SendBubbleCell extends UITableViewCell {
         }
     };
 
+    private OnClickListener statusClick = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            SendBubbleCellModel model = (SendBubbleCellModel)cellModel();
+            if (model != null && model.cellListener != null) {
+                model.cellListener.onErrorTagClick(model,model.notice);
+            }
+        }
+    };
+
     @Override
     public void onPrepareForReuse() {
         mTitleView.setText("");
@@ -53,6 +63,7 @@ public class SendBubbleCell extends UITableViewCell {
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         mLeftIcon = (TextView) view.findViewById(R.id.left_icon);
         mStatusIcon = (TextView) view.findViewById(R.id.send_status_icon);
+        mStatusIcon.setOnClickListener(UIEvent.click(statusClick));
         return view;
     }
 

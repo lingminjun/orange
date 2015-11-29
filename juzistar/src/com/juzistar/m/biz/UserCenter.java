@@ -121,10 +121,32 @@ public final class UserCenter {
 
     //将数据存储下来
     public void saveToken(BaseRequest.Token tokenModel) {
+
+        refreshToken(tokenModel);
+
+        //抛出成功通知
+        if (tokenModel != null && tokenModel.token != null && tokenModel.token.length() > 0) {
+            BroadcastCenter.shareInstance().postBroadcast(new Intent(USER_LOGIN_NOTIFICATION));
+        }
+    }
+
+    public void refreshToken(BaseRequest.Token tokenModel) {
+        if (tokenModel == null) {return;}
+
         UserBiz.TokenModel token = null;
         synchronized (this) {
             token = new UserBiz.TokenModel();
-            token.fillFromOther(tokenModel);
+
+            token.refreshToken = tokenModel.refreshToken;
+            token.token = tokenModel.token;
+
+            if (tokenModel instanceof UserBiz.TokenModel) {//更新其他值
+                UserBiz.TokenModel userToken = (UserBiz.TokenModel)tokenModel;
+                token.id = userToken.id;
+                token.mobile = userToken.mobile;
+                token.nickname = userToken.nickname;
+            }
+
             _token = token;//采用copy的方式
             if (tokenModel != null) {
                 _uid = token.id;
@@ -136,11 +158,6 @@ public final class UserCenter {
         if (tokenModel != null && !TextUtils.isEmpty(tokenModel.token)) {
             HTTPAccessor.setAuthToken(tokenModel.token);
         }
-
-        //抛出成功通知
-        if (tokenModel != null && tokenModel.token != null && tokenModel.token.length() > 0 && token.id > 0) {
-            BroadcastCenter.shareInstance().postBroadcast(new Intent(USER_LOGIN_NOTIFICATION));
-        }
     }
 
     public BaseRequest.Token getToken() {
@@ -148,7 +165,9 @@ public final class UserCenter {
             return null;
         }
 
-        BaseRequest.Token token = new BaseRequest.Token();
+        UserBiz.TokenModel token = new UserBiz.TokenModel();
+        token.id = _token.id;
+        token.mobile = _token.mobile;
         token.token = _token.token;
         token.refreshToken = _token.refreshToken;
 

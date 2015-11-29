@@ -31,7 +31,20 @@ public class ReceivedBubbleCell extends UITableViewCell {
     private OnClickListener click = new OnClickListener() {
         @Override
         public void onClick(View view) {
+            ReceivedBubbleCellModel model = (ReceivedBubbleCellModel)cellModel();
+            if (model != null && model.cellListener != null) {
+                model.cellListener.onMessageClick(model, model.notice);
+            }
+        }
+    };
 
+    private OnClickListener headerClick = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ReceivedBubbleCellModel model = (ReceivedBubbleCellModel)cellModel();
+            if (model != null && model.cellListener != null) {
+                model.cellListener.onHeaderClick(model, model.notice);
+            }
         }
     };
 
@@ -47,6 +60,7 @@ public class ReceivedBubbleCell extends UITableViewCell {
         panel = view.findViewById(R.id.message_content_panel);
         panel.setOnClickListener(UIEvent.click(click));
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
+        mIconView.setOnClickListener(UIEvent.click(headerClick));
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         mRightIcon = (TextView) view.findViewById(R.id.right_icon);
         return view;

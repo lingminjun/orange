@@ -11,6 +11,10 @@
           fragmentclass="com.juzistar.m.page.pop.PopViewController"
           activityclass=""
           description="泡泡"/>
+    <item url="http://m.juzistar.com/tag_pop.html"
+          fragmentclass="com.juzistar.m.page.pop.TagPopViewController"
+          activityclass=""
+          description="标签消息"/>
 
     <!--邂逅-->
     <item url="http://m.juzistar.com/chat_list.html"

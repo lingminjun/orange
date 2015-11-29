@@ -3,6 +3,7 @@ package com.juzistar.m.net;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.juzistar.m.R;
+import com.juzistar.m.biz.UserBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.ssn.framework.foundation.*;
 import org.apache.http.HttpStatus;
@@ -281,6 +282,9 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
                 Token token = UserCenter.shareInstance().getToken();
 
                 if (token != null) {
+                    if (token instanceof UserBiz.TokenModel) {
+                        params.put("mobile", ((UserBiz.TokenModel) token).mobile);
+                    }
                     params.put("token", token.token);
                     params.put("refreshToken", token.refreshToken);
                 }
@@ -289,7 +293,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             @Override
             public Token call(RPC.Retry retry) throws Exception {
                 Token token = super.call(retry);
-                UserCenter.shareInstance().saveToken(token);
+                UserCenter.shareInstance().refreshToken(token);
                 return token;
             }
 

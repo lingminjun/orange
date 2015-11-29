@@ -57,4 +57,5 @@
     <string name="setting_advice_title">打赏宝贵意见</string>
     <string name="me">我</string>
     <string name="look_over_tag_message">点击查看标签消息</string>
+    <string name="look_tag_msg_title">标签消息</string>
 </resources>
