@@ -34,6 +34,7 @@ public abstract class UITableViewCell extends RelativeLayout {
         public int separateLineLeftPadding;//分割线左边距，(dp)
         public boolean hiddenSeparateLine;//分割线是否隐藏
         public int separateLineColor;//分割线颜色
+        public int separateLineHeight;//默认是1（dp）
         public boolean hiddenRightArrow;//隐藏右边箭头
 
         public CellModel() {}
@@ -335,6 +336,14 @@ public abstract class UITableViewCell extends RelativeLayout {
                 }
             } else {
                 _separateLine.setVisibility(GONE);
+            }
+
+            //设置默认高度
+            LayoutParams params = (LayoutParams) _separateLine.getLayoutParams();
+            if (cellModel.separateLineHeight <= 0) {
+                params.height = Density.dipTopx(1);
+            } else {
+                params.height = Density.dipTopx(cellModel.separateLineHeight);
             }
         }
 

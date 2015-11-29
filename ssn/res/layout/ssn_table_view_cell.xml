@@ -6,11 +6,12 @@
                 android:layout_height="wrap_content">
 
     <!--cell container view-->
-    <FrameLayout android:orientation="horizontal"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:descendantFocusability="blocksDescendants"
-                 android:id="@+id/ssn_view_container">
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:descendantFocusability="blocksDescendants"
+            android:id="@+id/ssn_view_container">
     </FrameLayout>
 
     <!--右边指示按钮-->
@@ -27,9 +28,8 @@
 
     <!--底部分割线-->
     <TextView android:layout_width="match_parent"
-              android:layout_height="1px"
-              android:layout_alignParentBottom="true"
+              android:layout_height="1dp"
               android:id="@+id/ssn_separate_line"
+              android:layout_below="@+id/ssn_view_container"
               android:background="@color/ssn_separate_line"/>
-
 </RelativeLayout>

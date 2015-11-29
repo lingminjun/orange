@@ -20,22 +20,26 @@ import java.util.List;
 public final class NoticeBiz {
 
     public static final class NoticeType {
-        public static final String TEMP = "temp";
+        //type 定义
+        public static final String TEMP = "temp";//30秒间隔
+        public static final String NORMAL = "normal";//30分钟间隔
+    }
 
-        public static final String NORMAL = "normal";
-
-        public static final String LOVE = "love";
-        public static final String BOOK = "book";
-        public static final String EAT  = "eat";
-        public static final String TEST = "test";
-        public static final String HOME = "home";
-        public static final String FLOWER = "flower";
-        public static final String HELP = "help";
-        public static final String DATING = "dating";
-        public static final String CAR = "car";
-        public static final String WEAR = "wear";
-        public static final String SPORT = "sport";
-        public static final String MOVIE = "movie";
+    //类别
+    public static final class NoticeCategory {
+        public static final int NAN = 0;//"nan";
+        public static final int LOVE = 1;//"love";
+        public static final int BOOK = 2;//"book";
+        public static final int EAT  = 3;//"eat";
+        public static final int TEST = 4;//"test";
+        public static final int HOME = 5;//"home";
+        public static final int FLOWER = 6;//"flower";
+        public static final int HELP = 7;//"help";
+        public static final int DATING = 8;//"dating";
+        public static final int CAR = 9;//"car";
+        public static final int WEAR = 10;//"wear";
+        public static final int SPORT = 11;//"sport";
+        public static final int MOVIE = 12;//"movie";
     }
 
     public static class Notice extends BaseModel {
@@ -43,6 +47,7 @@ public final class NoticeBiz {
         public String content;
         public String longitude;
         public String latitude;
+        public int category;//类型
         public String type;
 
         public long creatorId;
@@ -107,6 +112,11 @@ public final class NoticeBiz {
             @Override
             public void params(HashMap<String, Object> params) {
                 params.put("content",notice.content);
+
+                if (NoticeCategory.NAN != notice.category) {
+                    params.put("category",notice.category);
+                }
+
                 params.put("longitude",notice.longitude);
                 params.put("latitude",notice.latitude);
 

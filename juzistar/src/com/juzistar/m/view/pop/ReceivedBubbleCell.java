@@ -81,13 +81,13 @@ public class ReceivedBubbleCell extends UITableViewCell {
         //头像
         mIconView.setBackgroundResource(UIDic.avatarResourceId(mEntity.notice.creatorId));
 
-        int resId = UIDic.bubbleResourceId(mEntity.notice.type,false);
+        int resId = UIDic.bubbleResourceId(mEntity.notice.category,false);
         if (resId != 0) {
             mRightIcon.setVisibility(VISIBLE);
             mRightIcon.setBackgroundResource(resId);
 
             //文案
-            mRightIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.type));
+            mRightIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.category));
         }
 
     }

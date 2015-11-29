@@ -1,14 +1,11 @@
 package com.juzistar.m.page.pop;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
@@ -43,6 +40,8 @@ public class PopViewController extends BaseTableViewController {
     TextView switchBtn;
     LinearLayout sendBtnPanel;
     TextView sendBtn;
+
+    static final String CHECK_POP_TIMER_KEY = "check_pop_timer_key";
 
     @Override
     public void onInit(Bundle args) {
@@ -87,6 +86,13 @@ public class PopViewController extends BaseTableViewController {
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
+        Clock.shareInstance().addListener(new Clock.Listener() {
+            @Override
+            public void fire(String flag) {
+
+            }
+        },CHECK_POP_TIMER_KEY);
+
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +118,8 @@ public class PopViewController extends BaseTableViewController {
             public void fire(String flag) {
                 {
                     final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                    notice.type = Convert.noticeType(Keyboard.KEY.LOVE);
+                    notice.type = NoticeBiz.NoticeType.NORMAL;
+                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
                     notice.content = "这仅仅只为测试"+test_count;
                     notice.creator = "xxxx";
                     notice.creatorId = test_count+101;
@@ -224,7 +231,7 @@ public class PopViewController extends BaseTableViewController {
                 customButtonKey = buttonKey;
 
                 //设置键盘文案
-                String keyName = UIDic.bubbleTagResourceId(Convert.noticeType(buttonKey));
+                String keyName = UIDic.bubbleTagResourceId(Convert.noticeCategory(buttonKey));
                 Keyboard.barrageKeyboard().setRightButtonTitle(keyName);
 
                 //设置键盘右按钮背景图标
@@ -259,7 +266,8 @@ public class PopViewController extends BaseTableViewController {
          * 构建消息
          */
         final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-        notice.type = Convert.noticeType(tag);
+        notice.type = NoticeBiz.NoticeType.NORMAL;
+        notice.category = Convert.noticeCategory(tag);
         notice.content = msg;
         notice.creator = user.nick;
         notice.creatorId = user.uid;

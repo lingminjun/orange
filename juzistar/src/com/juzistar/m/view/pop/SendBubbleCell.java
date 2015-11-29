@@ -82,13 +82,13 @@ public class SendBubbleCell extends UITableViewCell {
         //头像
         mIconView.setBackgroundResource(UIDic.avatarResourceId(mEntity.notice.creatorId));
 
-        int resId = UIDic.bubbleResourceId(mEntity.notice.type,true);
+        int resId = UIDic.bubbleResourceId(mEntity.notice.category,true);
         if (resId != 0) {
             mLeftIcon.setVisibility(VISIBLE);
             mLeftIcon.setBackgroundResource(resId);
 
             //文案
-            mLeftIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.type));
+            mLeftIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.category));
         }
 
         //发送失败

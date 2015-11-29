@@ -31,46 +31,46 @@ public final class UIDic {
 
     /**
      * 汽包颜色
-     * @param noticeType
+     * @param noticeCategory
      * @return
      */
-    public static int bubbleResourceId(String noticeType,boolean isSend) {
-        if (TextUtils.isEmpty(noticeType)) {return 0;}
+    public static int bubbleResourceId(int noticeCategory,boolean isSend) {
+        if (noticeCategory == NoticeBiz.NoticeCategory.NAN) {return 0;}
 
-        if (NoticeBiz.NoticeType.LOVE.equals(noticeType)) {
+        if (NoticeBiz.NoticeCategory.LOVE == noticeCategory) {
             return isSend?R.drawable.bubble_s_red0_icon:R.drawable.bubble_r_red0_icon;
         }
-        else if (NoticeBiz.NoticeType.BOOK.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.BOOK == noticeCategory) {
             return isSend?R.drawable.bubble_s_blue0_icon:R.drawable.bubble_r_blue0_icon;
         }
-        else if (NoticeBiz.NoticeType.EAT.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.EAT == noticeCategory) {
             return isSend?R.drawable.bubble_s_yellow0_icon:R.drawable.bubble_r_yellow0_icon;
         }
-        else if (NoticeBiz.NoticeType.TEST.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.TEST == noticeCategory) {
             return isSend?R.drawable.bubble_s_blue1_icon:R.drawable.bubble_r_blue1_icon;
         }
-        else if (NoticeBiz.NoticeType.HOME.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.HOME == noticeCategory) {
             return isSend?R.drawable.bubble_s_yellow1_icon:R.drawable.bubble_r_yellow1_icon;
         }
-        else if (NoticeBiz.NoticeType.FLOWER.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.FLOWER == noticeCategory) {
             return isSend?R.drawable.bubble_s_red0_icon:R.drawable.bubble_r_red0_icon;
         }
-        else if (NoticeBiz.NoticeType.HELP.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.HELP == noticeCategory) {
             return isSend?R.drawable.bubble_s_blue1_icon:R.drawable.bubble_r_blue1_icon;
         }
-        else if (NoticeBiz.NoticeType.DATING.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.DATING == noticeCategory) {
             return isSend?R.drawable.bubble_s_red0_icon:R.drawable.bubble_r_red0_icon;
         }
-        else if (NoticeBiz.NoticeType.CAR.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.CAR == noticeCategory) {
             return isSend?R.drawable.bubble_s_green0_icon:R.drawable.bubble_r_green0_icon;
         }
-        else if (NoticeBiz.NoticeType.WEAR.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.WEAR == noticeCategory) {
             return isSend?R.drawable.bubble_s_yellow1_icon:R.drawable.bubble_r_yellow1_icon;
         }
-        else if (NoticeBiz.NoticeType.SPORT.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.SPORT == noticeCategory) {
             return isSend?R.drawable.bubble_s_green1_icon:R.drawable.bubble_r_green1_icon;
         }
-        else if (NoticeBiz.NoticeType.MOVIE.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.MOVIE == noticeCategory) {
             return isSend?R.drawable.bubble_s_green0_icon:R.drawable.bubble_r_green0_icon;
         }
         else {
@@ -80,46 +80,46 @@ public final class UIDic {
 
     /**
      * 文案对应
-     * @param noticeType
+     * @param noticeCategory
      * @return
      */
-    public static String bubbleTagResourceId(String noticeType) {
-        if (TextUtils.isEmpty(noticeType)) {return "";}
+    public static String bubbleTagResourceId(int noticeCategory) {
+        if (noticeCategory == NoticeBiz.NoticeCategory.NAN) {return "";}
 
-        if (NoticeBiz.NoticeType.LOVE.equals(noticeType)) {
+        if (NoticeBiz.NoticeCategory.LOVE == noticeCategory) {
             return Res.localized(R.string.love);
         }
-        else if (NoticeBiz.NoticeType.BOOK.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.BOOK == noticeCategory) {
             return Res.localized(R.string.book);
         }
-        else if (NoticeBiz.NoticeType.EAT.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.EAT == noticeCategory) {
             return Res.localized(R.string.eat);
         }
-        else if (NoticeBiz.NoticeType.TEST.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.TEST == noticeCategory) {
             return Res.localized(R.string.test);
         }
-        else if (NoticeBiz.NoticeType.HOME.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.HOME == noticeCategory) {
             return Res.localized(R.string.home);
         }
-        else if (NoticeBiz.NoticeType.FLOWER.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.FLOWER == noticeCategory) {
             return Res.localized(R.string.flower);
         }
-        else if (NoticeBiz.NoticeType.HELP.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.HELP == noticeCategory) {
             return Res.localized(R.string.help);
         }
-        else if (NoticeBiz.NoticeType.DATING.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.DATING == noticeCategory) {
             return Res.localized(R.string.dating);
         }
-        else if (NoticeBiz.NoticeType.CAR.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.CAR == noticeCategory) {
             return Res.localized(R.string.car);
         }
-        else if (NoticeBiz.NoticeType.WEAR.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.WEAR == noticeCategory) {
             return Res.localized(R.string.wear);
         }
-        else if (NoticeBiz.NoticeType.SPORT.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.SPORT == noticeCategory) {
             return Res.localized(R.string.sport);
         }
-        else if (NoticeBiz.NoticeType.MOVIE.equals(noticeType)) {
+        else if (NoticeBiz.NoticeCategory.MOVIE == noticeCategory) {
             return Res.localized(R.string.movie);
         }
         else {
