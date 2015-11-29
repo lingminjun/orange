@@ -90,5 +90,8 @@ public class ReceivedBubbleCell extends UITableViewCell {
             mRightIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.category));
         }
 
+        //透明度设置
+        view.setAlpha(mEntity.getAlpha());
+
     }
 }

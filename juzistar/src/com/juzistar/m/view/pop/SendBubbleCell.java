@@ -100,5 +100,8 @@ public class SendBubbleCell extends UITableViewCell {
 //            mStatusIcon.setVisibility(VISIBLE);
 //            mStatusIcon.setBackgroundResource(R.drawable.error_icon);//发送中
 //        }
+
+        //透明度设置
+        view.setAlpha(mEntity.getAlpha());
     }
 }

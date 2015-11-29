@@ -20,6 +20,7 @@ import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
 import com.juzistar.m.view.com.UIDic;
+import com.juzistar.m.view.pop.BubbleCellModel;
 import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
@@ -79,19 +80,34 @@ public class PopViewController extends BaseTableViewController {
         return view;
     }
 
+    Clock.Listener timerListener = new Clock.Listener() {
+        @Override
+        public void fire(String flag) {
+            UITableView.TableViewAdapter adapter = tableViewAdapter();
+            int count = adapter.getCount();
+            if (count <= 0) {return;}
+
+            //从最后一个开始判断
+            adapter.beginUpdate();
+            for (int i = count-1; i >= 0; i--) {
+                BubbleCellModel model = (BubbleCellModel)adapter.getItem(i);
+                model.expireTime = model.expireTime - 1;
+                if (model.expireTime <= 0) {
+                    adapter.removeCell(model);
+                } else {
+                    adapter.updateCell(model,i);
+                }
+            }
+            adapter.endUpdate();
+        }
+    };
 
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
-
-        Clock.shareInstance().addListener(new Clock.Listener() {
-            @Override
-            public void fire(String flag) {
-
-            }
-        },CHECK_POP_TIMER_KEY);
+        Clock.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
