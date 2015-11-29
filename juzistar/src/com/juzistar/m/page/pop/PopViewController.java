@@ -300,6 +300,11 @@ public class PopViewController extends BaseTableViewController {
         }
 
         @Override
+        public void onScopeViewClick(UIKeyboard keyboard, View sender) {
+            Keyboard.barrageKeyboard().dismiss(false);
+        }
+
+        @Override
         public void onCustomButtonClick(UIKeyboard keyboard, View sender, int buttonKey) {
 
             if (buttonKey == customButtonKey) {

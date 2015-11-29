@@ -50,6 +50,7 @@ public final class Keyboard {
 
             barrageKeyboard.setKeyboardBody(barrageCustomView);
             barrageKeyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+            barrageKeyboard.setEnableScopeView(true);
 
             View.OnClickListener click = UIEvent.click(new View.OnClickListener() {
                 @Override

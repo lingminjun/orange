@@ -38,6 +38,15 @@ public final class UIKeyboard extends LinearLayout {
          */
         public boolean onRightButtonClick(UIKeyboard keyboard, View sender);
 
+
+        /**
+         * 键盘上面区域点击事件
+         * @param keyboard
+         * @param sender
+         * @return
+         */
+        public void onScopeViewClick(UIKeyboard keyboard, View sender);
+
         /**
          /**
          * 自定义按钮事件
@@ -77,6 +86,8 @@ public final class UIKeyboard extends LinearLayout {
     }
 
     private FrameLayout _keyboardPanel;
+    private View _scopePanel;
+    private ViewGroup _boardPanel;
 //    private ViewGroup _inputPanel;
     private TextView _rightButton;
     private TextView _wordLimitText;
@@ -98,6 +109,16 @@ public final class UIKeyboard extends LinearLayout {
             }
         }
     };
+
+    private OnClickListener _scopeAction = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (listener != null) {
+                listener.onScopeViewClick(UIKeyboard.this, view);
+            }
+        }
+    };
+
 
     private KeyboardListener listener;
     private View _customView;
@@ -153,7 +174,7 @@ public final class UIKeyboard extends LinearLayout {
 
                 if (listener != null) {
                     try {
-                        listener.onKeyboardChanged(UIKeyboard.this.getHeight(), oldHeight);
+                        listener.onKeyboardChanged(UIKeyboard.this._boardPanel.getHeight(), oldHeight);
                     } catch (Throwable e) {}
 
                 }
@@ -168,7 +189,9 @@ public final class UIKeyboard extends LinearLayout {
         inflater.inflate(R.layout.ssn_keyboard, this);
 
         _keyboardPanel = (FrameLayout)findViewById(R.id.ssn_keyboard_panel);
-//        _inputPanel = (ViewGroup)findViewById(R.id.ssn_input_panel);
+
+        _scopePanel = findViewById(R.id.ssn_scope_panel);
+        _boardPanel = (ViewGroup)findViewById(R.id.ssn_board_panel);
         _wordLimitText = (TextView)findViewById(R.id.ssn_word_limit_label);
         _wordLimitText.setText(String.format("%d/%d", 0, COMMENT_MAX_LENGTH));
         _rightButton = (TextView)findViewById(R.id.ssn_keyboard_right_button);
@@ -181,7 +204,7 @@ public final class UIKeyboard extends LinearLayout {
         _input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(COMMENT_MAX_LENGTH)});
 
         _rightButton.setOnClickListener(UIEvent.click(_rightBtnAction));
-
+        _scopePanel.setOnClickListener(UIEvent.click(_scopeAction));
     }
 
     public void setKeyboardBody(View customView) {
@@ -257,7 +280,8 @@ public final class UIKeyboard extends LinearLayout {
 
             //在frameLayout底部
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) this.getLayoutParams();
-            params.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
             params.gravity = Gravity.BOTTOM;
             this.setLayoutParams(params);
 
@@ -276,7 +300,7 @@ public final class UIKeyboard extends LinearLayout {
 
         if (listener != null) {
             try {
-                listener.onKeyboardChanged(this.getHeight(),0);
+                listener.onKeyboardChanged(this._boardPanel.getHeight(),0);
             } catch (Throwable e){e.printStackTrace();}
         }
     }
@@ -295,7 +319,7 @@ public final class UIKeyboard extends LinearLayout {
             showV = null;
         } else {
             _keyboardPanel.setVisibility(GONE);
-            keyboard_height = this.getHeight();
+            keyboard_height = this._boardPanel.getHeight();
         }
 
         if (listener != null) {
@@ -318,6 +342,14 @@ public final class UIKeyboard extends LinearLayout {
 
         //切换键盘状态
         switchKeyboardStatus();
+    }
+
+    public void setEnableScopeView(boolean enabled) {
+        if (enabled) {
+            _scopePanel.setVisibility(VISIBLE);
+        } else {
+            _scopePanel.setVisibility(INVISIBLE);
+        }
     }
 
     private void switchKeyboardStatus() {
