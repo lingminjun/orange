@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="crop_bottom_bg">#80000000</color>
+    <color name="smoke_gray">#f5f5f5</color>
 
     <color name="black_text">#000000</color>
     <color name="hint_text">#C9C9C9</color>

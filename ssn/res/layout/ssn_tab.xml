@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:background="@android:color/transparent"
               android:layout_width="match_parent"
-              android:layout_height="50dp">
+              android:layout_height="@dimen/ssn_tab_bar_height">
     <include layout="@layout/ssn_horizontal_line"/>
     <LinearLayout android:background="@android:color/transparent"
                   android:layout_gravity="center"

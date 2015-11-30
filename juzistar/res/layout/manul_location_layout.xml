@@ -3,12 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ptr="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
-              android:background="@color/page_bg"
+              android:background="@color/white"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <com.ssn.framework.uikit.UINavigationBar
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/ssn_navigation_bar_height"/>
+    <include layout="@layout/top_search_bar"/>
     <com.ssn.framework.uikit.UITableView
             android:fadingEdge="none"
             android:background="@android:color/white"

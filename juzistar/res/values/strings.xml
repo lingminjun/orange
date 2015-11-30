@@ -59,4 +59,5 @@
     <string name="look_over_tag_message">点击查看标签消息</string>
     <string name="look_tag_msg_title">标签消息</string>
     <string name="district">区</string>
+    <string name="search_local_hint">请输入街道小区信息</string>
 </resources>

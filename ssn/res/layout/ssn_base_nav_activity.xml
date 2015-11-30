@@ -11,7 +11,7 @@
             android:id="@+id/ssn_wrap_view">
         <com.ssn.framework.uikit.UINavigationBar
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="@dimen/ssn_navigation_bar_height"
                 android:id="@+id/ssn_navigation_bar"/>
         <FrameLayout android:id="@+id/ssn_view_container"
                      android:layout_width="fill_parent"

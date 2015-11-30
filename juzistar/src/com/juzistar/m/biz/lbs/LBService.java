@@ -4,10 +4,20 @@ import android.app.Service;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.UserCenter;
 import com.ssn.framework.foundation.Res;
@@ -21,6 +31,7 @@ import java.util.Set;
  */
 public final class LBService {
     private static final String LATEST_ADDR_KEY = "lbs.addr.key";
+    private static final String LATEST_CITY_KEY = "lbs.city.key";
     private static final String LATEST_LATI_KEY = "lbs.latitude.key";
     private static final String LATEST_LONG_KEY = "lbs.longitude.key";
 
@@ -66,6 +77,10 @@ public final class LBService {
         mLatitude = UserDefaults.getInstance().get(LATEST_LATI_KEY,0.0f);
         mLongitude = UserDefaults.getInstance().get(LATEST_LONG_KEY, 0.0f);
         mAddress = UserDefaults.getInstance().get(LATEST_ADDR_KEY,"");
+        mCity = UserDefaults.getInstance().get(LATEST_CITY_KEY,"");
+
+        // 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
+        SDKInitializer.initialize(Res.context());
     }
 
 
@@ -77,6 +92,7 @@ public final class LBService {
     private double mLatitude;
     private double mLongitude;
     private String mAddress;
+    private String mCity;
 
     private BDLocationListener mMyLocationListener = new BDLocationListener() {
         @Override
@@ -89,7 +105,9 @@ public final class LBService {
 
                 if (!TextUtils.isEmpty(location.getAddrStr())) {
                     mAddress = location.getAddrStr();
+                    mCity = location.getCity();
                     UserDefaults.getInstance().put(LATEST_ADDR_KEY,mAddress);
+                    UserDefaults.getInstance().put(LATEST_CITY_KEY,mCity);
                     UserDefaults.getInstance().put(LATEST_LATI_KEY,(float)mLatitude);
                     UserDefaults.getInstance().put(LATEST_LONG_KEY,(float)mLongitude);
                 }
@@ -214,4 +232,9 @@ public final class LBService {
         }
         return str;
     }
+
+    public String getLatestCity() {
+        return mCity;
+    }
+
 }

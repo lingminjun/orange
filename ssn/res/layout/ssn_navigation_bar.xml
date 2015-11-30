@@ -2,7 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="@dimen/ssn_navigation_bar_height"
                 android:background="@android:color/transparent">
 
     <!--左边按钮-->
@@ -46,15 +46,15 @@
                    android:textColor="@android:color/black"
                    android:gravity="center"
                    android:ellipsize="end"
-                   android:textSize="18sp"
+                   android:textSize="@dimen/ssn_title_font"
                    android:text="title"/>
     </LinearLayout>
 
     <!--底部分割线-->
     <TextView android:layout_width="match_parent"
-              android:layout_height="1px"
+              android:layout_height="1dp"
               android:layout_alignParentBottom="true"
               android:id="@+id/bottom_line"
-              android:background="@android:color/black"/>
+              android:background="@color/ssn_separate_line"/>
 
 </RelativeLayout>
