@@ -1,9 +1,11 @@
 package com.juzistar.m.biz.pop;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.net.BaseModelList;
 import com.ssn.framework.foundation.*;
 
@@ -151,4 +153,35 @@ public final class BarrageCenter {
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";
     private static final String LATEST_PULL_KEY = "latest_pull_at";
+
+    //最后设置的位置信息
+    private String mAddress;
+    private String mCity;
+    private String mProvince;
+    private String mCountry;
+    private double mLatitude;
+    private double mLongitude;
+    public void setLocation(Location location) {
+
+    }
+
+    public Location getLocation () {
+        Location location = new Location();
+
+        //如果位置不存在，则取定位地址
+        if (TextUtils.isEmpty(mAddress)) {
+            location.mCity = LBService.shareInstance().getLatestCity();
+            location.mLatitude = LBService.shareInstance().getLatestLatitude();
+            location.mLongitude = LBService.shareInstance().getLatestLongitude();
+        } else {
+            location.mAddress = mAddress;
+            location.mCity = mCity;
+            location.mCountry = mCountry;
+            location.mProvince = mProvince;
+            location.mLongitude = mLongitude;
+            location.mLatitude = mLatitude;
+        }
+
+        return location;
+    }
 }

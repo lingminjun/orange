@@ -148,6 +148,18 @@ public final class Clock {
         _fires.remove(flag);
     }
 
+    private synchronized void _removeListeners(String hasPrefix){
+        Iterator<Map.Entry<String,Listener>> iter = _fires.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,Listener> entry = (Map.Entry<String,Listener>) iter.next();
+            String key = entry.getKey();
+            if (key.startsWith(hasPrefix)) {
+                _fires.remove(key);
+            }
+        }
+    }
+
+
     private synchronized void _removeAllListeners(){
         _fires.clear();
         _stop();

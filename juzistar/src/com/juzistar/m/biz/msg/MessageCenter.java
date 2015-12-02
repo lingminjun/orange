@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import com.ssn.framework.foundation.Clock;
 import com.ssn.framework.foundation.Store;
+import com.ssn.framework.foundation.TR;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -129,10 +130,10 @@ public final class MessageCenter {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             // 序列化
-            dest.writeString(sid);
+            dest.writeString(TR.string(sid));
             dest.writeLong(other);
-            dest.writeString(otherName);
-            dest.writeString(latestMessage);
+            dest.writeString(TR.string(otherName));
+            dest.writeString(TR.string(latestMessage));
             dest.writeInt(unreadCount);
         }
 

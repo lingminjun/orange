@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.mapapi.search.core.CityInfo;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiResult;
@@ -21,11 +28,17 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.juzistar.m.R;
+import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.biz.msg.MessageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.page.base.BaseViewController;
 import com.juzistar.m.view.chat.SessionCellModel;
+import com.juzistar.m.view.com.TitleCellModel;
+import com.juzistar.m.view.location.LocationCellModel;
+import com.juzistar.m.view.me.BlankCellModel;
+import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UITableView;
@@ -45,6 +58,7 @@ public class LocationViewController extends BaseTableViewController {
     //pio功能实现
     private PoiSearch mPoiSearch;
     private SuggestionSearch mSuggestionSearch;
+    private SuggestionSearchOption option;
 
     private void loadPoiSevice() {
         if (mPoiSearch == null) {
@@ -55,6 +69,9 @@ public class LocationViewController extends BaseTableViewController {
             mSuggestionSearch = SuggestionSearch.newInstance();
             mSuggestionSearch.setOnGetSuggestionResultListener(onGetSuggestionResultListener);
 
+            option = new SuggestionSearchOption();
+            option.city(LBService.shareInstance().getLatestCity());
+
         }
     }
 
@@ -64,6 +81,7 @@ public class LocationViewController extends BaseTableViewController {
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
         UITableView.TableViewAdapter adapter = new UITableView.TableViewAdapter(tableView);
         setTableView(tableView,adapter);
+        tableView.setBackgroundColor(Res.color(R.color.page_bg));
         return view;
     }
 
@@ -104,6 +122,9 @@ public class LocationViewController extends BaseTableViewController {
         loadSearchBar();//加载search bar
 
         loadPoiSevice();//搜索组件加载
+
+        searchText.clearFocus();
+
     }
 
     @Override
@@ -125,7 +146,24 @@ public class LocationViewController extends BaseTableViewController {
 //            list.add(model);
 //        }
 
+        Log.e("dddd","dddddddddddddd"+adapter.getCount());
+
         return list;
+    }
+
+    @Override
+    public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
+        super.onTableViewCellClick(adapter, cellModel, row);
+
+        if (cellModel instanceof LocationCellModel) {
+            LBService.shareInstance().asyncLocation(new BDLocationListener() {
+                @Override
+                public void onReceiveLocation(BDLocation bdLocation) {
+                    App.toast(Res.localized(R.string.geolocation_complete));
+                    finish();
+                }
+            });
+        }
     }
 
     private String getSearchString() {
@@ -190,6 +228,8 @@ public class LocationViewController extends BaseTableViewController {
 
     private void suggestionSearch(String string) {
 
+        //结果在 onGetSuggestionResultListener 中
+        mSuggestionSearch.requestSuggestion(option.keyword(string));
     }
 
     //开始搜索
@@ -202,9 +242,34 @@ public class LocationViewController extends BaseTableViewController {
         cancelSearch(true);
 
         //删除搜索结果
-        tableViewAdapter().removeAll();
+        showNoResults();
     }
 
+    private void showNoResults() {
+        //删除搜索结果
+        if (tableViewAdapter().row(locationCellModel) < 0) {
+            tableViewAdapter().beginUpdate();
+            tableViewAdapter().removeAll();
+            tableViewAdapter().appendCells(noResults());
+            tableViewAdapter().endUpdate();
+        }
+    }
+
+    List<UITableViewCell.CellModel> noResults;
+    LocationCellModel locationCellModel;
+    private List<UITableViewCell.CellModel> noResults() {
+        if (noResults != null) {
+            return noResults;
+        }
+        noResults = new ArrayList<>();
+
+        noResults.add(new BlankCellModel());
+
+        locationCellModel = new LocationCellModel();
+        noResults.add(locationCellModel);
+
+        return noResults;
+    }
 
     private void showCancelButton() {
         mCancelPanel.setVisibility(View.VISIBLE);
@@ -245,6 +310,22 @@ public class LocationViewController extends BaseTableViewController {
         @Override
         public void onGetSuggestionResult(SuggestionResult suggestionResult) {
 
+            if (suggestionResult == null) {return;}
+
+            List<SuggestionResult.SuggestionInfo> list = suggestionResult.getAllSuggestions();
+            if (list == null || list.size() == 0) {return;}
+
+            tableViewAdapter().beginUpdate();
+            tableViewAdapter().removeAll();
+
+            for (SuggestionResult.SuggestionInfo info : list) {
+                TitleCellModel model = new TitleCellModel();
+                model.title = info.key;
+                model.data = info;
+                tableViewAdapter().appendCell(model);
+            }
+
+            tableViewAdapter().endUpdate();
         }
     };
 
@@ -253,8 +334,56 @@ public class LocationViewController extends BaseTableViewController {
      */
     private OnGetPoiSearchResultListener onGetPoiSearchResultListener = new OnGetPoiSearchResultListener() {
         @Override
-        public void onGetPoiResult(PoiResult poiResult) {
+        public void onGetPoiResult(PoiResult result) {
+            if (result == null
+                    || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
+                App.toast(Res.localized(R.string.no_search_result));
+                showNoResults();
+                return;
+            }
+            if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 
+                List< PoiInfo > list =  result.getAllPoi();
+
+                if (list.size() > 0) {
+                    tableViewAdapter().beginUpdate();
+                    tableViewAdapter().removeAll();
+
+                    for (PoiInfo poiInfo : list) {
+                        TitleCellModel model = new TitleCellModel();
+                        model.title = poiInfo.name;
+                        model.data = poiInfo;
+                        tableViewAdapter().appendCell(model);
+                    }
+
+                    tableViewAdapter().endUpdate();
+                }
+
+
+//                mBaiduMap.clear();
+//                PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+//                mBaiduMap.setOnMarkerClickListener(overlay);
+//                overlay.setData(result);
+//                overlay.addToMap();
+//                overlay.zoomToSpan();
+
+                return;
+            } else {
+                App.toast(Res.localized(R.string.no_search_result));
+                showNoResults();
+            }
+//            if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+//
+//                // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
+//                String strInfo = "在";
+//                for (CityInfo cityInfo : result.getSuggestCityList()) {
+//                    strInfo += cityInfo.city;
+//                    strInfo += ",";
+//                }
+//                strInfo += "找到结果";
+//                Toast.makeText(PoiSearchDemo.this, strInfo, Toast.LENGTH_LONG)
+//                        .show();
+//            }
         }
 
         @Override

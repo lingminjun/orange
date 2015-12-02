@@ -60,4 +60,7 @@
     <string name="look_tag_msg_title">标签消息</string>
     <string name="district">区</string>
     <string name="search_local_hint">请输入街道小区信息</string>
+    <string name="locate_current_location">点击定位当前位置</string>
+    <string name="geolocation_complete">定位完成</string>
+    <string name="no_search_result">未找到结果</string>
 </resources>
