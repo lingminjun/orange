@@ -17,7 +17,7 @@ import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
-import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
@@ -96,7 +96,7 @@ public class PopViewController extends BaseTableViewController {
         navigationItem().setTitleImage(R.drawable.location_icon);
         navigationItem().setTitleClick(titleClick);
 
-        String addr = LBService.shareInstance().getLatestSimpleAddress();
+        String addr = BarrageCenter.shareInstance().getLocation().getSimpleAddress();//
         if (!TextUtils.isEmpty(addr)) {
             navigationItem().setTitle(addr);
         }
@@ -190,17 +190,14 @@ public class PopViewController extends BaseTableViewController {
 
             UILoading.show(getActivity());
 
-                LBService.shareInstance().asyncLocation(new BDLocationListener() {
-                    @Override
-                    public void onReceiveLocation(BDLocation bdLocation) {
-
-                        if (!TextUtils.isEmpty(bdLocation.getAddrStr())) {
-                            navigationItem().setTitle(LBService.shareInstance().getLatestSimpleAddress());
-                        }
-
-                        UILoading.dismiss(getActivity());
-                    }
-                });
+            BarrageCenter.shareInstance().refreshCurrentLocation(new Runnable() {
+                @Override
+                public void run() {
+                    String addr = BarrageCenter.shareInstance().getLocation().getSimpleAddress();//
+                    navigationItem().setTitle(addr);
+                    UILoading.dismiss(getActivity());
+                }
+            });
         }
     };
 
@@ -355,15 +352,13 @@ public class PopViewController extends BaseTableViewController {
         notice.content = msg;
         notice.creator = user.nick;
         notice.creatorId = user.uid;
-        notice.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
-        notice.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
         notice.id = "sending:" + Utils.getServerTime();
 
         final SendBubbleCellModel model = new SendBubbleCellModel();
         model.notice = notice;
         tableViewAdapter().appendCell(model);
 
-        NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
+        BarrageCenter.shareInstance().publishNotice(notice,new RPC.Response<NoticeBiz.Notice>(){
             @Override
             public void onStart() {
                 super.onStart();

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.ssn.framework.foundation.Density;
@@ -56,20 +57,28 @@ public class TitleCell extends UITableViewCell {
 
         TitleCellModel model = (TitleCellModel)cellModel;
 
-        if (TextUtils.isEmpty(model.title)) {
+        if (!TextUtils.isEmpty(model.title)) {
             titleLabel.setText(model.title);
         }
 
-        if (TextUtils.isEmpty(model.subTitle)) {
+        if (!TextUtils.isEmpty(model.subTitle)) {
             subTitleLabel.setText(model.subTitle);
         }
 
         if (model.imageId != 0) {
+            imageView.setVisibility(VISIBLE);
             imageView.setImageResource(model.imageId);
 
-            model.separateLineLeftPadding = Density.dipTopx(52);
+            model.separateLineLeftPadding = 52;
         } else {
-            model.separateLineLeftPadding = Density.dipTopx(12);
+            model.separateLineLeftPadding = 12;
+        }
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)subTitleLabel.getLayoutParams();
+        if (model.hiddenRightArrow) {
+            params.rightMargin = 0;
+        } else {
+            params.rightMargin = Density.dipTopx(20);
         }
 
     }

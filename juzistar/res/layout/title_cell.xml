@@ -7,6 +7,7 @@
               android:paddingRight="@dimen/page_edg_mar"
               android:paddingTop="@dimen/small_padding"
               android:paddingBottom="@dimen/small_padding"
+              android:minHeight="44dp"
               android:gravity="center_vertical"
               android:background="@drawable/press_white_bg"
               android:descendantFocusability="blocksDescendants"
@@ -32,11 +33,12 @@
     <TextView android:id="@+id/sub_label"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textColor="@color/normal_text"
+              android:textColor="@color/ssn_assist_text"
               android:textSize="@dimen/normal_small_font"
               android:gravity="right"
-              android:layout_marginRight="@dimen/page_edg_mar"
+              android:layout_marginLeft="6dp"
+              android:layout_marginRight="20dp"
               android:lines="1"
-              android:ellipsize="end"
+              android:ellipsize="start"
               android:text=""/>
 </LinearLayout>

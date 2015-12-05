@@ -2,6 +2,8 @@ package com.juzistar.m.biz.pop;
 
 import android.content.Intent;
 import android.text.TextUtils;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.lbs.LBService;
@@ -45,6 +47,13 @@ public final class BarrageCenter {
      */
     private BarrageCenter() {
         super();
+
+        mAddress = UserDefaults.getInstance().get(BARRAGE_LB_ADDR_KEY, "");
+        mCity = UserDefaults.getInstance().get(BARRAGE_LB_CITY_KEY, "");
+        mCountry = UserDefaults.getInstance().get(BARRAGE_LB_STAT_KEY, "");
+        mProvince = UserDefaults.getInstance().get(BARRAGE_LB_PROV_KEY, "");
+        mLongitude = UserDefaults.getInstance().get(BARRAGE_LB_LAT_KEY, 0.0f);
+        mLatitude = UserDefaults.getInstance().get(BARRAGE_LB_LON_KEY,0.0f);
     }
 
 
@@ -133,28 +142,19 @@ public final class BarrageCenter {
 
 
     private int count;
-//    private Set<msgId>
 
-//    private Random random = new Random();
-//
-//    /**
-//     * 获取size以内随机数
-//     * @param size
-//     * @return
-//     */
-//    public int getRandom(int size) {
-//        if (size > 1) {
-//            return random.nextInt() % size;
-//        } else {
-//            return random.nextInt();
-//        }
-//    }
 
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";
     private static final String LATEST_PULL_KEY = "latest_pull_at";
 
     //最后设置的位置信息
+    public static final String BARRAGE_LB_ADDR_KEY = "barrage_lb_addr_key";
+    public static final String BARRAGE_LB_CITY_KEY = "barrage_lb_city_key";
+    public static final String BARRAGE_LB_PROV_KEY = "barrage_lb_prov_key";
+    public static final String BARRAGE_LB_STAT_KEY = "barrage_lb_stat_key";
+    public static final String BARRAGE_LB_LAT_KEY = "barrage_lb_lat_key";
+    public static final String BARRAGE_LB_LON_KEY = "barrage_lb_lon_key";
     private String mAddress;
     private String mCity;
     private String mProvince;
@@ -162,6 +162,25 @@ public final class BarrageCenter {
     private double mLatitude;
     private double mLongitude;
     public void setLocation(Location location) {
+        mAddress = location.mAddress;
+        mCity = location.mCity;
+        mLongitude = location.mLongitude;
+        mLatitude = location.mLatitude;
+
+        UserDefaults.getInstance().put(BARRAGE_LB_ADDR_KEY,TR.string(mAddress));
+        UserDefaults.getInstance().put(BARRAGE_LB_CITY_KEY,TR.string(mCity));
+        UserDefaults.getInstance().put(BARRAGE_LB_LAT_KEY,(float)mLatitude);
+        UserDefaults.getInstance().put(BARRAGE_LB_LON_KEY,(float)mLongitude);
+
+        if (!TextUtils.isEmpty(location.mCountry)) {
+            mCountry = location.mCountry;
+            UserDefaults.getInstance().put(BARRAGE_LB_STAT_KEY,TR.string(mCountry));
+        }
+
+        if (!TextUtils.isEmpty(location.mProvince)) {
+            mProvince = location.mProvince;
+            UserDefaults.getInstance().put(BARRAGE_LB_PROV_KEY, TR.string(mProvince));
+        }
 
     }
 
@@ -183,5 +202,40 @@ public final class BarrageCenter {
         }
 
         return location;
+    }
+
+    public void refreshCurrentLocation(final Runnable callback) {
+        LBService.shareInstance().asyncLocation(new BDLocationListener() {
+            @Override
+            public void onReceiveLocation(BDLocation bdLocation) {
+
+                //表示找到地址
+                if (bdLocation.hasAddr()) {
+                    Location location = new Location();
+                    location.mAddress = LBService.shareInstance().getLatestAddress();
+                    location.mCity = LBService.shareInstance().getLatestCity();
+                    location.mLatitude = LBService.shareInstance().getLatestLatitude();
+                    location.mLongitude = LBService.shareInstance().getLatestLongitude();
+                    setLocation(location);
+                }
+
+                if (callback != null) {
+                    callback.run();
+                }
+            }
+        });
+    }
+
+    public void publishNotice(final NoticeBiz.Notice notice, final RPC.Response<NoticeBiz.Notice> response) {
+
+        if (TextUtils.isEmpty(mAddress)) {
+            notice.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
+            notice.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
+        } else {
+            notice.latitude = Float.toString((float)(mLatitude));
+            notice.longitude = Float.toString((float)(mLongitude));
+        }
+
+        NoticeBiz.create(notice,response);
     }
 }

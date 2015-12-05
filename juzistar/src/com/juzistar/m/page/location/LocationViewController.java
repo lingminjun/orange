@@ -21,17 +21,16 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.mapapi.search.core.CityInfo;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
-import com.baidu.mapapi.search.poi.PoiDetailResult;
-import com.baidu.mapapi.search.poi.PoiResult;
-import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.search.poi.*;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.biz.msg.MessageCenter;
+import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.page.base.BaseViewController;
 import com.juzistar.m.view.chat.SessionCellModel;
@@ -53,10 +52,12 @@ import java.util.List;
 public class LocationViewController extends BaseTableViewController {
 
     private ViewGroup mCancelPanel;
-    EditText searchText;
+    private View mSearchRightPadding;
+    private EditText searchText;
 
     //pio功能实现
     private PoiSearch mPoiSearch;
+    private PoiCitySearchOption poption;
     private SuggestionSearch mSuggestionSearch;
     private SuggestionSearchOption option;
 
@@ -71,6 +72,9 @@ public class LocationViewController extends BaseTableViewController {
 
             option = new SuggestionSearchOption();
             option.city(LBService.shareInstance().getLatestCity());
+
+            poption = new PoiCitySearchOption();
+            poption.city(LBService.shareInstance().getLatestCity());
 
         }
     }
@@ -109,9 +113,11 @@ public class LocationViewController extends BaseTableViewController {
         mCancelPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearResults();
+                clearResults(false);
             }
         }));
+        mSearchRightPadding = layout.findViewById(R.id.search_right_padding);
+        mSearchRightPadding.setVisibility(View.INVISIBLE);
     }
 
 
@@ -123,8 +129,18 @@ public class LocationViewController extends BaseTableViewController {
 
         loadPoiSevice();//搜索组件加载
 
-        searchText.clearFocus();
+        cancelSearch(true);
 
+        showNoResults();//先显示无结果
+    }
+
+    @Override
+    public void onViewDidAppear() {
+        super.onViewDidAppear();
+
+        if (searchText != null) {
+            searchText.clearFocus();
+        }
     }
 
     @Override
@@ -156,13 +172,37 @@ public class LocationViewController extends BaseTableViewController {
         super.onTableViewCellClick(adapter, cellModel, row);
 
         if (cellModel instanceof LocationCellModel) {
-            LBService.shareInstance().asyncLocation(new BDLocationListener() {
+            BarrageCenter.shareInstance().refreshCurrentLocation(new Runnable() {
                 @Override
-                public void onReceiveLocation(BDLocation bdLocation) {
+                public void run() {
                     App.toast(Res.localized(R.string.geolocation_complete));
                     finish();
                 }
             });
+        } else if (cellModel instanceof TitleCellModel) {
+            TitleCellModel model = (TitleCellModel)cellModel;
+
+            Location location = new Location();
+            if (model.data instanceof SuggestionResult.SuggestionInfo) {
+                SuggestionResult.SuggestionInfo data = (SuggestionResult.SuggestionInfo)model.data;
+
+                location.mLatitude = data.pt.latitude;
+                location.mLongitude = data.pt.longitude;
+                location.mCity = data.city;
+                location.mAddress = data.key;
+
+            } else if (model.data instanceof PoiInfo){
+                PoiInfo poiInfo = (PoiInfo)model.data;
+
+                location.mLatitude = poiInfo.location.latitude;
+                location.mLongitude = poiInfo.location.longitude;
+                location.mCity = poiInfo.city;
+                location.mAddress = poiInfo.address;
+            }
+
+            BarrageCenter.shareInstance().setLocation(location);
+
+            finish();
         }
     }
 
@@ -221,7 +261,7 @@ public class LocationViewController extends BaseTableViewController {
             if (s != null && !TextUtils.isEmpty(s.toString())) {
                 suggestionSearch(s.toString());
             } else {
-                clearResults();
+                clearResults(true);
             }
         }
     };
@@ -230,16 +270,21 @@ public class LocationViewController extends BaseTableViewController {
 
         //结果在 onGetSuggestionResultListener 中
         mSuggestionSearch.requestSuggestion(option.keyword(string));
+
+//        searchLocation(string);
     }
 
     //开始搜索
     private void searchLocation(String string) {
-
+        mPoiSearch.searchInCity(poption.keyword(string));
     }
 
     //清除结果
-    private void clearResults() {
-        cancelSearch(true);
+    private void clearResults(boolean noCancel) {
+
+        if (!noCancel) {
+            cancelSearch(true);
+        }
 
         //删除搜索结果
         showNoResults();
@@ -273,10 +318,12 @@ public class LocationViewController extends BaseTableViewController {
 
     private void showCancelButton() {
         mCancelPanel.setVisibility(View.VISIBLE);
+        mSearchRightPadding.setVisibility(View.GONE);
     }
 
     private void hideCancelButton() {
         mCancelPanel.setVisibility(View.GONE);
+        mSearchRightPadding.setVisibility(View.INVISIBLE);
     }
 
     private void cancelSearch(boolean clear) {
@@ -285,12 +332,16 @@ public class LocationViewController extends BaseTableViewController {
             searchText.removeTextChangedListener(watcher);
         }
 
-        //清空输入
+        //去掉键盘
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null && imm.isAcceptingText()) {
             imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
         }
-        searchText.clearFocus();
+
+        //不clear时，不需要去掉光标
+        if (!clear) {
+            searchText.clearFocus();
+        }
 
         //在输入时点取消则清空输入
         if (clear) {
@@ -321,6 +372,7 @@ public class LocationViewController extends BaseTableViewController {
             for (SuggestionResult.SuggestionInfo info : list) {
                 TitleCellModel model = new TitleCellModel();
                 model.title = info.key;
+                model.hiddenRightArrow = true;
                 model.data = info;
                 tableViewAdapter().appendCell(model);
             }
@@ -352,6 +404,8 @@ public class LocationViewController extends BaseTableViewController {
                     for (PoiInfo poiInfo : list) {
                         TitleCellModel model = new TitleCellModel();
                         model.title = poiInfo.name;
+                        model.subTitle = poiInfo.address;
+                        model.hiddenRightArrow = true;
                         model.data = poiInfo;
                         tableViewAdapter().appendCell(model);
                     }
@@ -359,17 +413,9 @@ public class LocationViewController extends BaseTableViewController {
                     tableViewAdapter().endUpdate();
                 }
 
-
-//                mBaiduMap.clear();
-//                PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
-//                mBaiduMap.setOnMarkerClickListener(overlay);
-//                overlay.setData(result);
-//                overlay.addToMap();
-//                overlay.zoomToSpan();
-
                 return;
             } else {
-                App.toast(Res.localized(R.string.no_search_result));
+//                App.toast(Res.localized(R.string.no_search_result));
                 showNoResults();
             }
 //            if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
@@ -388,7 +434,7 @@ public class LocationViewController extends BaseTableViewController {
 
         @Override
         public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
-
+            Log.e("d",poiDetailResult.toString());
         }
     };
 }

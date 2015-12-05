@@ -105,6 +105,9 @@
         </service>
 
         <!--百度 appkey-->
-        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="BXkktcVYEk1o1oI8DMrOST2M" />
+        <!--Debug debug.keystore-->
+        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="0goxkHdUkYga0qCBTpK2yCG5" />
+        <!--Release-->
+        <!--<meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="BXkktcVYEk1o1oI8DMrOST2M" />-->
     </application>
 </manifest>

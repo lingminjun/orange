@@ -242,7 +242,7 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         }
 
         //出现时机通知，此方法多次调用，没有什么坏处
-        if (/*exist && */fragment instanceof UIViewController) {
+        if (exist && fragment instanceof UIViewController) {
             try {((UIViewController) fragment).onViewDidAppear();} catch (Throwable e) {APPLog.error(e);}
         }
     }
