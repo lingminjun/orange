@@ -10,14 +10,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
-import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
@@ -89,7 +86,6 @@ public class PopViewController extends BaseTableViewController {
         super.onViewDidLoad();
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
-        Clock.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
 
         navigationItem().rightItem().setOnClick(UIEvent.click(rightClick));
         navigationItem().rightItem().setImage(R.drawable.refresh_icon);
@@ -127,31 +123,32 @@ public class PopViewController extends BaseTableViewController {
         //默认打开
         BarrageCenter.shareInstance().startService();
 
-//        Clock.shareInstance().addListener(new Clock.Listener() {
-//            @Override
-//            public void fire(String flag) {
-//                {
-//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-//                    notice.type = NoticeBiz.NoticeType.NORMAL;
-//                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
-//                    notice.content = "这仅仅只为测试"+test_count;
-//                    notice.creator = "xxxx";
-//                    notice.creatorId = test_count+101;
-//                    notice.longitude = Double.toString(31.2117411154);
-//                    notice.latitude = Double.toString(121.4596178033);
-//
-//                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
-//                    model.notice = notice;
-//                    test_count++;
-//
-//                    tableViewAdapter().appendCell(model);
-//
-//                    if (test_count > 20) {
-//                        Clock.shareInstance().removeListener("dd");
-//                    }
-//                }
-//            }
-//        },"dd");
+        Clock.shareInstance().addListener(new Clock.Listener() {
+            @Override
+            public void fire(String flag) {
+                {
+                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+                    notice.type = NoticeBiz.NoticeType.NORMAL;
+                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
+                    notice.content = "这仅仅只为测试"+test_count;
+                    notice.creator = "xxxx";
+                    notice.creatorId = test_count+101;
+                    notice.longitude = Double.toString(31.2117411154);
+                    notice.latitude = Double.toString(121.4596178033);
+
+                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
+                    model.notice = notice;
+                    test_count++;
+
+                    tableViewAdapter().appendCell(model);
+                    UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+
+                    if (test_count > 20) {
+                        Clock.shareInstance().removeListener("dd");
+                    }
+                }
+            }
+        },"dd");
     }
 
     @Override
@@ -160,21 +157,42 @@ public class PopViewController extends BaseTableViewController {
 
         //进入时不展示键盘
         Keyboard.barrageKeyboard().dismiss(false);
+
+        if (tableViewAdapter().getCount() > 0) {
+            UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+        }
+
     }
 
-    Clock.Listener timerListener = new Clock.Listener() {
+    @Override
+    public void onViewDidDisappear() {
+        super.onViewDidDisappear();
+        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
+    }
+
+    @Override
+    public void onDestroyController() {
+        super.onDestroyController();
+        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
+    }
+
+    //刷新ui必须采用高频刷新
+    UIDisplayLink.Listener timerListener = new UIDisplayLink.Listener() {
         @Override
         public void fire(String flag) {
             UITableView.TableViewAdapter adapter = tableViewAdapter();
             int count = adapter.getCount();
-            if (count <= 0) {return;}
+            if (count <= 0) {
+                UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
+                return;
+            }
 
             //从最后一个开始判断
             adapter.beginUpdate();
             for (int i = count-1; i >= 0; i--) {
                 BubbleCellModel model = (BubbleCellModel)adapter.getItem(i);
-                model.expireTime = model.expireTime - 1;
-                if (model.expireTime <= 0) {
+                model.animationDuration = model.animationDuration - BubbleCellModel.DEFAULT_ONCE_DURATION_TIME;
+                if (model.animationDuration <= 0) {
                     adapter.removeCell(model);
                 } else {
                     adapter.updateCell(model,i);
@@ -220,6 +238,8 @@ public class PopViewController extends BaseTableViewController {
             ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
             model.notice = notice;
             tableViewAdapter().appendCell(model);
+            UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+
         }
     };
 
@@ -357,8 +377,9 @@ public class PopViewController extends BaseTableViewController {
         final SendBubbleCellModel model = new SendBubbleCellModel();
         model.notice = notice;
         tableViewAdapter().appendCell(model);
+        UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
 
-        BarrageCenter.shareInstance().publishNotice(notice,new RPC.Response<NoticeBiz.Notice>(){
+        BarrageCenter.shareInstance().publishNotice(notice, new RPC.Response<NoticeBiz.Notice>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -387,21 +408,21 @@ public class PopViewController extends BaseTableViewController {
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
-                    tableViewAdapter().updateCell(model,row);
+                    tableViewAdapter().updateCell(model, row);
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
                 super.onFailure(e);
-                Utils.toastException(e,Res.localized(R.string.send_failed));
+                Utils.toastException(e, Res.localized(R.string.send_failed));
 
                 notice.id = "";
                 model.disabled = false;
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
-                    tableViewAdapter().updateCell(model,row);
+                    tableViewAdapter().updateCell(model, row);
                 }
             }
         });

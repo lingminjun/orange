@@ -8,14 +8,18 @@ import com.ssn.framework.uikit.UITableViewCell;
  */
 public abstract class BubbleCellModel extends UITableViewCell.CellModel {
     public static final int DEFAULT_EXPIRE_TIME = 9;
+    public static final int DEFAULT_DURATION_TIME = 5000;
+    public static final int DEFAULT_ONCE_DURATION_TIME = 3 0;
 
     public NoticeBiz.Notice notice;//消息
     public BubbleCellListener cellListener;
 
     public int expireTime;//过期时效(默认值5秒)
+    public int animationDuration;//毫秒
 
     public BubbleCellModel() {
         expireTime = DEFAULT_EXPIRE_TIME;
+        animationDuration = DEFAULT_DURATION_TIME;
     }
 
     public static interface BubbleCellListener {
@@ -25,10 +29,11 @@ public abstract class BubbleCellModel extends UITableViewCell.CellModel {
     }
 
     public float getAlpha() {
-        if (expireTime <= 0) {
+        if (expireTime <= 0 || animationDuration <= 0) {
             return 0.0f;
         } else {
-            return expireTime * 1.0f / DEFAULT_EXPIRE_TIME;
+            return animationDuration * 1.0f / DEFAULT_DURATION_TIME;
+//            return expireTime * 1.0f / DEFAULT_EXPIRE_TIME;
         }
     }
 }

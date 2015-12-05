@@ -97,10 +97,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	public final void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount,
 			final int totalItemCount) {
 
-		if (DEBUG) {
-			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount
-					+ ". Total Items:" + totalItemCount);
-		}
+//		if (DEBUG) {
+//			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount
+//					+ ". Total Items:" + totalItemCount);
+//		}
 
 		/**
 		 * Set whether the Last Item is Visible. lastVisibleItemIndex is a
