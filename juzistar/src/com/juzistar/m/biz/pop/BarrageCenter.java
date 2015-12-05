@@ -192,6 +192,7 @@ public final class BarrageCenter {
             location.mCity = LBService.shareInstance().getLatestCity();
             location.mLatitude = LBService.shareInstance().getLatestLatitude();
             location.mLongitude = LBService.shareInstance().getLatestLongitude();
+            location.mAddress = LBService.shareInstance().getLatestAddress();
         } else {
             location.mAddress = mAddress;
             location.mCity = mCity;
