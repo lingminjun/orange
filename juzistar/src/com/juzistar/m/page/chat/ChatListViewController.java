@@ -61,4 +61,11 @@ public class ChatListViewController extends BaseTableViewController {
 
         return list;
     }
+
+    @Override
+    public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
+        super.onTableViewCellClick(adapter, cellModel, row);
+
+        //取私聊页面
+    }
 }

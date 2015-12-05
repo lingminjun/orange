@@ -9,7 +9,7 @@ import com.ssn.framework.uikit.UITableViewCell;
 public abstract class BubbleCellModel extends UITableViewCell.CellModel {
     public static final int DEFAULT_EXPIRE_TIME = 9;
     public static final int DEFAULT_DURATION_TIME = 5000;
-    public static final int DEFAULT_ONCE_DURATION_TIME = 3 0;
+    public static final int DEFAULT_ONCE_DURATION_TIME = 30;
 
     public NoticeBiz.Notice notice;//消息
     public BubbleCellListener cellListener;

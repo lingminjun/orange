@@ -11,8 +11,7 @@ import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.net.BaseModelList;
 import com.ssn.framework.foundation.*;
 
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by lingminjun on 15/11/9.
@@ -102,6 +101,12 @@ public final class BarrageCenter {
 
                 int time = 0;
                 for (final NoticeBiz.Notice notice : list.list) {
+
+                    //若收到的是标签消息，则将标签消息存储下来
+                    if (notice.category != NoticeBiz.NoticeCategory.NAN) {
+                        tagNotice.add(notice);//标签消息
+                    }
+
                     time += 300;
                     TaskQueue.mainQueue().executeDelayed(new Runnable() {
                         @Override
@@ -142,7 +147,7 @@ public final class BarrageCenter {
 
 
     private int count;
-
+    private List<NoticeBiz.Notice> tagNotice = new ArrayList<>();
 
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";
@@ -237,6 +242,14 @@ public final class BarrageCenter {
             notice.longitude = Float.toString((float)(mLongitude));
         }
 
+        if (notice.category != NoticeBiz.NoticeCategory.NAN) {
+            tagNotice.add(notice);
+        }
+
         NoticeBiz.create(notice,response);
+    }
+
+    public List<NoticeBiz.Notice> getAllTabNotice() {
+        return new ArrayList<>(tagNotice);
     }
 }

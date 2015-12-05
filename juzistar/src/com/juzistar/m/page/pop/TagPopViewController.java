@@ -20,6 +20,7 @@ import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
 import com.juzistar.m.view.com.UIDic;
+import com.juzistar.m.view.pop.BubbleCellModel;
 import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
@@ -55,7 +56,7 @@ public class TagPopViewController extends BaseTableViewController {
         View view = inflater.inflate(R.layout.tag_pop_layout, null);
         UITableView tableView = (UITableView)view.findViewById(R.id.table_view);
         tableView.setCacheColorHint(Color.TRANSPARENT);
-        tableView.setStackFromBottom(true);
+//        tableView.setStackFromBottom(true);
 //        tableView.setScrollEnable(false);
         setTableView(tableView);
 
@@ -77,6 +78,8 @@ public class TagPopViewController extends BaseTableViewController {
     }
 
 
+    private List<NoticeBiz.Notice> notices;
+
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
@@ -85,19 +88,27 @@ public class TagPopViewController extends BaseTableViewController {
         if (activity instanceof BaseActivity) {
             ((BaseActivity) activity).setBackgroundDrawable(R.drawable.page_bd);
         }
+
+        notices = BarrageCenter.shareInstance().getAllTabNotice();
+        tableViewAdapter().reload();
     }
 
     @Override
     public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
-//        for (int i = 0; i< 10;i++) {
-//            {
-//                BubbleCellModel model = new BubbleCellModel();
-//                model.message = "这仅仅只为测试"+i;
-//                list.add(model);
-//            }
-//        }
+        if (notices != null) {
+            for (NoticeBiz.Notice notice : notices) {
+                BubbleCellModel model = null;
+                if (notice.creatorId == UserCenter.shareInstance().UID()) {
+                    model = new SendBubbleCellModel();
+                } else {
+                    model = new ReceivedBubbleCellModel();
+                }
+                model.notice = notice;
+                list.add(model);
+            }
+        }
 
         return list;
     }
