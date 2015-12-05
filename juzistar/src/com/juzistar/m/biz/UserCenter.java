@@ -119,6 +119,16 @@ public final class UserCenter {
     private static final String TOKEN_INFO_DIR  = "/users/";
     private static final String UID_MD5         = "sfht.user.uid.md5";
 
+    public void modifyNick(String nick) {
+        if (!TextUtils.isEmpty(nick)) {
+            synchronized (this) {
+                _token.nickname = nick;
+                String json = JSON.toJSONString(_token);
+                UserDefaults.getInstance().putJSONString(USER_TOKEN_KEY, json);
+            }
+        }
+    }
+
     //将数据存储下来
     public void saveToken(BaseRequest.Token tokenModel) {
 

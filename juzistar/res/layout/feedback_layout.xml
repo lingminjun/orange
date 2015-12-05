@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/page_bg">
+    <ScrollView android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+        <RelativeLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:focusable="true"
+                      android:focusableInTouchMode="true"
+                      android:paddingTop="20dp"
+                      android:paddingBottom="11dp">
+
+            <EditText android:id="@+id/feedback_content"
+                      android:layout_width="match_parent"
+                      android:layout_height="200dp"
+                      android:paddingLeft="@dimen/page_edg_mar"
+                      android:paddingRight="@dimen/page_edg_mar"
+                      android:paddingTop="4dp"
+                      android:paddingBottom="4dp"
+                      android:textColor="@color/normal_text"
+                      android:textSize="@dimen/normal_font"
+                      android:maxLength="150"
+                      android:lineSpacingExtra="6dp"
+                      android:gravity="left"
+                      android:layout_centerInParent="true"
+                      android:background="@color/white"/>
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textSize="@dimen/ssn_assist_text"
+                      android:textColor="@color/ssn_assist_text"
+                      android:layout_alignBottom="@+id/feedback_content"
+                      android:layout_alignRight="@+id/feedback_content"
+                      android:layout_marginRight="12dp"
+                      android:layout_marginBottom="2dp"
+                      android:text=""
+                      android:id="@+id/ssn_word_limit_label"/>
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

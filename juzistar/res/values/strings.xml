@@ -63,4 +63,12 @@
     <string name="locate_current_location">点击定位当前位置</string>
     <string name="geolocation_complete">定位完成</string>
     <string name="no_search_result">未找到结果</string>
+    <string name="submit">提交</string>
+    <string name="comment_too_short">太懒了，再多说几句吧！</string>
+    <string name="modify_nick">修改昵称</string>
+    <string name="please_input_nick">请输入您的昵称</string>
+    <string name="input_new_nick_tip">请输入您想设置的昵称</string>
+    <string name="input_nick_length_tip">请输入1~10位的昵称</string>
+    <string name="modify_failed">修改失败！</string>
+    <string name="modify_success">修改成功！</string>
 </resources>

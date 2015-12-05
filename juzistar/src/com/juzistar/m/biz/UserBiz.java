@@ -159,7 +159,7 @@ public final class UserBiz {
         BaseRequest<TokenModel> request = new BaseRequest<TokenModel>() {
             @Override
             public String path() {
-                return "updateUser";
+                return "user";
             }
 
             @Override
@@ -175,6 +175,13 @@ public final class UserBiz {
             @Override
             public void params(HashMap<String, Object> params) {
                 params.put("nickname",nick);
+            }
+
+            @Override
+            public TokenModel call(RPC.Retry retry) throws Exception {
+                TokenModel token = super.call(retry);
+                UserCenter.shareInstance().modifyNick(token.nickname);
+                return token;
             }
         };
 

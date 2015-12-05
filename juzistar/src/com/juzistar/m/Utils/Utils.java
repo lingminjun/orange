@@ -33,6 +33,7 @@ import com.juzistar.m.net.APIErrorMessage;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.foundation.TR;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -772,6 +773,17 @@ public final class Utils /*extends CommonUtil*/ {
 
     public static boolean isEdtEmpty(EditText edt) {
         return edt.getText() == null || TextUtils.isEmpty(edt.getText().toString().trim());
+    }
+
+    public static String getEditText(EditText edt) {
+        if (edt == null) {return "";}
+        Editable ext = edt.getText();
+        if (ext == null) {return "";}
+
+        String txt = ext.toString();
+        if (TextUtils.isEmpty(txt)) {return "";}
+
+        return TR.string(txt.trim());
     }
 //
 

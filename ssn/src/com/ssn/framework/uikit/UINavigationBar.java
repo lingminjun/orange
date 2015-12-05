@@ -2,6 +2,7 @@ package com.ssn.framework.uikit;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -75,7 +76,7 @@ public final class UINavigationBar extends RelativeLayout {
             public void setTitle(String title) {this.title = title; display();}
             public void setImage(int image) {this.imageID = image;display();}
             public void setCustomView(View view) {this.customView = view;display();}
-            public void setTitleColor(int color) {this.textColor = color;display();}
+            public void setTitleColor(ColorStateList color) {this.textColor = color;display();}
             public void setTitleFontSize(int size) {this.textSize = size;display();}
             public boolean isHidden() {return hidden;}
             public void setHidden(boolean hidden) {this.hidden = hidden; display();}
@@ -119,8 +120,8 @@ public final class UINavigationBar extends RelativeLayout {
                         textView.setText(title);
 
                         //颜色设置
-                        if (textColor != 0) {
-                            textView.setTextColor(Res.resources().getColorStateList(textColor));
+                        if (textColor != null) {
+                            textView.setTextColor(textColor);
                         }
 
                         //字体大小
@@ -166,7 +167,7 @@ public final class UINavigationBar extends RelativeLayout {
             }
 
             private String title;
-            private int textColor;
+            private ColorStateList textColor;
             private int textSize;
             private int imageID;
             private View customView;

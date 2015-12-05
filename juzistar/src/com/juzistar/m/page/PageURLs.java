@@ -24,4 +24,6 @@ public class PageURLs {
     //个人中心
     public static final String ME_URL = "http://m.juzistar.com/me.html";
     public static final String EDIT_HEADER_URL = "http://m.juzistar.com/edit_header.html";
+    public static final String FEEDBACK_URL = "http://m.juzistar.com/feedback.html";
+    public static final String SET_NICK_URL = "http://m.juzistar.com/modify_nick.html";
 }

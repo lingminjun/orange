@@ -123,32 +123,32 @@ public class PopViewController extends BaseTableViewController {
         //默认打开
         BarrageCenter.shareInstance().startService();
 
-        Clock.shareInstance().addListener(new Clock.Listener() {
-            @Override
-            public void fire(String flag) {
-                {
-                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                    notice.type = NoticeBiz.NoticeType.NORMAL;
-                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
-                    notice.content = "这仅仅只为测试"+test_count;
-                    notice.creator = "xxxx";
-                    notice.creatorId = test_count+101;
-                    notice.longitude = Double.toString(31.2117411154);
-                    notice.latitude = Double.toString(121.4596178033);
-
-                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
-                    model.notice = notice;
-                    test_count++;
-
-                    tableViewAdapter().appendCell(model);
-                    UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
-
-                    if (test_count > 20) {
-                        Clock.shareInstance().removeListener("dd");
-                    }
-                }
-            }
-        },"dd");
+//        Clock.shareInstance().addListener(new Clock.Listener() {
+//            @Override
+//            public void fire(String flag) {
+//                {
+//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+//                    notice.type = NoticeBiz.NoticeType.NORMAL;
+//                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
+//                    notice.content = "这仅仅只为测试"+test_count;
+//                    notice.creator = "xxxx";
+//                    notice.creatorId = test_count+101;
+//                    notice.longitude = Double.toString(31.2117411154);
+//                    notice.latitude = Double.toString(121.4596178033);
+//
+//                    ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
+//                    model.notice = notice;
+//                    test_count++;
+//
+//                    tableViewAdapter().appendCell(model);
+//                    UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
+//
+//                    if (test_count > 20) {
+//                        Clock.shareInstance().removeListener("dd");
+//                    }
+//                }
+//            }
+//        },"dd");
     }
 
     @Override
@@ -379,6 +379,13 @@ public class PopViewController extends BaseTableViewController {
         tableViewAdapter().appendCell(model);
         UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
 
+        //先收起键盘，还原键盘状态
+        Keyboard.barrageKeyboard().dismiss(false);
+        Keyboard.barrageKeyboard().setText("");
+        Keyboard.barrageKeyboard().setRightButtonTitle("");
+        Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+        customButtonKey = 0;
+
         BarrageCenter.shareInstance().publishNotice(notice, new RPC.Response<NoticeBiz.Notice>() {
             @Override
             public void onStart() {
@@ -395,13 +402,6 @@ public class PopViewController extends BaseTableViewController {
             @Override
             public void onSuccess(NoticeBiz.Notice notice1) {
                 super.onSuccess(notice1);
-
-                //发送成功则将键盘收起来，清除输入
-                Keyboard.barrageKeyboard().dismiss(false);
-                Keyboard.barrageKeyboard().setText("");
-                Keyboard.barrageKeyboard().setRightButtonTitle("");
-                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
-                customButtonKey = 0;
 
                 model.disabled = true;
                 notice.id = notice1.id;//获取新的id

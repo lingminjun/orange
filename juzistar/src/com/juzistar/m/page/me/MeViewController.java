@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.juzistar.m.R;
+import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
+import com.juzistar.m.view.chat.SessionCellModel;
 import com.juzistar.m.view.me.*;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
@@ -49,13 +51,23 @@ public class MeViewController extends BaseTableViewController {
     @Override
     public void onViewDidAppear() {
         super.onViewDidAppear();
+
+        if (headerCellModel != null) {
+            tableViewAdapter().updateCell(headerCellModel,0);
+        }
     }
+
+
+    UserHeaderCellModel headerCellModel;
 
     @Override
     public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
-        list.add(new UserHeaderCellModel());
+        if (headerCellModel == null) {
+            headerCellModel = new UserHeaderCellModel();
+        }
+        list.add(headerCellModel);
 
         list.add(new BlankCellModel());
 
@@ -90,6 +102,28 @@ public class MeViewController extends BaseTableViewController {
         }
 
         return list;
+    }
+
+    @Override
+    public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
+        super.onTableViewCellClick(adapter, cellModel, row);
+
+        if (cellModel instanceof SettingCellModel) {
+            SettingCellModel model = (SettingCellModel)cellModel;
+
+
+            if (model.mTitle.equals(Res.localized(R.string.setting_advice_title))) {//意见反馈
+                Navigator.shareInstance().openURL(PageURLs.FEEDBACK_URL);
+            }
+
+        } else if (cellModel instanceof UserHeaderCellModel) {
+            PageCenter.checkAuth(new PageCenter.AuthCallBack() {
+                @Override
+                public void auth(String account) {
+                    Navigator.shareInstance().openURL(PageURLs.SET_NICK_URL);
+                }
+            });
+        }
     }
 
     public SettingCellModel.SettingCellListener switchListener = new SettingCellModel.SettingCellListener() {

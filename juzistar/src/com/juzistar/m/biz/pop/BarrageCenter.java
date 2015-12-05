@@ -6,6 +6,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
+import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.biz.lbs.Location;
 import com.juzistar.m.net.BaseModelList;
@@ -97,10 +98,17 @@ public final class BarrageCenter {
                 }
 
                 //存储游标
-                UserDefaults.getInstance().put(LATEST_PULL_KEY,list.latestTime);
+                if (list.latestTime > 0) {
+                    UserDefaults.getInstance().put(LATEST_PULL_KEY, list.latestTime);
+                }
 
                 int time = 0;
                 for (final NoticeBiz.Notice notice : list.list) {
+
+                    //过滤掉自己发送的
+                    if (notice.creatorId == UserCenter.shareInstance().UID()) {
+                        continue;
+                    }
 
                     //若收到的是标签消息，则将标签消息存储下来
                     if (notice.category != NoticeBiz.NoticeCategory.NAN) {
@@ -116,6 +124,13 @@ public final class BarrageCenter {
                             BroadcastCenter.shareInstance().postBroadcast(intent);
                         }
                     },time);
+                }
+
+                //检查太大
+                if (tagNotice.size() > 400) {
+                    List<NoticeBiz.Notice> subList = tagNotice.subList(200,tagNotice.size());
+                    tagNotice.clear();
+                    tagNotice.addAll(subList);
                 }
             }
         });
@@ -246,7 +261,35 @@ public final class BarrageCenter {
             tagNotice.add(notice);
         }
 
-        NoticeBiz.create(notice,response);
+        NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
+            @Override
+            public void onStart() {
+                if (response != null) {
+                    response.onStart();
+                }
+            }
+
+            @Override
+            public void onSuccess(NoticeBiz.Notice notice) {
+                if (response != null) {
+                    response.onSuccess(notice);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (response != null) {
+                    response.onFailure(e);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (response != null) {
+                    response.onFinish();
+                }
+            }
+        });
     }
 
     public List<NoticeBiz.Notice> getAllTabNotice() {

@@ -42,6 +42,16 @@
           activityclass=""
           description="编辑头像"/>
 
+    <item url="http://m.juzistar.com/modify_nick.html"
+          fragmentclass="com.juzistar.m.page.setting.EditNickViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="修改昵称"/>
+
+    <item url="http://m.juzistar.com/feedback.html"
+          fragmentclass="com.juzistar.m.page.setting.FeedbackViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="意见反馈"/>
+
 
     <!--关于页面-->
     <item url="http://m.juzistar.com/about.html"
