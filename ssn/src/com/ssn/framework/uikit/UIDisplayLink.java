@@ -88,6 +88,15 @@ public final class UIDisplayLink {
     }
 
     /**
+     * 删除以什么开头的注册器
+     * @param hasPrefix
+     */
+    public void removeListeners(String hasPrefix) {
+        if (hasPrefix == null) {return;}
+        _removeListeners(hasPrefix);
+    }
+
+    /**
      * 移除所有监听者，timer会结束
      */
     public void removeAllListeners() {_removeAllListeners();}

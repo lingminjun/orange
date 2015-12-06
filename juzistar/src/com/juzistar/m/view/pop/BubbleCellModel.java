@@ -17,6 +17,8 @@ public abstract class BubbleCellModel extends UITableViewCell.CellModel {
     public int expireTime;//过期时效(默认值5秒)
     public int animationDuration;//毫秒
 
+    public boolean autoDisappear;//自动消失
+
     public BubbleCellModel() {
         expireTime = DEFAULT_EXPIRE_TIME;
         animationDuration = DEFAULT_DURATION_TIME;

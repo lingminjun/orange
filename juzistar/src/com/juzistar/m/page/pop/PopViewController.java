@@ -48,9 +48,7 @@ public class PopViewController extends BaseTableViewController {
     LinearLayout sendBtnPanel;
     TextView sendBtn;
 
-    Set<NoticeBiz.Notice> animatingSet = new HashSet<>();
-
-    static final String CHECK_POP_TIMER_KEY = "check_pop_timer_key";
+    String UIDISPLAYLINK_PREFIX;
 
     @Override
     public void onInit(Bundle args) {
@@ -93,6 +91,8 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onViewDidLoad() {
         super.onViewDidLoad();
+
+        UIDISPLAYLINK_PREFIX = ""+getActivity().hashCode();
 
         Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
@@ -162,56 +162,19 @@ public class PopViewController extends BaseTableViewController {
 
         //进入时不展示键盘
         Keyboard.barrageKeyboard().dismiss(false);
-
-        if (tableViewAdapter().getCount() > 0) {
-            UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
-        }
-
     }
 
     @Override
     public void onViewDidDisappear() {
         super.onViewDidDisappear();
-        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
+//        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
     }
 
     @Override
     public void onDestroyController() {
         super.onDestroyController();
-        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
+        UIDisplayLink.shareInstance().removeListeners(UIDISPLAYLINK_PREFIX);
     }
-
-    //刷新ui必须采用高频刷新
-    UIDisplayLink.Listener timerListener = new UIDisplayLink.Listener() {
-        @Override
-        public void fire(String flag) {
-            UITableView.TableViewAdapter adapter = tableViewAdapter();
-
-            if (animatingSet.size() <= 0) {
-                UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
-                return;
-            }
-
-            //从最后一个开始判断
-            int count = adapter.getCount();
-            adapter.beginUpdate();
-            for (int i = count-1; i >= 0; i--) {
-                BubbleCellModel model = (BubbleCellModel)adapter.getItem(i);
-
-                //普通消息需要消失
-                if (model.notice.category == NoticeBiz.NoticeCategory.NAN) {
-                    model.animationDuration = model.animationDuration - BubbleCellModel.DEFAULT_ONCE_DURATION_TIME;
-                    if (model.animationDuration <= 0) {
-                        adapter.removeCell(model);
-                        animatingSet.remove(model);
-                    } else {
-                        adapter.updateCell(model, i);
-                    }
-                }
-            }
-            adapter.endUpdate();
-        }
-    };
 
     View.OnClickListener rightClick = new View.OnClickListener() {
         @Override
@@ -245,12 +208,9 @@ public class PopViewController extends BaseTableViewController {
 
             NoticeBiz.Notice notice = (NoticeBiz.Notice)intent.getSerializableExtra(BarrageCenter.BARRAGE_KEY);
 
-            //刷新界面
-            ReceivedBubbleCellModel model = new ReceivedBubbleCellModel();
-            model.notice = notice;
-            tableViewAdapter().appendCell(model);
-            UIDisplayLink.shareInstance().addListener(timerListener,CHECK_POP_TIMER_KEY);
-
+            if (notice != null) {
+                appendNoticeCellModel(notice);
+            }
         }
     };
 
@@ -402,6 +362,11 @@ public class PopViewController extends BaseTableViewController {
         public void onErrorTagClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
 
         }
+
+        @Override
+        public void onDisappear(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
+            tableViewAdapter().removeCell(cellModel);//移除即可
+        }
     };
 
     private BubbleCellModel appendNoticeCellModel(NoticeBiz.Notice notice) {
@@ -413,13 +378,20 @@ public class PopViewController extends BaseTableViewController {
         }
         model.notice = notice;
         model.cellListener = bubbleCellListener;
+
+        tableViewAdapter().beginUpdate();
         tableViewAdapter().appendCell(model);
 
         //添加ui刷新器
         if (notice.category == NoticeBiz.NoticeCategory.NAN) {
-            UIDisplayLink.shareInstance().addListener(timerListener, CHECK_POP_TIMER_KEY);
-            animatingSet.add(notice);
+            model.autoDisappear = true;
+        } else {
+            if (tableViewAdapter().getCount() > 20) {
+                tableViewAdapter().removeCells(0,10);//太多时删除一部分
+            }
         }
+
+        tableViewAdapter().endUpdate();
 
         return model;
     }

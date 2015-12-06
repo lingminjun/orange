@@ -16,7 +16,7 @@ import com.ssn.framework.uikit.UITableViewCell;
 /**
  * Created by lingminjun on 15/4/24.
  */
-public class SendBubbleCell extends UITableViewCell {
+public class SendBubbleCell extends BubbleCell {
     private View view;
 
     private View panel;
@@ -115,7 +115,5 @@ public class SendBubbleCell extends UITableViewCell {
 //            mStatusIcon.setBackgroundResource(R.drawable.error_icon);//发送中
 //        }
 
-        //透明度设置
-        view.setAlpha(mEntity.getAlpha());
     }
 }

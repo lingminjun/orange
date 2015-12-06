@@ -15,7 +15,7 @@ import com.ssn.framework.uikit.UITableViewCell;
 /**
  * Created by lingminjun on 15/4/24.
  */
-public class ReceivedBubbleCell extends UITableViewCell {
+public class ReceivedBubbleCell extends BubbleCell {
     private View view;
 
     private View panel;
@@ -89,9 +89,5 @@ public class ReceivedBubbleCell extends UITableViewCell {
             //文案
             mRightIcon.setText(UIDic.bubbleTagResourceId(mEntity.notice.category));
         }
-
-        //透明度设置
-        view.setAlpha(mEntity.getAlpha());
-
     }
 }
