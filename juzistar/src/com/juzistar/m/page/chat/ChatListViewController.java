@@ -30,6 +30,7 @@ public class ChatListViewController extends BaseTableViewController {
 
         navigationItem().setBottomLineHidden(false);
         navigationItem().setTitleColor(Res.color(R.color.ssn_normal_text));
+        navigationItem().backItem().setHidden(true);
     }
 
     @Override

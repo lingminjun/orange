@@ -60,6 +60,7 @@ public class PopViewController extends BaseTableViewController {
         tabItem().setTabImage(R.drawable.tab_selector_pop);
 
         navigationItem().setBottomLineHidden(true);
+        navigationItem().backItem().setHidden(true);
     }
 
     @Override
@@ -360,7 +361,8 @@ public class PopViewController extends BaseTableViewController {
 
         @Override
         public void onErrorTagClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
-
+            //重新发送
+            resendNotice(cellModel);
         }
 
         @Override
@@ -384,7 +386,11 @@ public class PopViewController extends BaseTableViewController {
 
         //添加ui刷新器
         if (notice.category == NoticeBiz.NoticeCategory.NAN) {
-            model.autoDisappear = true;
+            if (model.notice.id.startsWith("sending:") || TextUtils.isEmpty(model.notice.id)) {
+                model.autoDisappear = false;
+            } else {
+                model.autoDisappear = true;
+            }
         } else {
             if (tableViewAdapter().getCount() > 20) {
                 tableViewAdapter().removeCells(0,10);//太多时删除一部分
@@ -439,6 +445,9 @@ public class PopViewController extends BaseTableViewController {
 
                 model.disabled = true;
                 notice.id = notice1.id;//获取新的id
+                if (notice.category == NoticeBiz.NoticeCategory.NAN) {
+                    model.autoDisappear = true;
+                }
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
@@ -484,6 +493,9 @@ public class PopViewController extends BaseTableViewController {
 
                 model.disabled = true;
                 notice.id = notice1.id;//获取新的id
+                if (notice.category == NoticeBiz.NoticeCategory.NAN) {
+                    model.autoDisappear = true;
+                }
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
