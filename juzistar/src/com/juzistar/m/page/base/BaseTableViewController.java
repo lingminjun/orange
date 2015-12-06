@@ -17,8 +17,7 @@ public class BaseTableViewController extends UITableViewController {
         String title = Res.localized(R.string.app_name);
         navigationItem().setTitle(title);
         navigationItem().setTitleColor(Res.color(R.color.white));
-
-        navigationItem().setBottomLineHidden(true);
+        navigationItem().backItem().setImage(R.drawable.nav_left_icon);
     }
 
 

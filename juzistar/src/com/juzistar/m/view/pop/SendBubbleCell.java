@@ -33,7 +33,20 @@ public class SendBubbleCell extends UITableViewCell {
     private OnClickListener click = new OnClickListener() {
         @Override
         public void onClick(View view) {
+            SendBubbleCellModel model = (SendBubbleCellModel)cellModel();
+            if (model != null && model.cellListener != null) {
+                model.cellListener.onMessageClick(model,model.notice);
+            }
+        }
+    };
 
+    OnClickListener headerClick = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            SendBubbleCellModel model = (SendBubbleCellModel)cellModel();
+            if (model != null && model.cellListener != null) {
+                model.cellListener.onHeaderClick(model,model.notice);
+            }
         }
     };
 
@@ -60,6 +73,7 @@ public class SendBubbleCell extends UITableViewCell {
         panel = view.findViewById(R.id.message_content_panel);
         panel.setOnClickListener(UIEvent.click(click));
         mIconView = (ImageView) view.findViewById(R.id.icon_image);
+        mIconView.setOnClickListener(UIEvent.click(headerClick));
         mTitleView = (TextView) view.findViewById(R.id.title_label);
         mLeftIcon = (TextView) view.findViewById(R.id.left_icon);
         mStatusIcon = (TextView) view.findViewById(R.id.send_status_icon);

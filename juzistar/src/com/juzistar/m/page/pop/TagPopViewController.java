@@ -49,6 +49,8 @@ public class TagPopViewController extends BaseTableViewController {
 
         String title = Res.localized(R.string.look_tag_msg_title);
         navigationItem().setTitle(title);
+
+        navigationItem().setBottomLineHidden(true);
     }
 
     @Override

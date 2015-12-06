@@ -17,5 +17,6 @@ public class BaseViewController extends UIViewController {
         String title = Res.localized(R.string.app_name);
         navigationItem().setTitle(title);
         navigationItem().setTitleColor(Res.color(R.color.white));
+        navigationItem().backItem().setImage(R.drawable.nav_left_icon);
     }
 }

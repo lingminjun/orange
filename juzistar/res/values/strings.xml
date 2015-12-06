@@ -27,7 +27,7 @@
     <string name="confirm_password_error">确认密码错误</string>
     <string name="please_input_mobile">请输入手机号</string>
     <string name="please_input_sms_code">请输入短信验证码</string>
-    <string name="encounters">邂逅</string>
+    <string name="encounters">遇见</string>
     <string name="register_failed">注册失败</string>
     <string name="reset_failed">重置密码失败</string>
     <string name="request_time_out">请求超时</string>

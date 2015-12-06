@@ -27,6 +27,9 @@ public final class MessageBiz {
     	Long receiverId;
     	Long senderId;
     	Long timestamp;
+
+        public String longitude;
+        public String latitude;
     }
 
     public static class MessageList extends BaseModelList<Message> {

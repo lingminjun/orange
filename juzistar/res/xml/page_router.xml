@@ -30,6 +30,10 @@
           fragmentclass="com.juzistar.m.page.chat.ChatViewController"
           activityclass=""
           description="私信"/>
+    <item url="http://m.juzistar.com/map_chat.html"
+          fragmentclass="com.juzistar.m.page.chat.MapChatViewController"
+          activityclass="com.ssn.framework.uikit.BaseNavActivity"
+          description="私信"/>
 
     <!--我-->
     <item url="http://m.juzistar.com/me.html"

@@ -17,7 +17,7 @@ public final class UIDic {
      * @return
      */
     public static int avatarResourceId(long uid) {
-        int idx = (int)(uid%6);
+        int idx = (int)(uid%7);
         switch (idx) {
             case 0:return R.drawable.avatar_blue_0;
             case 1:return R.drawable.avatar_green_0;
@@ -25,7 +25,48 @@ public final class UIDic {
             case 3:return R.drawable.avatar_yellow_0;
             case 4:return R.drawable.avatar_yellow_1;
             case 5:return R.drawable.avatar_red_0;
+            case 6:return R.drawable.avatar_blue_1;
             default:return R.drawable.avatar_blue_0;
+        }
+    }
+
+    /**
+     * 聊天头像图标对应
+     * @param uid
+     * @param isSend
+     * @return
+     */
+    public static int mascotResourceId(long uid,boolean isSend) {
+        int idx = (int)(uid%7);
+        switch (idx) {
+            case 0:return isSend ? R.drawable.mascot_s_blue0_icon : R.drawable.mascot_r_blue0_icon;
+            case 1:return isSend ? R.drawable.mascot_s_green0_icon : R.drawable.mascot_r_green0_icon;
+            case 2:return isSend ? R.drawable.mascot_s_green1_icon : R.drawable.mascot_r_green1_icon;
+            case 3:return isSend ? R.drawable.mascot_s_yellow0_icon : R.drawable.mascot_r_yellow0_icon;
+            case 4:return isSend ? R.drawable.mascot_s_orange0_icon : R.drawable.mascot_r_orange0_icon;
+            case 5:return isSend ? R.drawable.mascot_s_pink0_icon : R.drawable.mascot_r_pink0_icon;
+            case 6:return isSend ? R.drawable.mascot_s_blue1_icon : R.drawable.mascot_r_blue1_icon;
+            default:return isSend ? R.drawable.mascot_s_blue0_icon : R.drawable.mascot_r_blue0_icon;
+        }
+    }
+
+    /**
+     * 聊天背景对应
+     * @param uid
+     * @param isSend
+     * @return
+     */
+    public static int dialogResourceId(long uid,boolean isSend) {
+        int idx = (int)(uid%7);
+        switch (idx) {
+            case 0:return isSend ? R.drawable.dialog_s_blue0 : R.drawable.dialog_r_blue0;
+            case 1:return isSend ? R.drawable.dialog_s_green0 : R.drawable.dialog_r_green0;
+            case 2:return isSend ? R.drawable.dialog_s_green1 : R.drawable.dialog_r_green1;
+            case 3:return isSend ? R.drawable.dialog_s_yellow0 : R.drawable.dialog_r_yellow0;
+            case 4:return isSend ? R.drawable.dialog_s_yellow1 : R.drawable.dialog_r_yellow1;
+            case 5:return isSend ? R.drawable.dialog_s_red0 : R.drawable.dialog_r_red0;
+            case 6:return isSend ? R.drawable.dialog_s_blue1 : R.drawable.dialog_r_blue1;
+            default:return isSend ? R.drawable.dialog_s_blue0 : R.drawable.dialog_r_blue0;
         }
     }
 

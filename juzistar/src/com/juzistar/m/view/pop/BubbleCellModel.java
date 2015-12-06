@@ -26,6 +26,7 @@ public abstract class BubbleCellModel extends UITableViewCell.CellModel {
         public void onMessageClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1);
         public void onHeaderClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1);
         public void onErrorTagClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1);//发送失败标签点击
+        public void onDisappear(BubbleCellModel cellModel, NoticeBiz.Notice notice1);//消失时
     }
 
     public float getAlpha() {

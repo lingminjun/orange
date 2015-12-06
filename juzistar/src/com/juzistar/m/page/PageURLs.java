@@ -20,6 +20,7 @@ public class PageURLs {
 
     //遇见页
     public static final String CHAT_LIST_URL = "http://m.juzistar.com/chat_list.html";
+    public static final String MAP_CHAT_URL = "http://m.juzistar.com/map_chat.html";
 
     //个人中心
     public static final String ME_URL = "http://m.juzistar.com/me.html";

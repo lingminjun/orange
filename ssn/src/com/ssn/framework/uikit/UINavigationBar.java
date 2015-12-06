@@ -74,7 +74,7 @@ public final class UINavigationBar extends RelativeLayout {
              */
             public String title() {return title;}
             public void setTitle(String title) {this.title = title; display();}
-            public void setImage(int image) {this.imageID = image;display();}
+            public void setImage(int imageId) {this.imageID = imageId;display();}
             public void setCustomView(View view) {this.customView = view;display();}
             public void setTitleColor(ColorStateList color) {this.textColor = color;display();}
             public void setTitleFontSize(int size) {this.textSize = size;display();}
