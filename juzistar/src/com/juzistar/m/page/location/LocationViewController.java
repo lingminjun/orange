@@ -113,7 +113,8 @@ public class LocationViewController extends BaseTableViewController {
         mCancelPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearResults(false);
+                cancelSearch(true);
+                showNoResults();
             }
         }));
         mSearchRightPadding = layout.findViewById(R.id.search_right_padding);
@@ -261,7 +262,8 @@ public class LocationViewController extends BaseTableViewController {
             if (s != null && !TextUtils.isEmpty(s.toString())) {
                 suggestionSearch(s.toString());
             } else {
-                clearResults(true);
+//                cancelSearch(false);
+                showNoResults();
             }
         }
     };
@@ -277,17 +279,6 @@ public class LocationViewController extends BaseTableViewController {
     //开始搜索
     private void searchLocation(String string) {
         mPoiSearch.searchInCity(poption.keyword(string));
-    }
-
-    //清除结果
-    private void clearResults(boolean noCancel) {
-
-        if (!noCancel) {
-            cancelSearch(true);
-        }
-
-        //删除搜索结果
-        showNoResults();
     }
 
     private void showNoResults() {
@@ -338,13 +329,9 @@ public class LocationViewController extends BaseTableViewController {
             imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
         }
 
-        //不clear时，不需要去掉光标
-        if (!clear) {
-            searchText.clearFocus();
-        }
-
         //在输入时点取消则清空输入
         if (clear) {
+            searchText.clearFocus();
             searchText.setText("");
         }
 
