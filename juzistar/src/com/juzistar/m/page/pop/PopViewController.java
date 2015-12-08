@@ -145,6 +145,7 @@ public class PopViewController extends BaseTableViewController {
                     notice.creatorId = test_count+101;
                     notice.longitude = Double.toString(121.4596178033);
                     notice.latitude = Double.toString(31.2117411154);
+                    notice.id = "" + Utils.getServerTime();
 
                     appendNoticeCellModel(notice);
                     test_count++;

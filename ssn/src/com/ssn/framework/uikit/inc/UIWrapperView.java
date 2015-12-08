@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.TaskQueue;
+import com.ssn.framework.foundation.UserDefaults;
 import com.ssn.framework.uikit.UIEvent;
 
 /**
@@ -56,6 +57,12 @@ public class UIWrapperView extends LinearLayout {
             Intent intent = new Intent(UIEvent.UIKeyboardWillShowNotification);
             intent.putExtra(UIEvent.UIKeyboardHeightKey,changed);
             BroadcastCenter.shareInstance().postBroadcast(intent);
+
+            int height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
+            if (height <= 0) {
+                UserDefaults.getInstance().put(UIEvent.UIKeyboardHeightKey,changed);//存储起来备用
+            }
+            Log.e("keyboard", "height="+changed);
         }
         else if (changed <= getKeyboardMinHeight() && -changed < h) {
             _showingKeyboard = false;
@@ -71,7 +78,7 @@ public class UIWrapperView extends LinearLayout {
         }
 
 //        1860-1080=780
-//        Log.e("tabbar", "yyyyyyy"+h+"old"+oldh);
+
     }
 
     private static int KEYBOARD_MIN_HEIGHT = 100;//纯粹是经验值

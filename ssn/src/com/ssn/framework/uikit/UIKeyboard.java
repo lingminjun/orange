@@ -18,6 +18,7 @@ import com.ssn.framework.R;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TR;
+import com.ssn.framework.foundation.UserDefaults;
 
 /**
  * Created by lingminjun on 15/11/21.
@@ -401,7 +402,11 @@ public final class UIKeyboard extends LinearLayout {
 
         //展示系统键盘
 //        if (_showSystemKeyboard) {
-            params.height = Density.dipTopx(_keyboard_height);
+        int sys_height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
+        if (sys_height <= 0) {
+            sys_height = Density.dipTopx(_keyboard_height);
+        }
+            params.height = sys_height;//Density.dipTopx(_keyboard_height);
 //        } else {
 //            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
 //        }
