@@ -25,6 +25,7 @@ import com.juzistar.m.page.base.BaseViewController;
 import com.juzistar.m.view.com.UIDic;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
+import com.ssn.framework.foundation.TR;
 
 import java.util.ArrayList;
 
@@ -132,13 +133,17 @@ public class MapChatViewController extends BaseViewController {
             button.setBackgroundResource(R.drawable.popup);
             OnInfoWindowClickListener listener = null;
             if (marker == mMarkerMe || marker == mMarkerOther) {
-                button.setText("更改位置");
+                if (marker == mMarkerMe) {
+                    button.setText(TR.string(latestSendMessage.message));
+                } else if (marker == mMarkerOther) {
+                    button.setText(TR.string(latestReceiveMessage.message));
+                }
                 listener = new OnInfoWindowClickListener() {
                     public void onInfoWindowClick() {
-                        LatLng ll = marker.getPosition();
-                        LatLng llNew = new LatLng(ll.latitude + 0.005,
-                                ll.longitude + 0.005);
-                        marker.setPosition(llNew);
+//                        LatLng ll = marker.getPosition();
+//                        LatLng llNew = new LatLng(ll.latitude + 0.005,
+//                                ll.longitude + 0.005);
+//                        marker.setPosition(llNew);
                         mBaiduMap.hideInfoWindow();
                     }
                 };
