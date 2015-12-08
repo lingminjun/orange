@@ -133,29 +133,29 @@ public class PopViewController extends BaseTableViewController {
         //默认打开
         BarrageCenter.shareInstance().startService();
 
-        Clock.shareInstance().addListener(new Clock.Listener() {
-            @Override
-            public void fire(String flag) {
-                {
-                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                    notice.type = NoticeBiz.NoticeType.NORMAL;
-                    notice.category = Convert.noticeCategory(Keyboard.KEY.NAN);
-                    notice.content = "这仅仅只为测试"+test_count;
-                    notice.creator = "xxxx";
-                    notice.creatorId = test_count+101;
-                    notice.longitude = Double.toString(121.4596178033);
-                    notice.latitude = Double.toString(31.2117411154);
-                    notice.id = "" + Utils.getServerTime();
-
-                    appendNoticeCellModel(notice);
-                    test_count++;
-
-                    if (test_count > 20) {
-                        Clock.shareInstance().removeListener("dd");
-                    }
-                }
-            }
-        },"dd");
+//        Clock.shareInstance().addListener(new Clock.Listener() {
+//            @Override
+//            public void fire(String flag) {
+//                {
+//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+//                    notice.type = NoticeBiz.NoticeType.NORMAL;
+//                    notice.category = Convert.noticeCategory(Keyboard.KEY.NAN);
+//                    notice.content = "这仅仅只为测试"+test_count;
+//                    notice.creator = "xxxx";
+//                    notice.creatorId = test_count+101;
+//                    notice.longitude = Double.toString(121.4596178033);
+//                    notice.latitude = Double.toString(31.2117411154);
+//                    notice.id = "" + Utils.getServerTime();
+//
+//                    appendNoticeCellModel(notice);
+//                    test_count++;
+//
+//                    if (test_count > 20) {
+//                        Clock.shareInstance().removeListener("dd");
+//                    }
+//                }
+//            }
+//        },"dd");
     }
 
     @Override
