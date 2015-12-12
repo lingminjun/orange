@@ -1,5 +1,7 @@
 package com.juzistar.m.page.chat;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -7,9 +9,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.SeekBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -18,18 +19,19 @@ import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.OverlayManager;
-import com.baidu.mapapi.utils.DistanceUtil;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.biz.msg.MessageCenter;
+import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.constants.Constants;
 import com.juzistar.m.entity.MapMarkPoint;
 import com.juzistar.m.page.base.BaseViewController;
 import com.juzistar.m.view.com.UIDic;
-import com.ssn.framework.foundation.App;
-import com.ssn.framework.foundation.Res;
-import com.ssn.framework.foundation.TR;
+import com.ssn.framework.foundation.*;
+import com.ssn.framework.uikit.UILoading;
+import com.ssn.framework.uikit.UILockScreenKeyboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,8 @@ import java.util.List;
  * 演示覆盖物的用法
  */
 public class MapChatViewController extends BaseViewController {
+
+    private static final int MSG_SHOW_INTERVAL = 3;
 
 	/**
 	 * MapView 是地图主控件
@@ -50,17 +54,17 @@ public class MapChatViewController extends BaseViewController {
 
 	private Marker mMarkerMe;
 	private Marker mMarkerOther;
-//	private Marker mMarkerC;
-//	private Marker mMarkerD;
 
     private long otherId;
     private MapMarkPoint latestReceiveMessage;
     private MapMarkPoint latestSendMessage;
 
+    private List<MessageBiz.Message> recMsgs = new ArrayList<>();
+
 	private InfoWindow mInfoWindow;
 
-    BitmapDescriptor bdMe; //= BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
-    BitmapDescriptor bdOther;// = BitmapDescriptorFactory.fromResource(R.drawable.icon_markb);
+//    BitmapDescriptor bdMe; //= BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+//    BitmapDescriptor bdOther;// = BitmapDescriptorFactory.fromResource(R.drawable.icon_markb);
 
     @Override
     public void onInit(Bundle args) {
@@ -82,12 +86,44 @@ public class MapChatViewController extends BaseViewController {
             latestSendMessage.latitude = (float)LBService.shareInstance().getLatestLatitude();
             latestSendMessage.longitude = (float)LBService.shareInstance().getLatestLongitude();
         }
-
-        bdMe = BitmapDescriptorFactory.fromResource(UIDic.mascotResourceId(UserCenter.shareInstance().UID(),true));
-        bdOther = BitmapDescriptorFactory.fromResource(UIDic.mascotResourceId(otherId,false));
     }
 
+    UILockScreenKeyboard.KeyboardListener keyboardListener = new UILockScreenKeyboard.KeyboardListener() {
+        @Override
+        public void onSendButtonClick(UILockScreenKeyboard keyboard, View sender) {
+            String msg = keyboard.text();
+            sendMessage(msg);
+            keyboard.finish();
+        }
 
+        @Override
+        public boolean onRightButtonClick(UILockScreenKeyboard keyboard, View sender) {
+            return false;
+        }
+
+        @Override
+        public void onScopeViewClick(UILockScreenKeyboard keyboard, View sender) {
+            keyboard.finish();//直接隐藏
+        }
+
+        @Override
+        public void onCustomButtonClick(UILockScreenKeyboard keyboard, View sender, int buttonKey) {
+
+        }
+
+        @Override
+        public void onKeyboardChanged(UILockScreenKeyboard keyboard, int newHeight, int oldHeight) {
+
+        }
+    };
+
+    OnMarkerClickListener markClick = new OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            UILockScreenKeyboard.show(getActivity(), keyboardListener, true);
+            return false;
+        }
+    };
 
     @Override
     public View loadView(LayoutInflater inflater) {
@@ -103,70 +139,8 @@ public class MapChatViewController extends BaseViewController {
     }
 
     private void refreshMapZoom() {
-
-        /*
-        //自己计算比例
-        float latitude = latestReceiveMessage.latitude + ((latestSendMessage.latitude - latestReceiveMessage.latitude)/2.0f);
-        float longitude = latestReceiveMessage.longitude + ((latestSendMessage.longitude - latestReceiveMessage.longitude)/2.0f);
-
-        LatLng p1 = new LatLng(latestReceiveMessage.latitude, latestReceiveMessage.longitude);
-        LatLng p2 = new LatLng(latestSendMessage.latitude, latestSendMessage.longitude);
-
-        float zoom = 16;//3~18，我们一般取4~16
-        double distance = DistanceUtil.getDistance(p1, p2);
-
-        if (distance >= 8000) {
-            zoom = 10.0f;
-        } else if (distance >= 6000) {
-            zoom = 13.0f;
-        } else if (distance >= 4000) {
-            zoom = 14.0f;
-        } else if (distance >= 2000) {
-            zoom = 15.0f;
-        } else {
-            zoom = 16.0f;
-        }
-
-        LatLng point = new LatLng(latitude, longitude);
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(point, zoom);	//设置地图中心点以及缩放级别
-
-        mBaiduMap.setMapStatus(msu);
-        mBaiduMap.animateMapStatus(msu);
-
-        */
-
-        initOverlay();
+        refreshOverlay();
     }
-
-    OnMarkerClickListener markClick = new OnMarkerClickListener() {
-        @Override
-        public boolean onMarkerClick(final Marker marker) {
-            Button button = new Button(Res.context());
-            button.setBackgroundResource(R.drawable.popup);
-            OnInfoWindowClickListener listener = null;
-//            if (marker == mMarkerMe || marker == mMarkerOther) {
-//                if (marker == mMarkerMe) {
-//                    button.setText(TR.string(latestSendMessage.message));
-//                } else if (marker == mMarkerOther) {
-//                    button.setText(TR.string(latestReceiveMessage.message));
-//                }
-                listener = new OnInfoWindowClickListener() {
-                    public void onInfoWindowClick() {
-                        LatLng ll = marker.getPosition();
-                        LatLng llNew = new LatLng(ll.latitude + 0.005,
-                                ll.longitude + 0.005);
-                        marker.setPosition(llNew);
-                        mBaiduMap.hideInfoWindow();
-                    }
-                };
-                LatLng ll = marker.getPosition();
-                mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
-                mBaiduMap.showInfoWindow(mInfoWindow);
-//            }
-
-            return true;
-        }
-    };
 
     @Override
 	public void onViewDidLoad () {
@@ -174,87 +148,191 @@ public class MapChatViewController extends BaseViewController {
         if (otherId == 0) {
             finish();
         }
+
+        addObservers();
+
+        //开启高频刷新
+        MessageCenter.shareInstance().startFrequency();
+        LBService.shareInstance().start();
 	}
+
+    private void addObservers() {
+        BroadcastCenter.shareInstance().addObserver(this, MessageCenter.RECEIVED_MSG_NOTIFICATION, observerMethod);
+    }
+
+    private BroadcastCenter.Method<MapChatViewController> observerMethod = new BroadcastCenter.Method<MapChatViewController>() {
+        @Override
+        public void onReceive(MapChatViewController observer, Context context, Intent intent) {
+            MessageBiz.Message message = (MessageBiz.Message)intent.getSerializableExtra(MessageCenter.MSG_KEY);
+            if (message == null) {return;}
+
+            if (message.fromUserId != observer.otherId) {return;}
+
+            observer.recMsgs.add(message);
+            intermittentRefresh();
+        }
+    };
+
+    private RPC.Response<MessageBiz.Message> sendMsgCallback = new RPC.Response<MessageBiz.Message>(){
+        @Override
+        public void onStart() {
+            super.onStart();
+
+            UILoading.show(getActivity());
+        }
+
+        @Override
+        public void onSuccess(MessageBiz.Message message) {
+            super.onSuccess(message);
+
+            latestSendMessage.latitude = (float)LBService.shareInstance().getLatestLatitude();
+            latestSendMessage.longitude = (float)LBService.shareInstance().getLatestLongitude();
+            latestSendMessage.message = message.content;
+
+            refreshMapZoom();
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            super.onFailure(e);
+        }
+
+        @Override
+        public void onFinish() {
+            super.onFinish();
+            UILoading.dismiss(getActivity());
+        }
+    };
+
+    private void sendMessage(String msg) {
+        MessageCenter.shareInstance().sendMessage(msg,otherId,sendMsgCallback);
+    }
+
+    private boolean hasTimer;
+    private String timer_key = "timer_key_" + this.hashCode();
+
+    private int count;
+    Clock.Listener timerListener = new Clock.Listener() {
+        @Override
+        public void fire(String flag) {
+            if (recMsgs.size() <= 0) {
+                count = 0;
+                hasTimer = false;
+                Clock.shareInstance().removeListener(timer_key);
+                return;
+            }
+
+            if (count % MSG_SHOW_INTERVAL == 0) {
+                MessageBiz.Message message = recMsgs.remove(0);
+                if (message != null) {
+                    latestReceiveMessage.message = message.content;
+                    latestReceiveMessage.longitude = Float.parseFloat(message.longitude);
+                    latestReceiveMessage.latitude = Float.parseFloat(message.latitude);
+
+                    refreshMapZoom();//刷新显示
+                }
+            }
+
+            count++;
+            if (count>=MSG_SHOW_INTERVAL) {count = 0;}
+        }
+    };
+
+    private void intermittentRefresh() {
+        if (hasTimer) {
+            return;
+        }
+
+        Clock.shareInstance().addListener(timerListener,timer_key);
+    }
+
+    private BitmapDescriptor getBitmapDescriptor(MapMarkPoint point) {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View view = null;
+        if (point.uid == UserCenter.shareInstance().UID()) {
+            view = inflater.inflate(R.layout.send_msg_pop, null);
+
+            ImageView icon = (ImageView)view.findViewById(R.id.icon_image);
+            icon.setImageResource(UIDic.mascotResourceId(point.uid,true));
+        } else {
+            view = inflater.inflate(R.layout.receive_msg_pop, null);
+
+            ImageView icon = (ImageView)view.findViewById(R.id.icon_image);
+            icon.setImageResource(UIDic.mascotResourceId(point.uid, false));
+        }
+
+        TextView text = (TextView)view.findViewById(R.id.title_label);
+        if (TextUtils.isEmpty(point.message)) {
+            text.setVisibility(View.GONE);
+        } else {
+            text.setText(point.message);
+        }
+
+        return BitmapDescriptorFactory.fromBitmap(Res.bitmap(view));
+    }
 
     /**
      * 根据位置展示头像，并且加载消息
      */
-	public void initOverlay() {
+	public void refreshOverlay() {
 		// add marker overlay
 		LatLng llA = new LatLng(latestSendMessage.latitude, latestSendMessage.longitude);
 		LatLng llB = new LatLng(latestReceiveMessage.latitude, latestReceiveMessage.longitude);
 
 
-        //锚点设置（默认（0.5f, 1.0f）水平居中，垂直下对齐）
-		MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdMe).zIndex(4).anchor(1.0f, 1.0f);//.draggable(true);
-        ooA.animateType(MarkerAnimateType.grow);//生长动画
-//		mMarkerMe = (Marker) (mBaiduMap.addOverlay(ooA));
-
-		MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdOther).zIndex(5).anchor(0.0f, 1.0f);
-        ooB.animateType(MarkerAnimateType.grow);//生长动画
-//		mMarkerOther = (Marker) (mBaiduMap.addOverlay(ooB));
+        BitmapDescriptor bdMe = getBitmapDescriptor(latestSendMessage);
+        BitmapDescriptor bdOther = getBitmapDescriptor(latestReceiveMessage);
 
         if (marks == null) {
-            marks = new ArrayList<>();
-            manager = new OverlayManager(mBaiduMap) {
 
-                @Override
-                public boolean onPolylineClick(Polyline polyline) {
-                    return false;
-                }
+            //锚点设置（默认（0.5f, 1.0f）水平居中，垂直下对齐）
+            MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdMe).zIndex(4).anchor(1.0f, 1.0f);//.draggable(true);
+            ooA.animateType(MarkerAnimateType.grow);//生长动画
 
-                @Override
-                public boolean onMarkerClick(final Marker marker) {
-                    Button button = new Button(Res.context());
-                    button.setBackgroundResource(R.drawable.popup);
-                    OnInfoWindowClickListener listener = null;
-                    button.setText(TR.string("dddddd"));
-//                    if (marker == mMarkerMe || marker == mMarkerOther) {
-//                        if (marker == mMarkerMe) {
-//                            button.setText(TR.string(latestSendMessage.message));
-//                        } else if (marker == mMarkerOther) {
-//                            button.setText(TR.string(latestReceiveMessage.message));
-//                        }
-                        listener = new OnInfoWindowClickListener() {
-                            public void onInfoWindowClick() {
-                                LatLng ll = marker.getPosition();
-                                LatLng llNew = new LatLng(ll.latitude + 0.005,
-                                        ll.longitude + 0.005);
-                                marker.setPosition(llNew);
-                                mBaiduMap.hideInfoWindow();
-                            }
-                        };
-                        LatLng ll = marker.getPosition();
-                        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
-                        mBaiduMap.showInfoWindow(mInfoWindow);
-//                    }
-                    return true;
-                }
+            MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdOther).zIndex(5).anchor(0.0f, 1.0f);
+            ooB.animateType(MarkerAnimateType.grow);//生长动画
 
-                @Override
-                public List<OverlayOptions> getOverlayOptions() {
-                    return marks;
-                }
-            };
+            if (marks == null) {
+                marks = new ArrayList<>();
+                manager = new OverlayManager(mBaiduMap) {
+
+                    @Override
+                    public boolean onPolylineClick(Polyline polyline) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onMarkerClick(final Marker marker) {
+                        return true;
+                    }
+
+                    @Override
+                    public List<OverlayOptions> getOverlayOptions() {
+                        return marks;
+                    }
+                };
+            }
+
+            marks.clear();
+            marks.add(ooA);
+            marks.add(ooB);
+
+            manager.addToMap();
+
+            mMarkerMe = (Marker)manager.getOverlayList().get(0);
+            mMarkerOther = (Marker)manager.getOverlayList().get(1);
+
+
+        } else {
+            mMarkerMe.setPosition(llA);
+            mMarkerMe.setIcon(bdMe);
+
+            mMarkerOther.setPosition(llB);
+            mMarkerOther.setIcon(bdOther);
         }
 
-        marks.clear();
-        marks.add(ooA);
-        marks.add(ooB);
-
-
-        manager.addToMap();
         manager.zoomToSpan();
 	}
-
-    private void showMessage(Marker marker,String message) {
-        Button button = new Button(Res.context());
-        button.setBackgroundResource(R.drawable.popup);
-        button.setText(message);
-        LatLng ll = marker.getPosition();
-        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, null);
-        mBaiduMap.showInfoWindow(mInfoWindow);
-    }
 
     /**
      * 拖拽事件
@@ -271,29 +349,6 @@ public class MapChatViewController extends BaseViewController {
         public void onMarkerDragStart(Marker marker) {
         }
     };
-
-	/**
-	 * 清除所有Overlay
-	 * 
-	 * @param view
-	 */
-	public void clearOverlay(View view) {
-		mBaiduMap.clear();
-		mMarkerMe = null;
-		mMarkerOther = null;
-//		mMarkerC = null;
-//		mMarkerD = null;
-	}
-
-    /**
-     * 重新添加Overlay
-     *
-     * @param view
-     */
-    public void resetOverlay(View view) {
-        clearOverlay(null);
-        initOverlay();
-    }
 
 	@Override
 	public void onViewDidDisappear() {
@@ -313,35 +368,14 @@ public class MapChatViewController extends BaseViewController {
     public void onDestroyController() {
         super.onDestroyController();
 
+        LBService.shareInstance().stop();
+        MessageCenter.shareInstance().stopFrequency();
+
+        Clock.shareInstance().removeListener(timer_key);
         // MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
         mMapView.onDestroy();
-
-        // 回收 bitmap 资源
-        bdMe.recycle();
-        bdOther.recycle();
-//        bdC.recycle();
-//        bdD.recycle();
-//        bd.recycle();
-//        bdGround.recycle();
     }
 
-    public static class MyOverlay extends Overlay
-    {
-        LatLng loc;
-        public MyOverlay(LatLng point) {
-            loc = point;
-        }
-
-        Paint paint = new Paint();
-
-//        @Override
-        public void draw(Canvas canvas, MapView mapView, boolean shadow)
-        {
-            // 在天安门的位置绘制一个String
-
-            Point point = mapView.getMap().getProjection().toScreenLocation(loc);
-            canvas.drawText("★这里是天安门", point.x, point.y, paint);
-        }
-    }
+    //发消息
 
 }

@@ -15,6 +15,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import java.io.File;
 
@@ -135,6 +136,21 @@ public class Res {
         drawable.setBounds(0,0,width,height);
         drawable.draw(canvas);
 
+        return bitmap;
+    }
+
+    /**
+     *
+     * @param view
+     * @return
+     */
+    public static Bitmap bitmap(View view) {
+        view.destroyDrawingCache();
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = view.getDrawingCache(true);
         return bitmap;
     }
 

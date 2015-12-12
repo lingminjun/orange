@@ -114,4 +114,8 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
         }
     }
 
+    public List<Overlay> getOverlayList() {
+        return mOverlayList;
+    }
+
 }

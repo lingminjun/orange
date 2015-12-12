@@ -42,7 +42,9 @@
     <dimen name="small_padding">4dp</dimen>
     <dimen name="line_max_width">4dp</dimen>
 
+    <dimen name="dialog_height_size">46dp</dimen>
     <dimen name="user_icon_size">27dp</dimen>
+    <dimen name="mascot_icon_size">30dp</dimen>
     <dimen name="tag_icon_size">34dp</dimen>
     <dimen name="error_icon_size">24dp</dimen>
 
