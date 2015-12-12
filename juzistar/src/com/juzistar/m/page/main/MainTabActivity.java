@@ -1,6 +1,8 @@
 package com.juzistar.m.page.main;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +10,10 @@ import android.view.KeyEvent;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 import com.juzistar.m.R;
+import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.msg.MessageCenter;
 import com.ssn.framework.foundation.App;
+import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.uikit.BaseTabActivity;
 import com.ssn.framework.uikit.Navigator;
 
@@ -34,7 +39,27 @@ public class MainTabActivity extends BaseTabActivity {
 //                getKeyboardHeight();
 //            }
 //        });
+
+
+        if (UserCenter.shareInstance().isLogin()) {
+            MessageCenter.shareInstance().start();//开启
+        }
+
+        BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGIN_NOTIFICATION, observerMethod);
+        BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGOUT_NOTIFICATION, observerMethod);
     }
+
+    BroadcastCenter.Method<MainTabActivity> observerMethod = new BroadcastCenter.Method<MainTabActivity>() {
+        @Override
+        public void onReceive(MainTabActivity observer, Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(UserCenter.USER_LOGIN_NOTIFICATION)) {
+                MessageCenter.shareInstance().start();//开启
+            } else {
+                MessageCenter.shareInstance().stop();//开启
+            }
+        }
+    };
 
     private long mLastBackKeyTime;
 

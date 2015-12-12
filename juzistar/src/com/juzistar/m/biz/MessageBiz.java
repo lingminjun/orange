@@ -1,5 +1,6 @@
 package com.juzistar.m.biz;
 
+import com.alibaba.fastjson.JSON;
 import com.juzistar.m.net.BaseModel;
 import com.juzistar.m.net.BaseModelList;
 import com.juzistar.m.net.BaseRequest;
@@ -19,17 +20,25 @@ import java.util.List;
 public final class MessageBiz {
 
     public static class Message extends BaseModel {
-        String id;
+        public String id;
 
-    	String content;
-    	Long toUserId;
-    	
-    	Long receiverId;
-    	Long senderId;
-    	Long timestamp;
+        public String content;
+        public long toUserId;
+
+        public long fromUserId;
+        public String fromName;
+
+        public long timestamp;
 
         public String longitude;
         public String latitude;
+
+        public static Message messageFromJSON(String json) {
+            return  (Message) com.alibaba.fastjson.JSON.parseObject(json, Message.class);
+        }
+        public static String messageToJSON(Message msg) {
+            return JSON.toJSONString(msg);
+        }
     }
 
     public static class MessageList extends BaseModelList<Message> {
@@ -74,7 +83,7 @@ public final class MessageBiz {
 	private Long toUserId;
 	*/
 
-    public static RPC.Cancelable send(final String content, final long toId, final RPC.Response<Message> response){
+    public static RPC.Cancelable send(final String content, final long toId, final float longitude,final float latitude, final RPC.Response<Message> response){
 
         BaseRequest<Message> request = new BaseRequest<Message>() {
             @Override
@@ -96,6 +105,8 @@ public final class MessageBiz {
             public void params(HashMap<String, Object> params) {
                 params.put("content",content);
                 params.put("toUserId",Long.toString(toId));
+                params.put("longitude",Float.toString(longitude));
+                params.put("latitude",Float.toString(latitude));
             }
         };
 

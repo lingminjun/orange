@@ -1,23 +1,31 @@
 package com.juzistar.m.biz.msg;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.ssn.framework.foundation.Clock;
-import com.ssn.framework.foundation.Store;
-import com.ssn.framework.foundation.TR;
+import android.text.TextUtils;
+import com.juzistar.m.Utils.Utils;
+import com.juzistar.m.biz.MessageBiz;
+import com.juzistar.m.biz.NoticeBiz;
+import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.lbs.LBService;
+import com.ssn.framework.foundation.*;
+import org.json.JSONArray;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lingminjun on 15/11/29.
  */
 public final class MessageCenter {
+
+    public static final String RECEIVED_MSG_NOTIFICATION = "received_msg_notification";
+    public static final String MSG_KEY = "msg_key";
+
     private static MessageCenter _instance = null;
 
     /**
@@ -38,8 +46,9 @@ public final class MessageCenter {
     }
 
     private static final String SESSION_STORE_KEY = "session.store.key";
-    private static final int SESSION_MAX_SIZE = 50;
-    private List<Session> list = new LinkedList<>();
+    private static final int SESSION_MAX_SIZE = 500;
+    private Map<String,Session> snMap = new HashMap<>();
+    private List<Session> snlist = new LinkedList<>();
 
     /**
      * 防止构造实例
@@ -61,7 +70,10 @@ public final class MessageCenter {
                 oin.close();
 
                 if (ss != null) {
-                    list.addAll(ss);
+                    snlist.addAll(ss);
+                    for (Session sn : ss) {
+                        snMap.put(sn.sid,sn);
+                    }
                 }
             } catch (Throwable e) {}
 
@@ -69,12 +81,12 @@ public final class MessageCenter {
     }
 
     private void saveSessions() {
-        if (list.size() > 0) {
+        if (snlist.size() > 0) {
             try {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024*1024);
 
                 ObjectOutputStream out = new ObjectOutputStream(outputStream);
-                out.writeObject(list);
+                out.writeObject(snlist);
                 out.close();
 
                 byte[] data = outputStream.toByteArray();
@@ -93,9 +105,11 @@ public final class MessageCenter {
         public String sid;
         public long other;
         public String otherName;
-        public String latestMessage;
-//        public boolean hasNew;//有新的消息
         public int unreadCount;//未读数
+        public String msg;//最后显示的msg
+        public List<String> unrdmsgs;//最后三条
+//        public boolean hasNew;//有新的消息
+
 
         @Override
         public boolean equals(Object o) {
@@ -105,12 +119,21 @@ public final class MessageCenter {
             return super.equals(o);
         }
 
+        public static String composedSessionID(long from,long to) {
+            if (to > from) {
+                return from + ":" + to;
+            } else {
+                return to + ":" + from;
+            }
+        }
+
         @Override
         public int hashCode() {
             return (int)other;
         }
 
         public Session() {
+            unrdmsgs = new ArrayList<>();
         }
 
         public Session(Parcel parcel) {
@@ -118,8 +141,11 @@ public final class MessageCenter {
             sid = parcel.readString();
             other = parcel.readLong();
             otherName = parcel.readString();
-            latestMessage = parcel.readString();
             unreadCount = parcel.readInt();
+            msg = parcel.readString();
+            unrdmsgs = new ArrayList<>();
+            parcel.readStringList(unrdmsgs);
+
         }
 
         @Override
@@ -133,8 +159,9 @@ public final class MessageCenter {
             dest.writeString(TR.string(sid));
             dest.writeLong(other);
             dest.writeString(TR.string(otherName));
-            dest.writeString(TR.string(latestMessage));
             dest.writeInt(unreadCount);
+            dest.writeString(msg);
+            dest.writeStringList(unrdmsgs);
         }
 
         public static final Creator<Session> CREATOR = new Creator<Session>() {
@@ -153,22 +180,23 @@ public final class MessageCenter {
     }
 
     public List<Session> getSessions() {
-        return new ArrayList<>(list);
+        return new ArrayList<>(snlist);
     }
 
 
     /**
-     * 服务是否开启
-     * @return 是否开启
+     * 是否开启服务
+     * @return
      */
-    public boolean isFrequency() {return _open;}
-    private boolean _open;
+    public boolean isOpenService() {
+        return _open;
+    }
 
     /**
      * 开启高频刷新
      * @return
      */
-    public void startFrequency() {
+    public void start() {
         if (_open) {return;}
 
         _open = true;
@@ -178,23 +206,175 @@ public final class MessageCenter {
     /**
      * 停止高频刷新
      */
-    public void stopFrequency() {
+    public void stop() {
+        _open = false;
         _open = false;
         Clock.shareInstance().removeListener(CLOCK_KEY);
     }
+
+    /**
+     * 服务是否开启
+     * @return 是否开启
+     */
+    public boolean isFrequency() {return _high;}
+
+
+    /**
+     * 开启高频刷新，同时启动服务
+     * @return
+     */
+    public void startFrequency() {
+        if (_high) {return;}
+        _high = true;
+        start();
+    }
+
+    /**
+     * 停止高频刷新
+     */
+    public void stopFrequency() {
+        _high = false;
+    }
+
     private Clock.Listener clock = new Clock.Listener() {
         @Override
         public void fire(String flag) {
+            if (!_open) {_high = false; count = 0;return;}
+
             count++;
-            if (count >= PULL_INTERVAL) {
-                count = 0;//循环
-//                pullBarrage();
+
+            int mode;
+            if (_high) {
+                mode = count % HIGH_PULL_INTERVAL;
+            } else {
+                mode = count % NORMAL_PULL_INTERVAL;
+            }
+
+            if (mode == 0) {//触发请求
+                pullMessage();
+            }
+
+            if (count >= NORMAL_PULL_INTERVAL) {
+                count = 0;//循环；
             }
         }
     };
 
+    private void pullMessage() {
+
+        long latest_pull_at = UserDefaults.getInstance().get(LATEST_PULL_KEY,0l);
+
+        RPC.Response<MessageBiz.MessageList> res = new RPC.Response<MessageBiz.MessageList>() {
+            @Override
+            public void onSuccess(MessageBiz.MessageList list) {
+                super.onSuccess(list);
+
+                //接受到数据并做去重处理
+                if (list == null) {
+                    return;
+                }
+
+                //存储游标
+                if (list.latestTime > 0) {
+                    UserDefaults.getInstance().put(LATEST_PULL_KEY, list.latestTime);
+                }
+
+                int time = 0;
+                for (final MessageBiz.Message message : list.list) {
+
+                    //不是发送给自己的先过滤掉
+                    if (message.toUserId != UserCenter.shareInstance().UID()) {
+                        continue;
+                    }
+
+                    //查看session是否已经存在
+                    String sid = Session.composedSessionID(UserCenter.shareInstance().UID(),message.toUserId);
+                    Session session = snMap.get(sid);
+                    if (session == null) {
+                        session = new Session();
+                        session.sid = sid;
+                        session.unreadCount++;
+                        session.other = message.fromUserId;
+                        session.otherName = message.fromName;
+
+                        snMap.put(sid,session);
+                        snlist.add(0,session);
+                    }
+
+                    if(TextUtils.isEmpty(session.msg)) {
+                        session.msg = message.content;
+                    } else {
+                        String json = MessageBiz.Message.messageToJSON(message);
+                        session.unrdmsgs.add(json);
+                    }
+
+                    TaskQueue.mainQueue().executeDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(RECEIVED_MSG_NOTIFICATION);
+                            intent.putExtra(MSG_KEY, message);
+                            BroadcastCenter.shareInstance().postBroadcast(intent);
+                        }
+                    }, time);
+                    time += 300;
+                }
+
+            }
+        };
+
+        MessageBiz.fetchMessage(latest_pull_at,res);
+    }
+
+    public void sendMessage(final String msg,final long to, final RPC.Response<MessageBiz.Message> response) {
+
+        UserCenter.User user = UserCenter.shareInstance().user();
+        MessageBiz.Message message = new MessageBiz.Message();
+        message.fromName = user.nick;
+        message.fromUserId = user.uid;
+        message.toUserId = to;
+        message.content = msg;
+        message.timestamp = Utils.getServerTime();
+        message.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
+        message.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
+
+        RPC.Response<MessageBiz.Message> res = new RPC.Response<MessageBiz.Message>() {
+            @Override
+            public void onStart() {
+                if (response != null) {
+                    response.onStart();
+                }
+            }
+
+            @Override
+            public void onSuccess(MessageBiz.Message message1) {
+                if (response != null) {
+                    response.onSuccess(message1);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                if (response != null) {
+                    response.onFailure(e);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (response != null) {
+                    response.onFinish();
+                }
+            }
+        };
+        MessageBiz.send(msg, to, (float)LBService.shareInstance().getLatestLatitude(), (float)LBService.shareInstance().getLatestLongitude(), res);
+    }
+
 
     private int count;
-    private static final int PULL_INTERVAL = 5;//秒
+    private boolean _open;
+    private boolean _high;//是否为高频
+    private static final int HIGH_PULL_INTERVAL = 5;//秒
+    private static final int NORMAL_PULL_INTERVAL = 60;//一分钟拉取一次足够了
     private static final String CLOCK_KEY = "pull_message";
+    private static final String LATEST_PULL_KEY = "message_latest_pull_at";
 }

@@ -115,7 +115,6 @@ public final class BarrageCenter {
                         tagNotice.add(notice);//标签消息
                     }
 
-                    time += 300;
                     TaskQueue.mainQueue().executeDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -124,6 +123,7 @@ public final class BarrageCenter {
                             BroadcastCenter.shareInstance().postBroadcast(intent);
                         }
                     },time);
+                    time += 300;
                 }
 
                 //检查太大
@@ -166,7 +166,7 @@ public final class BarrageCenter {
 
     private static final int PULL_INTERVAL = 15;//秒
     private static final String CLOCK_KEY = "pull_barrage";
-    private static final String LATEST_PULL_KEY = "latest_pull_at";
+    private static final String LATEST_PULL_KEY = "barrage_latest_pull_at";
 
     //最后设置的位置信息
     public static final String BARRAGE_LB_ADDR_KEY = "barrage_lb_addr_key";

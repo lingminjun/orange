@@ -1,19 +1,23 @@
 package com.juzistar.m.page.chat;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerDragListener;
 import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.model.LatLngBounds;
-import com.baidu.mapapi.model.inner.GeoPoint;
+import com.baidu.mapapi.overlayutil.OverlayManager;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.MessageBiz;
@@ -28,6 +32,7 @@ import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TR;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 演示覆盖物的用法
@@ -39,6 +44,9 @@ public class MapChatViewController extends BaseViewController {
 	 */
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
+
+    private List<OverlayOptions> marks;
+    private OverlayManager manager;
 
 	private Marker mMarkerMe;
 	private Marker mMarkerOther;
@@ -96,6 +104,8 @@ public class MapChatViewController extends BaseViewController {
 
     private void refreshMapZoom() {
 
+        /*
+        //自己计算比例
         float latitude = latestReceiveMessage.latitude + ((latestSendMessage.latitude - latestReceiveMessage.latitude)/2.0f);
         float longitude = latestReceiveMessage.longitude + ((latestSendMessage.longitude - latestReceiveMessage.longitude)/2.0f);
 
@@ -121,7 +131,9 @@ public class MapChatViewController extends BaseViewController {
         MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(point, zoom);	//设置地图中心点以及缩放级别
 
         mBaiduMap.setMapStatus(msu);
-//        mBaiduMap.animateMapStatus(msu);
+        mBaiduMap.animateMapStatus(msu);
+
+        */
 
         initOverlay();
     }
@@ -132,25 +144,25 @@ public class MapChatViewController extends BaseViewController {
             Button button = new Button(Res.context());
             button.setBackgroundResource(R.drawable.popup);
             OnInfoWindowClickListener listener = null;
-            if (marker == mMarkerMe || marker == mMarkerOther) {
-                if (marker == mMarkerMe) {
-                    button.setText(TR.string(latestSendMessage.message));
-                } else if (marker == mMarkerOther) {
-                    button.setText(TR.string(latestReceiveMessage.message));
-                }
+//            if (marker == mMarkerMe || marker == mMarkerOther) {
+//                if (marker == mMarkerMe) {
+//                    button.setText(TR.string(latestSendMessage.message));
+//                } else if (marker == mMarkerOther) {
+//                    button.setText(TR.string(latestReceiveMessage.message));
+//                }
                 listener = new OnInfoWindowClickListener() {
                     public void onInfoWindowClick() {
-//                        LatLng ll = marker.getPosition();
-//                        LatLng llNew = new LatLng(ll.latitude + 0.005,
-//                                ll.longitude + 0.005);
-//                        marker.setPosition(llNew);
+                        LatLng ll = marker.getPosition();
+                        LatLng llNew = new LatLng(ll.latitude + 0.005,
+                                ll.longitude + 0.005);
+                        marker.setPosition(llNew);
                         mBaiduMap.hideInfoWindow();
                     }
                 };
                 LatLng ll = marker.getPosition();
                 mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
                 mBaiduMap.showInfoWindow(mInfoWindow);
-            }
+//            }
 
             return true;
         }
@@ -164,61 +176,85 @@ public class MapChatViewController extends BaseViewController {
         }
 	}
 
+    /**
+     * 根据位置展示头像，并且加载消息
+     */
 	public void initOverlay() {
 		// add marker overlay
 		LatLng llA = new LatLng(latestSendMessage.latitude, latestSendMessage.longitude);
 		LatLng llB = new LatLng(latestReceiveMessage.latitude, latestReceiveMessage.longitude);
 
-//		LatLng llC = new LatLng(39.939723, 116.425541);
-//		LatLng llD = new LatLng(39.906965, 116.401394);
 
         //锚点设置（默认（0.5f, 1.0f）水平居中，垂直下对齐）
 		MarkerOptions ooA = new MarkerOptions().position(llA).icon(bdMe).zIndex(4).anchor(1.0f, 1.0f);//.draggable(true);
         ooA.animateType(MarkerAnimateType.grow);//生长动画
-		mMarkerMe = (Marker) (mBaiduMap.addOverlay(ooA));
+//		mMarkerMe = (Marker) (mBaiduMap.addOverlay(ooA));
 
 		MarkerOptions ooB = new MarkerOptions().position(llB).icon(bdOther).zIndex(5).anchor(0.0f, 1.0f);
         ooB.animateType(MarkerAnimateType.grow);//生长动画
-		mMarkerOther = (Marker) (mBaiduMap.addOverlay(ooB));
+//		mMarkerOther = (Marker) (mBaiduMap.addOverlay(ooB));
 
-//		MarkerOptions ooC = new MarkerOptions().position(llC).icon(bdC)
-//				.perspective(false).anchor(0.5f, 0.5f).rotate(30).zIndex(7);
-////		if (animationBox.isChecked()) {
-//
-//		    ooC.animateType(MarkerAnimateType.grow);
-//        }
-//		mMarkerC = (Marker) (mBaiduMap.addOverlay(ooC));
+        if (marks == null) {
+            marks = new ArrayList<>();
+            manager = new OverlayManager(mBaiduMap) {
 
-//		ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
-//		giflist.add(bdMe);
-//		giflist.add(bdOther);
+                @Override
+                public boolean onPolylineClick(Polyline polyline) {
+                    return false;
+                }
 
-//		giflist.add(bdC);
-//		MarkerOptions ooD = new MarkerOptions().position(llD).icons(giflist)
-//				.zIndex(0).period(10);
-////		if (animationBox.isChecked()) {
-//            //生长动画
-//		    ooD.animateType(MarkerAnimateType.grow);
-////        }
-//		mMarkerD = (Marker) (mBaiduMap.addOverlay(ooD));
+                @Override
+                public boolean onMarkerClick(final Marker marker) {
+                    Button button = new Button(Res.context());
+                    button.setBackgroundResource(R.drawable.popup);
+                    OnInfoWindowClickListener listener = null;
+                    button.setText(TR.string("dddddd"));
+//                    if (marker == mMarkerMe || marker == mMarkerOther) {
+//                        if (marker == mMarkerMe) {
+//                            button.setText(TR.string(latestSendMessage.message));
+//                        } else if (marker == mMarkerOther) {
+//                            button.setText(TR.string(latestReceiveMessage.message));
+//                        }
+                        listener = new OnInfoWindowClickListener() {
+                            public void onInfoWindowClick() {
+                                LatLng ll = marker.getPosition();
+                                LatLng llNew = new LatLng(ll.latitude + 0.005,
+                                        ll.longitude + 0.005);
+                                marker.setPosition(llNew);
+                                mBaiduMap.hideInfoWindow();
+                            }
+                        };
+                        LatLng ll = marker.getPosition();
+                        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
+                        mBaiduMap.showInfoWindow(mInfoWindow);
+//                    }
+                    return true;
+                }
 
-		// add ground overlay
-//		LatLng southwest = new LatLng(39.92235, 116.380338);
-//		LatLng northeast = new LatLng(39.947246, 116.414977);
-//		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast)
-//				.include(southwest).build();
+                @Override
+                public List<OverlayOptions> getOverlayOptions() {
+                    return marks;
+                }
+            };
+        }
 
-//		OverlayOptions ooGround = new GroundOverlayOptions()
-//				.positionFromBounds(bounds).image(bdGround).transparency(0.8f);
-//		mBaiduMap.addOverlay(ooGround);
-
-//		MapStatusUpdate u = MapStatusUpdateFactory
-//				.newLatLng(bounds.getCenter());
-//		mBaiduMap.setMapStatus(u);
+        marks.clear();
+        marks.add(ooA);
+        marks.add(ooB);
 
 
-        mBaiduMap.setOnMarkerDragListener(onMarkerDragListener);
+        manager.addToMap();
+        manager.zoomToSpan();
 	}
+
+    private void showMessage(Marker marker,String message) {
+        Button button = new Button(Res.context());
+        button.setBackgroundResource(R.drawable.popup);
+        button.setText(message);
+        LatLng ll = marker.getPosition();
+        mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, null);
+        mBaiduMap.showInfoWindow(mInfoWindow);
+    }
 
     /**
      * 拖拽事件
@@ -258,38 +294,6 @@ public class MapChatViewController extends BaseViewController {
         clearOverlay(null);
         initOverlay();
     }
-    private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                boolean fromUser) {
-            // TODO Auto-generated method stub
-            float alpha = ((float)seekBar.getProgress()) / 10;
-            if (mMarkerMe != null) {
-                mMarkerMe.setAlpha(alpha);
-            }
-            if (mMarkerOther != null) {
-                mMarkerOther.setAlpha(alpha);
-            }
-//            if (mMarkerC != null) {
-//                mMarkerC.setAlpha(alpha);
-//            }
-//            if (mMarkerD != null) {
-//                mMarkerD.setAlpha(alpha);
-//            }
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            // TODO Auto-generated method stub
-        }
-       
-    }
 
 	@Override
 	public void onViewDidDisappear() {
@@ -319,6 +323,25 @@ public class MapChatViewController extends BaseViewController {
 //        bdD.recycle();
 //        bd.recycle();
 //        bdGround.recycle();
+    }
+
+    public static class MyOverlay extends Overlay
+    {
+        LatLng loc;
+        public MyOverlay(LatLng point) {
+            loc = point;
+        }
+
+        Paint paint = new Paint();
+
+//        @Override
+        public void draw(Canvas canvas, MapView mapView, boolean shadow)
+        {
+            // 在天安门的位置绘制一个String
+
+            Point point = mapView.getMap().getProjection().toScreenLocation(loc);
+            canvas.drawText("★这里是天安门", point.x, point.y, paint);
+        }
     }
 
 }

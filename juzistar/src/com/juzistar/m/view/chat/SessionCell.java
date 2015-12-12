@@ -74,7 +74,7 @@ public class SessionCell extends UITableViewCell {
         }
 
         name.setText(model.session.otherName);
-        message.setText(model.session.latestMessage);
+        message.setText(model.session.msg);
 
         avatar.setBackgroundResource(UIDic.avatarResourceId(model.session.other));
     }
