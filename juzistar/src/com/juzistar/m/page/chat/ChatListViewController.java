@@ -1,16 +1,22 @@
 package com.juzistar.m.page.chat;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.juzistar.m.R;
+import com.juzistar.m.biz.MessageBiz;
+import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.msg.MessageCenter;
+import com.juzistar.m.constants.Constants;
+import com.juzistar.m.entity.MapMarkPoint;
+import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.chat.SessionCell;
 import com.juzistar.m.view.chat.SessionCellModel;
 import com.ssn.framework.foundation.Res;
-import com.ssn.framework.uikit.UITableView;
-import com.ssn.framework.uikit.UITableViewCell;
+import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +56,42 @@ public class ChatListViewController extends BaseTableViewController {
     }
 
     @Override
+    public void onViewDidAppear() {
+        super.onViewDidAppear();
+
+        tableViewAdapter().reload();
+    }
+
+    UITableViewCell.CellModelLongClick itemLongClick = new UITableViewCell.CellModelLongClick() {
+        @Override
+        public boolean onLongClick(View var, final UITableViewCell.CellModel model) {
+            final SessionCellModel m = (SessionCellModel)model;
+
+            UIAlert.showAlert(getActivity(),
+                    Res.localized(R.string.whether_delete_session),
+                    Res.localized(R.string.ok),
+                    Res.localized(R.string.cancel), new UIAlertButtonClick() {
+                        @Override
+                        public void onClick(Dialog dialog, String btnTitle) {
+                            if (btnTitle.equals(Res.localized(R.string.ok))) {
+                                tableViewAdapter().removeCell(model);
+                                MessageCenter.shareInstance().removeSession(m.session.sid);
+                            }
+                        }
+                    });
+
+            return true;
+        }
+    };
+
+    @Override
     public List<? extends UITableViewCell.CellModel> tableViewLoadCells(UITableView.TableViewAdapter adapter) {
         List<UITableViewCell.CellModel> list = new ArrayList<>();
 
         List<MessageCenter.Session> sessions = MessageCenter.shareInstance().getSessions();
         for (MessageCenter.Session session : sessions) {
             SessionCellModel model = new SessionCellModel();
+            model.longClick = itemLongClick;
             model.session = session;
             list.add(model);
         }
@@ -67,6 +103,24 @@ public class ChatListViewController extends BaseTableViewController {
     public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
         super.onTableViewCellClick(adapter, cellModel, row);
 
+        SessionCellModel model = (SessionCellModel)cellModel;
         //取私聊页面
+        Bundle bundle = new Bundle();
+
+        bundle.putLong(Constants.PAGE_ARG_OTHER_ID,model.session.other);
+
+
+        if (!TextUtils.isEmpty(model.session.lastRcvMsg)) {
+            MapMarkPoint point = new MapMarkPoint();
+            point.uid = model.session.other;
+            point.nick = model.session.otherName;
+            point.longitude = model.session.lastLng;
+            point.latitude = model.session.lastLat;
+            point.message = model.session.lastRcvMsg;
+            bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE, point);
+        }
+        Navigator.shareInstance().openURL(PageURLs.MAP_CHAT_URL,bundle);
     }
+
+
 }

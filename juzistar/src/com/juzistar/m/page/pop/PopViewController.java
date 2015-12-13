@@ -354,6 +354,7 @@ public class PopViewController extends BaseTableViewController {
 
                         MapMarkPoint point = new MapMarkPoint();
                         point.uid = notice1.creatorId;
+                        point.nick = notice1.creator;
                         point.longitude = Double.parseDouble(notice1.longitude);
                         point.latitude = Double.parseDouble(notice1.latitude);
                         point.message = notice1.content;

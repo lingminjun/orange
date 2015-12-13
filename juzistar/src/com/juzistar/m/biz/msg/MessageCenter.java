@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import com.alibaba.fastjson.JSON;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.entity.MapMarkPoint;
 import com.ssn.framework.foundation.*;
 import org.json.JSONArray;
 
@@ -65,13 +67,13 @@ public final class MessageCenter {
         //读取数据
         if (data != null) {
             try {
-                ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(data));
-                List<Session> ss = (List<Session>) oin.readObject();
-                oin.close();
+
+                String json = new String(data);
+                List<Session> ss = JSON.parseArray(json,Session.class);
 
                 if (ss != null) {
-                    snlist.addAll(ss);
                     for (Session sn : ss) {
+                        snlist.add(sn);
                         snMap.put(sn.sid,sn);
                     }
                 }
@@ -83,13 +85,10 @@ public final class MessageCenter {
     private void saveSessions() {
         if (snlist.size() > 0) {
             try {
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024*1024);
 
-                ObjectOutputStream out = new ObjectOutputStream(outputStream);
-                out.writeObject(snlist);
-                out.close();
+                String json = JSON.toJSONString(snlist);
+                byte[] data = json.getBytes();
 
-                byte[] data = outputStream.toByteArray();
                 Store.documents().store(SESSION_STORE_KEY,data);
 
             } catch (Throwable e){e.printStackTrace();}
@@ -101,15 +100,16 @@ public final class MessageCenter {
     /**
      * 聊天会话
      */
-    public static class Session implements Parcelable {
+    public static class Session {
         public String sid;
         public long other;
         public String otherName;
         public int unreadCount;//未读数
         public String msg;//最后显示的msg
+        public String lastRcvMsg;//最后一条收到消息
+        public double lastLng;//最后一条收到消息
+        public double lastLat;//最后一条收到消息
         public List<String> unrdmsgs;//最后三条
-//        public boolean hasNew;//有新的消息
-
 
         @Override
         public boolean equals(Object o) {
@@ -136,47 +136,19 @@ public final class MessageCenter {
             unrdmsgs = new ArrayList<>();
         }
 
-        public Session(Parcel parcel) {
-            // 反序列化 顺序要与序列化时相同
-            sid = parcel.readString();
-            other = parcel.readLong();
-            otherName = parcel.readString();
-            unreadCount = parcel.readInt();
-            msg = parcel.readString();
-            unrdmsgs = new ArrayList<>();
-            parcel.readStringList(unrdmsgs);
-
+        public static String toJSONString(Session session) {
+            try {
+                return JSON.toJSONString(session);
+            } catch (Throwable e) {}
+            return "";
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
+        public static Session toSession(String json) {
+            try {
+                return JSON.parseObject(json,Session.class);
+            } catch (Throwable e) {}
+            return null;
         }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            // 序列化
-            dest.writeString(TR.string(sid));
-            dest.writeLong(other);
-            dest.writeString(TR.string(otherName));
-            dest.writeInt(unreadCount);
-            dest.writeString(msg);
-            dest.writeStringList(unrdmsgs);
-        }
-
-        public static final Creator<Session> CREATOR = new Creator<Session>() {
-
-            @Override
-            public Session createFromParcel(Parcel source) {
-                // 反序列化 顺序要与序列化时相同
-                return new Session(source);
-            }
-
-            @Override
-            public Session[] newArray(int i) {
-                return new Session[i];
-            }
-        };
     }
 
     public List<Session> getSessions() {
@@ -288,7 +260,7 @@ public final class MessageCenter {
                     }
 
                     //查看session是否已经存在
-                    String sid = Session.composedSessionID(UserCenter.shareInstance().UID(),message.toUserId);
+                    String sid = Session.composedSessionID(message.toUserId,UserCenter.shareInstance().UID());
                     Session session = snMap.get(sid);
                     if (session == null) {
                         session = new Session();
@@ -301,12 +273,25 @@ public final class MessageCenter {
                         snlist.add(0,session);
                     }
 
-                    if(TextUtils.isEmpty(session.msg)) {
+                    if(TextUtils.isEmpty(session.lastRcvMsg)) {
+                        session.lastRcvMsg = message.content;
+                        try {
+                            session.lastLat = Double.parseDouble(message.latitude);
+                        } catch (Throwable e){e.printStackTrace();}
+
+                        try {
+                            session.lastLng = Double.parseDouble(message.longitude);
+                        } catch (Throwable e){e.printStackTrace();}
+
                         session.msg = message.content;
                     } else {
-                        String json = MessageBiz.Message.messageToJSON(message);
-                        session.unrdmsgs.add(json);
+                        try {
+                            String json = MessageBiz.Message.messageToJSON(message);
+                            session.unrdmsgs.add(json);
+                        } catch (Throwable e) {e.printStackTrace();}
                     }
+
+                    saveSessions();
 
                     TaskQueue.mainQueue().executeDelayed(new Runnable() {
                         @Override
@@ -325,7 +310,7 @@ public final class MessageCenter {
         MessageBiz.fetchMessage(latest_pull_at,res);
     }
 
-    public void sendMessage(final String msg,final long to, final RPC.Response<MessageBiz.Message> response) {
+    public void sendMessage(final String msg,final long to,final MapMarkPoint point, final RPC.Response<MessageBiz.Message> response) {
 
         UserCenter.User user = UserCenter.shareInstance().user();
         MessageBiz.Message message = new MessageBiz.Message();
@@ -349,6 +334,27 @@ public final class MessageCenter {
             public void onSuccess(MessageBiz.Message message1) {
                 if (response != null) {
                     response.onSuccess(message1);
+
+                    String sid = Session.composedSessionID(UserCenter.shareInstance().UID(),to);
+                    Session session = snMap.get(sid);
+                    if (session == null) {
+                        session = new Session();
+                        session.sid = sid;
+                        session.other = to;
+                        session.otherName = point.nick;
+
+                        //模拟出一条消息
+                        session.lastLng = point.longitude;
+                        session.lastLat = point.latitude;
+                        session.lastRcvMsg = point.message;
+
+                        snMap.put(sid,session);
+                        snlist.add(0,session);
+                    }
+                    session.unreadCount = 0;
+                    session.msg = message1.content;
+
+                    saveSessions();
                 }
             }
 
@@ -369,6 +375,77 @@ public final class MessageCenter {
         MessageBiz.send(msg, to, LBService.shareInstance().getLatestLatitude(), LBService.shareInstance().getLatestLongitude(), res);
     }
 
+    public Session getSession(long otherId) {
+        String sid = Session.composedSessionID(UserCenter.shareInstance().UID(),otherId);
+        return snMap.get(sid);
+    }
+
+    public Session getSession(String sid) {
+        return snMap.get(sid);
+    }
+
+    public void visiableSessionMessage(MessageBiz.Message message) {
+        if (message.toUserId != UserCenter.shareInstance().UID()) {return;}
+
+        String sid = Session.composedSessionID(UserCenter.shareInstance().UID(),message.fromUserId);
+        Session session = snMap.get(sid);
+        if (session != null) {
+            List<String> dels = new ArrayList<>();
+            for (String msg : session.unrdmsgs) {
+                dels.add(msg);
+                if (msg.contains(message.id)) {
+                    break;
+                }
+            }
+            session.unrdmsgs.removeAll(dels);//删除更早的消息
+
+            session.lastRcvMsg = message.content;
+            try {
+                session.lastLat = Double.parseDouble(message.latitude);
+            } catch (Throwable e){e.printStackTrace();}
+
+            try {
+                session.lastLng = Double.parseDouble(message.longitude);
+            } catch (Throwable e){e.printStackTrace();}
+            session.unreadCount = session.unreadCount - dels.size();
+            if (session.unreadCount < 0) {session.unreadCount = 0;}
+            session.msg = message.content;
+
+            saveSessions();
+        }
+    }
+
+    public List<MessageBiz.Message> getUnreadMessages(String sid) {
+        Session session = snMap.get(sid);
+        if (session == null) {
+            return new ArrayList<>();
+        }
+
+        List<MessageBiz.Message> list = new ArrayList<>();
+        for (String msg : session.unrdmsgs) {
+            try {
+                MessageBiz.Message m = JSON.parseObject(msg, MessageBiz.Message.class);
+                list.add(m);
+            } catch (Throwable e) {e.printStackTrace();}
+        }
+
+        if (session.unreadCount > 0) {
+            session.unreadCount = 0;
+            saveSessions();
+        }
+
+        return list;
+    }
+
+    public void removeSession(String sid) {
+        Session session = snMap.get(sid);
+        if (session == null) {
+            return ;
+        }
+
+        snMap.remove(sid);
+        snlist.remove(session);
+    }
 
     private int count;
     private boolean _open;

@@ -26,6 +26,14 @@ public abstract class UITableViewCell extends RelativeLayout {
     public static int TABLE_VIEW_CELL_DEFAULT_HEIGHT = 44;
     public static int TABLE_VIEW_CELL_MIN_HEIGHT = 10;
 
+    public static interface CellModelClick {
+        public void onClick(View var, CellModel model);
+    }
+
+    public static interface CellModelLongClick {
+        public boolean onLongClick(View var, CellModel model);
+    }
+
     public abstract static class CellModel {
 
         public int height;//高度
@@ -52,8 +60,8 @@ public abstract class UITableViewCell extends RelativeLayout {
         /**
          * 一些事件支持
          */
-        public UIEvent.LongClick longClick;
-        public UIEvent.Click     click;
+        public CellModelClick click;
+        public CellModelLongClick longClick;
 
         /**
          * 子类需要实现此方法，返回其对应的实例方法

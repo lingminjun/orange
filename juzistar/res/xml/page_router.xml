@@ -58,10 +58,10 @@
 
 
     <!--关于页面-->
-    <item url="http://m.juzistar.com/about.html"
-          fragmentclass="com.juzistar.m.page.about.AboutViewController"
-          activityclass="com.ssn.framework.uikit.BaseNavActivity"
-          description="关于"/>
+    <!--<item url="http://m.juzistar.com/about.html"-->
+          <!--fragmentclass="com.juzistar.m.page.about.AboutViewController"-->
+          <!--activityclass="com.ssn.framework.uikit.BaseNavActivity"-->
+          <!--description="关于"/>-->
 
     <!--启动页，新手指导页-->
     <item url="http://m.juzistar.com/welcome.html"

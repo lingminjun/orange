@@ -73,4 +73,5 @@
     <string name="modify_success">修改成功！</string>
     <string name="feedback_error">提交失败！</string>
     <string name="feedback_success">提交成功！</string>
+    <string name="whether_delete_session">确定删除会话？</string>
 </resources>

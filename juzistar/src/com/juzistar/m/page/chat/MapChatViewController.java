@@ -78,13 +78,16 @@ public class MapChatViewController extends BaseViewController {
         latestSendMessage = (MapMarkPoint)args.getSerializable(Constants.PAGE_ARG_LATEST_SEND_MESSAGE);
         if (latestSendMessage == null) {//在没有发过消息时，取最后一次消息，若没有发过消息，取当前位置
 
-//            if ()
-
             latestSendMessage = new MapMarkPoint();
             latestSendMessage.uid = UserCenter.shareInstance().UID();
             latestSendMessage.latitude = LBService.shareInstance().getLatestLatitude();
             latestSendMessage.longitude = LBService.shareInstance().getLatestLongitude();
         }
+
+        String sid = MessageCenter.Session.composedSessionID(UserCenter.shareInstance().UID(), otherId);
+
+        //先获取未读的消息
+        recMsgs.addAll(MessageCenter.shareInstance().getUnreadMessages(sid));
     }
 
     UILockScreenKeyboard.KeyboardListener keyboardListener = new UILockScreenKeyboard.KeyboardListener() {
@@ -173,6 +176,10 @@ public class MapChatViewController extends BaseViewController {
 
         //开启高频刷新
         MessageCenter.shareInstance().startFrequency();
+
+        if (recMsgs != null && recMsgs.size() > 0) {
+            intermittentRefresh();
+        }
 	}
 
     private void addObservers() {
@@ -224,7 +231,7 @@ public class MapChatViewController extends BaseViewController {
     };
 
     private void sendMessage(String msg) {
-        MessageCenter.shareInstance().sendMessage(msg,otherId,sendMsgCallback);
+        MessageCenter.shareInstance().sendMessage(msg,otherId,latestReceiveMessage,sendMsgCallback);
     }
 
     private boolean hasTimer;
@@ -247,6 +254,10 @@ public class MapChatViewController extends BaseViewController {
                     latestReceiveMessage.message = message.content;
                     latestReceiveMessage.longitude = Double.parseDouble(message.longitude);
                     latestReceiveMessage.latitude = Double.parseDouble(message.latitude);
+                    latestReceiveMessage.msgId = message.id;
+
+                    //更新session
+                    MessageCenter.shareInstance().visiableSessionMessage(message);
 
                     refreshMapZoom();//刷新显示
                 }

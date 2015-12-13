@@ -126,7 +126,9 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             }
 
             if (cellModel.click != null) {
-                cellModel.click.onClick(view);
+                try {
+                    cellModel.click.onClick(view,cellModel);
+                } catch (Throwable e){e.printStackTrace();}
             }
 
             if (_delegate != null) {
@@ -149,7 +151,9 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             }
 
             if (cellModel.longClick != null) {
-                return cellModel.longClick.onLongClick(view);
+                try {
+                    return cellModel.longClick.onLongClick(view,cellModel);
+                } catch (Throwable e){e.printStackTrace();}
             }
 
             return false;
