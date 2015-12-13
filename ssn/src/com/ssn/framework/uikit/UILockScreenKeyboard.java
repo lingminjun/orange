@@ -225,8 +225,8 @@ public class UILockScreenKeyboard extends Activity {
         overridePendingTransition(R.anim.ssn_stay_put, R.anim.ssn_push_bottom_out);
     }
 
-    private static int keyboard_min_height = 100;
-    private int sys_keyboard_height = 827;//
+    private static int keyboard_min_height = Density.dipTopx(118);//353;//经验值
+    private int sys_keyboard_height = 827;//274
     private View.OnLayoutChangeListener layoutChangeListener = new View.OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
