@@ -92,6 +92,11 @@ public class MapChatViewController extends BaseViewController {
 
     UILockScreenKeyboard.KeyboardListener keyboardListener = new UILockScreenKeyboard.KeyboardListener() {
         @Override
+        public void onKeyboardDidLoad(UILockScreenKeyboard keyboard) {
+
+        }
+
+        @Override
         public void onSendButtonClick(UILockScreenKeyboard keyboard, View sender) {
             String msg = keyboard.text();
             sendMessage(msg);

@@ -16,6 +16,7 @@ import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.constants.Constants;
 import com.juzistar.m.entity.MapMarkPoint;
@@ -84,7 +85,7 @@ public class PopViewController extends BaseTableViewController {
         sendBtnPanel = (LinearLayout)bottom.findViewById(R.id.send_pop_btn_panel);
         tableView.setFooterView(bottom);
 
-        tableView.setOnClickListener(UIEvent.click(disKeyboard));
+//        tableView.setOnClickListener(UIEvent.click(disKeyboard));
 
         return view;
     }
@@ -95,7 +96,7 @@ public class PopViewController extends BaseTableViewController {
 
         UIDISPLAYLINK_PREFIX = ""+getActivity().hashCode();
 
-        Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
+//        Keyboard.barrageKeyboard().setKeyboardListener(keyboardListener);
 
         navigationItem().rightItem().setOnClick(UIEvent.click(rightClick));
         navigationItem().rightItem().setImage(R.drawable.refresh_icon);
@@ -168,7 +169,7 @@ public class PopViewController extends BaseTableViewController {
         }
 
         //进入时不展示键盘
-        Keyboard.barrageKeyboard().dismiss(false);
+//        Keyboard.barrageKeyboard().dismiss(false);
     }
 
     @Override
@@ -263,12 +264,14 @@ public class PopViewController extends BaseTableViewController {
         }
     };
 
+    /*
     View.OnClickListener disKeyboard = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Keyboard.barrageKeyboard().dismiss(false);
         }
     };
+    */
 
 
 
@@ -277,49 +280,63 @@ public class PopViewController extends BaseTableViewController {
     PageCenter.AuthCallBack sendAuthCallback = new PageCenter.AuthCallBack() {
         @Override
         public void auth(String account) {
-            Keyboard.barrageKeyboard().show(PopViewController.this);
+//            Keyboard.barrageKeyboard().show(PopViewController.this);
+            UILockScreenKeyboard.show(getActivity(),keyboardListener,Keyboard.barrageCustomView());
         }
     };
 
     private int customButtonKey;
-    UIKeyboard.KeyboardListener keyboardListener = new UIKeyboard.KeyboardListener() {
+    UILockScreenKeyboard.KeyboardListener keyboardListener = new UILockScreenKeyboard.KeyboardListener() {
         @Override
-        public void onSendButtonClick(UIKeyboard keyboard, View sender) {
+        public void onKeyboardDidLoad(UILockScreenKeyboard keyboard) {
+            keyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+        }
+
+        @Override
+        public void onSendButtonClick(UILockScreenKeyboard keyboard, View sender) {
             sendAction(keyboard.text(),customButtonKey);//发送消息
         }
 
         @Override
-        public boolean onRightButtonClick(UIKeyboard keyboard, View sender) {
-
+        public boolean onRightButtonClick(UILockScreenKeyboard keyboard, View sender) {
             return false;
         }
 
         @Override
-        public void onScopeViewClick(UIKeyboard keyboard, View sender) {
-            Keyboard.barrageKeyboard().dismiss(false);
+        public void onScopeViewClick(UILockScreenKeyboard keyboard, View sender) {
+            UILockScreenKeyboard.dismiss();
         }
 
         @Override
-        public void onCustomButtonClick(UIKeyboard keyboard, View sender, int buttonKey) {
-
+        public void onCustomButtonClick(UILockScreenKeyboard keyboard, View sender, int buttonKey) {
             if (buttonKey == customButtonKey) {
                 customButtonKey = 0;
-                Keyboard.barrageKeyboard().setRightButtonTitle("");
-                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+                keyboard.setRightButtonTitle("");
+                keyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
             } else {
                 customButtonKey = buttonKey;
 
                 //设置键盘文案
                 String keyName = UIDic.bubbleTagResourceId(Convert.noticeCategory(buttonKey));
-                Keyboard.barrageKeyboard().setRightButtonTitle(keyName);
+                keyboard.setRightButtonTitle(keyName);
 
                 //设置键盘右按钮背景图标
-                Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.tag_icon_bg);
+                keyboard.setRightButtonResourceId(R.drawable.tag_icon_bg);
             }
         }
 
         @Override
-        public void onKeyboardChanged(int newHeight, int oldHeight) {}
+        public void onKeyboardChanged(UILockScreenKeyboard keyboard, int newHeight, int oldHeight) {
+
+        }
+
+        @Override
+        public void onKeyboardStatusChanged(UILockScreenKeyboard keyboard, boolean isShow) {
+            if (!isShow && !keyboard.isCustomKeyboardShow()) {
+                keyboard.dismiss();//直接隐藏
+                LBService.shareInstance().stop();
+            }
+        }
     };
 
 
@@ -427,10 +444,11 @@ public class PopViewController extends BaseTableViewController {
         final BubbleCellModel model = appendNoticeCellModel(notice);
 
         //先收起键盘，还原键盘状态
-        Keyboard.barrageKeyboard().dismiss(false);
-        Keyboard.barrageKeyboard().setText("");
-        Keyboard.barrageKeyboard().setRightButtonTitle("");
-        Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+        UILockScreenKeyboard.dismiss();
+//        Keyboard.barrageKeyboard().dismiss(false);
+//        Keyboard.barrageKeyboard().setText("");
+//        Keyboard.barrageKeyboard().setRightButtonTitle("");
+//        Keyboard.barrageKeyboard().setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
         customButtonKey = 0;
 
         BarrageCenter.shareInstance().publishNotice(notice, new RPC.Response<NoticeBiz.Notice>() {
@@ -544,7 +562,8 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onTableViewCellClick(UITableView.TableViewAdapter adapter, UITableViewCell.CellModel cellModel, int row) {
         super.onTableViewCellClick(adapter, cellModel, row);
-        Keyboard.barrageKeyboard().dismiss(false);
+//        Keyboard.barrageKeyboard().dismiss(false);
+        UILockScreenKeyboard.dismiss();
     }
 
 }

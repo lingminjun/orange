@@ -19,10 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.ssn.framework.R;
-import com.ssn.framework.foundation.Density;
-import com.ssn.framework.foundation.Res;
-import com.ssn.framework.foundation.TR;
-import com.ssn.framework.foundation.UserDefaults;
+import com.ssn.framework.foundation.*;
 import com.ssn.framework.uikit.inc.UIWrapperView;
 
 /**
@@ -48,9 +45,23 @@ public class UILockScreenKeyboard extends Activity {
     private TextView _wordLimitText;
     private EditText _input;
 
+    private View _customView;
+
     private boolean _showSystemKeyboard;
+    private boolean _showCustomKeyboard;
 
     public static interface KeyboardListener {
+        /**
+         * 当键盘加载完回调
+         * @param keyboard
+         */
+        public void onKeyboardDidLoad(UILockScreenKeyboard keyboard);
+
+        /**
+         * 发送按钮
+         * @param keyboard
+         * @param sender
+         */
         public void onSendButtonClick(UILockScreenKeyboard keyboard, View sender);//发送按钮被触发
 
         /**
@@ -97,18 +108,23 @@ public class UILockScreenKeyboard extends Activity {
 
     private static KeyboardListener listener;
     private static UILockScreenKeyboard keyboard;
-    private static View _customView;
+    private static View customKeyboard;
     public static void show(Activity activity,KeyboardListener listener) {
         show(activity,listener,false);
     }
 
 
     public static void show(Activity activity,KeyboardListener alistener,boolean hideRightButton) {
-        show(activity,alistener,INPUT_MAX_LENGTH,hideRightButton,true,false);
+        show(activity,alistener,null,INPUT_MAX_LENGTH,hideRightButton,true,false);
     }
 
-    public static void show(Activity activity,KeyboardListener alistener, int wordLimit, boolean hideRightButton, boolean hideLimit, boolean disabledScope) {
+    public static void show(Activity activity,KeyboardListener alistener,View customView) {
+        show(activity,alistener,customView,INPUT_MAX_LENGTH,false,true,false);
+    }
+
+    public static void show(Activity activity,KeyboardListener alistener, View customView, int wordLimit, boolean hideRightButton, boolean hideLimit, boolean disabledScope) {
         listener = alistener;
+        customKeyboard = customView;
         Intent intent = new Intent(activity,UILockScreenKeyboard.class);
         intent.putExtra(HIDE_RIGHT_BTN_KEY,hideRightButton);
         intent.putExtra(HIDE_LIMIT_WORD_KEY,hideLimit);
@@ -122,6 +138,10 @@ public class UILockScreenKeyboard extends Activity {
         if (keyboard != null) {
             keyboard.finish();
         }
+    }
+
+    public static KeyboardListener keyboardListener() {
+        return listener;
     }
 
     public static UILockScreenKeyboard keyboard() {
@@ -155,6 +175,8 @@ public class UILockScreenKeyboard extends Activity {
         _rightButton.setOnClickListener(UIEvent.click(_rightBtnAction));
         _scopePanel.setOnClickListener(UIEvent.click(_scopeAction));
 
+        _showSystemKeyboard = true;//默认显示
+
         Intent intent = getIntent();
         boolean hideRightButton = intent.getBooleanExtra(HIDE_RIGHT_BTN_KEY,false);
         if (hideRightButton) {
@@ -176,6 +198,14 @@ public class UILockScreenKeyboard extends Activity {
         } else {
             _scopePanel.setVisibility(View.VISIBLE);
         }
+
+        if (customKeyboard != null) {
+            setKeyboardBody(customKeyboard);
+        }
+
+        if (listener != null) {
+            listener.onKeyboardDidLoad(this);
+        }
     }
 
     private View.OnClickListener onClick = new View.OnClickListener() {
@@ -190,18 +220,25 @@ public class UILockScreenKeyboard extends Activity {
         innerHideSystemKeyboard(false);
         listener = null;
         keyboard = null;
+        customKeyboard = null;
         super.finish();
         overridePendingTransition(R.anim.ssn_stay_put, R.anim.ssn_push_bottom_out);
     }
 
     private static int keyboard_min_height = 100;
+    private int sys_keyboard_height = 827;//
     private View.OnLayoutChangeListener layoutChangeListener = new View.OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
             if (listener != null && oldBottom != 0) {
                 if (oldBottom - bottom > keyboard_min_height) {
+                    _showCustomKeyboard = false;
+                    _showSystemKeyboard = true;
+                    sys_keyboard_height = oldBottom - bottom;
+                    adjustKeyboardHeight();//马上隐藏custom键盘
                     listener.onKeyboardStatusChanged(UILockScreenKeyboard.this, true);
                 } else if (bottom - oldBottom > keyboard_min_height) {
+                    _showSystemKeyboard = false;
                     listener.onKeyboardStatusChanged(UILockScreenKeyboard.this, false);
                 }
             }
@@ -218,7 +255,10 @@ public class UILockScreenKeyboard extends Activity {
             }
 
             if (!done) {
-                switchKeyboardStatus();
+                if (_customView != null) {
+                    _showCustomKeyboard = !_showCustomKeyboard;
+                    switchKeyboardStatus();
+                }
             }
         }
     };
@@ -301,6 +341,7 @@ public class UILockScreenKeyboard extends Activity {
         _input.requestFocus();
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(_input, InputMethodManager.SHOW_IMPLICIT);
+        _showSystemKeyboard = true;
         Editable editable = _input.getText();
         if (editable != null) {
             _input.setSelection(editable.length());
@@ -316,6 +357,7 @@ public class UILockScreenKeyboard extends Activity {
         //隐藏键盘
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
+        _showSystemKeyboard = false;
 
         if (!keepFocus) {
             _input.clearFocus();
@@ -324,7 +366,7 @@ public class UILockScreenKeyboard extends Activity {
         adjustKeyboardHeight();
     }
 
-    public void setKeyboardBody(View customView) {
+    private void setKeyboardBody(View customView) {
         if (_customView == customView) {
             return;
         }
@@ -336,6 +378,7 @@ public class UILockScreenKeyboard extends Activity {
         _customView = customView;
         if (customView != null) {
             _keyboardPanel.addView(customView);
+            _keyboardPanel.setVisibility(View.GONE);
         }
     }
 
@@ -371,6 +414,10 @@ public class UILockScreenKeyboard extends Activity {
         return _showSystemKeyboard;
     }
 
+    public boolean isCustomKeyboardShow() {
+        return _showCustomKeyboard;
+    }
+
     public void showSystemKeyboard() {
         //切换键盘状态
         switchKeyboardStatus();
@@ -380,26 +427,24 @@ public class UILockScreenKeyboard extends Activity {
         InputMethodManager imm = (InputMethodManager) Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if (_showSystemKeyboard) {
+            _showSystemKeyboard = !_showSystemKeyboard;
             boolean ret = imm.hideSoftInputFromWindow(_input.getWindowToken(), 0);
             if (ret) {
                 innerHideSystemKeyboard(true);
             } else {
-                _showSystemKeyboard = false;
                 innerShowSystemKeyboard();
             }
             Log.e("UIKeyboard", "hide=" + ret);
         } else {
+            _showSystemKeyboard = !_showSystemKeyboard;
             boolean ret = imm.showSoftInput(_input, InputMethodManager.SHOW_IMPLICIT);
             if (ret) {
                 innerShowSystemKeyboard();
             } else {
-                _showSystemKeyboard = true;
                 innerHideSystemKeyboard(true);
             }
             Log.e("UIKeyboard","show="+ret);
         }
-
-        _showSystemKeyboard = !_showSystemKeyboard;
         _rightButton.setSelected(!_showSystemKeyboard);
     }
 
@@ -419,19 +464,29 @@ public class UILockScreenKeyboard extends Activity {
         _input.setMaxLines(setLineCount);
     }
 
-    private static int _keyboard_height = 274;
-    private void adjustKeyboardHeight() {
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) _keyboardPanel.getLayoutParams();
-
-        //展示系统键盘
-//        if (_showSystemKeyboard) {
-        int sys_height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
-        if (sys_height <= 0) {
-            sys_height = Density.dipTopx(_keyboard_height);
+    Runnable showSystemRunnable = new Runnable() {
+        @Override
+        public void run() {
+            _keyboardPanel.setVisibility(View.GONE);
         }
-        params.height = sys_height;//Density.dipTopx(_keyboard_height);
-//        } else {
-//            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        }
+    };
+
+    Runnable hideSystemRunnable = new Runnable() {
+        @Override
+        public void run() {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) _keyboardPanel.getLayoutParams();
+            params.height = sys_keyboard_height;
+            _keyboardPanel.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private void adjustKeyboardHeight() {
+        if (_customView == null) {return;}
+
+        if (_showSystemKeyboard) {
+            TaskQueue.mainQueue().executeDelayed(showSystemRunnable,10);
+        } else {
+            TaskQueue.mainQueue().executeDelayed(hideSystemRunnable,50);
+        }
     }
 }
