@@ -52,8 +52,8 @@ public final class BarrageCenter {
         mCity = UserDefaults.getInstance().get(BARRAGE_LB_CITY_KEY, "");
         mCountry = UserDefaults.getInstance().get(BARRAGE_LB_STAT_KEY, "");
         mProvince = UserDefaults.getInstance().get(BARRAGE_LB_PROV_KEY, "");
-        mLongitude = UserDefaults.getInstance().get(BARRAGE_LB_LAT_KEY, 0.0f);
-        mLatitude = UserDefaults.getInstance().get(BARRAGE_LB_LON_KEY,0.0f);
+        mLongitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LAT_KEY, "0.0"));
+        mLatitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LON_KEY, "0.0"));
     }
 
 
@@ -173,8 +173,8 @@ public final class BarrageCenter {
     public static final String BARRAGE_LB_CITY_KEY = "barrage_lb_city_key";
     public static final String BARRAGE_LB_PROV_KEY = "barrage_lb_prov_key";
     public static final String BARRAGE_LB_STAT_KEY = "barrage_lb_stat_key";
-    public static final String BARRAGE_LB_LAT_KEY = "barrage_lb_lat_key";
-    public static final String BARRAGE_LB_LON_KEY = "barrage_lb_lon_key";
+    public static final String BARRAGE_LB_LAT_KEY = "barrage_lb_lati_key";
+    public static final String BARRAGE_LB_LON_KEY = "barrage_lb_long_key";
     private String mAddress;
     private String mCity;
     private String mProvince;
@@ -189,8 +189,8 @@ public final class BarrageCenter {
 
         UserDefaults.getInstance().put(BARRAGE_LB_ADDR_KEY,TR.string(mAddress));
         UserDefaults.getInstance().put(BARRAGE_LB_CITY_KEY,TR.string(mCity));
-        UserDefaults.getInstance().put(BARRAGE_LB_LAT_KEY,(float)mLatitude);
-        UserDefaults.getInstance().put(BARRAGE_LB_LON_KEY,(float)mLongitude);
+        UserDefaults.getInstance().put(BARRAGE_LB_LAT_KEY,"" + mLatitude);
+        UserDefaults.getInstance().put(BARRAGE_LB_LON_KEY,"" + mLongitude);
 
         if (!TextUtils.isEmpty(location.mCountry)) {
             mCountry = location.mCountry;
@@ -250,11 +250,11 @@ public final class BarrageCenter {
     public void publishNotice(final NoticeBiz.Notice notice, final RPC.Response<NoticeBiz.Notice> response) {
 
         if (TextUtils.isEmpty(mAddress)) {
-            notice.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
-            notice.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
+            notice.latitude = Double.toString(LBService.shareInstance().getLatestLatitude());
+            notice.longitude = Double.toString(LBService.shareInstance().getLatestLongitude());
         } else {
-            notice.latitude = Float.toString((float)(mLatitude));
-            notice.longitude = Float.toString((float)(mLongitude));
+            notice.latitude = Double.toString(mLatitude);
+            notice.longitude = Double.toString(mLongitude);
         }
 
         if (notice.category != NoticeBiz.NoticeCategory.NAN) {

@@ -9,10 +9,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
+import com.juzistar.m.biz.UserBiz;
+import com.juzistar.m.net.BoolModel;
+import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
+import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIEvent;
+import com.ssn.framework.uikit.UILoading;
 
 /**
  * Created by BlackDev on 6/15/15.
@@ -69,38 +74,54 @@ public class FeedbackViewController extends BaseViewController {
     View.OnClickListener rightClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (mContentText == null || mContentText.length() <= 3) {
+
+            final String string = Utils.getEditText(mContentText);
+
+            if (string == null || string.length() <= 3) {
                 App.toast(Res.localized(R.string.comment_too_short));
                 return;
             }
 
-            String string = Utils.getEditText(mContentText);
+            //需要登录权限
+            PageCenter.checkAuth(new PageCenter.AuthCallBack() {
+                @Override
+                public void auth(String account) {
+                    submit(string);
+                }
+            });
 
-//            HtAsyncWorkViewCB<Boolean> cb = new HtAsyncWorkViewCB<Boolean>() {
-//                @Override
-//                public void onStart() {
-//                    Progress.show(FeedbackFragment.this, true);
-//                }
-//
-//                @Override
-//                public void onFinish() {
-//                    Progress.dismiss(FeedbackFragment.this);
-//                }
-//
-//                @Override
-//                public void onSuccess(Boolean success) {
-//                    Utils.toast(getActivity(), Res.localized(R.string.feedback_status_submited));
-//                    FeedbackFragment.this.finish();
-//                }
-//
-//                @Override
-//                public void onFailure(Exception e) {
-//                    Utils.toastException(getActivity(), e, Res.localized(R.string.feedback_status_failed));
-//                }
-//            };
-//
-//            AccountBiz.asyncFeedback(cb, mContentText.getText().toString(), mContactText.getText().toString());
         }
     };
 
+
+    private void submit(String string) {
+        RPC.Response<BoolModel> cb = new RPC.Response<BoolModel>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                UILoading.show(getActivity());
+            }
+
+            @Override
+            public void onSuccess(BoolModel o) {
+                super.onSuccess(o);
+                App.toast(Res.localized(R.string.feedback_success));
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                super.onFailure(e);
+                Utils.toastException(e,Res.localized(R.string.feedback_error));
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                UILoading.dismiss(getActivity());
+            }
+        };
+
+        UserBiz.feedback(string,cb);
+    }
 }

@@ -32,8 +32,8 @@ import java.util.Set;
 public final class LBService {
     private static final String LATEST_ADDR_KEY = "lbs.addr.key";
     private static final String LATEST_CITY_KEY = "lbs.city.key";
-    private static final String LATEST_LATI_KEY = "lbs.latitude.key";
-    private static final String LATEST_LONG_KEY = "lbs.longitude.key";
+    private static final String LATEST_LATI_KEY = "lbs.lati.key";
+    private static final String LATEST_LONG_KEY = "lbs.long.key";
 
     private static LBService _instance = null;
 
@@ -65,7 +65,7 @@ public final class LBService {
 
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
-        option.setCoorType("gcj02");//可选，默认gcj02，设置返回的定位结果坐标系，
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，
         option.setScanSpan(1000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -74,8 +74,8 @@ public final class LBService {
 
         mLocationClient.setLocOption(option);
 
-        mLatitude = UserDefaults.getInstance().get(LATEST_LATI_KEY,0.0f);
-        mLongitude = UserDefaults.getInstance().get(LATEST_LONG_KEY, 0.0f);
+        mLatitude = Double.parseDouble(UserDefaults.getInstance().get(LATEST_LATI_KEY,"0.0"));
+        mLongitude = Double.parseDouble(UserDefaults.getInstance().get(LATEST_LONG_KEY, "0.0"));
         mAddress = UserDefaults.getInstance().get(LATEST_ADDR_KEY,"");
         mCity = UserDefaults.getInstance().get(LATEST_CITY_KEY,"");
 
@@ -108,8 +108,8 @@ public final class LBService {
                     mCity = location.getCity();
                     UserDefaults.getInstance().put(LATEST_ADDR_KEY,mAddress);
                     UserDefaults.getInstance().put(LATEST_CITY_KEY,mCity);
-                    UserDefaults.getInstance().put(LATEST_LATI_KEY,(float)mLatitude);
-                    UserDefaults.getInstance().put(LATEST_LONG_KEY,(float)mLongitude);
+                    UserDefaults.getInstance().put(LATEST_LATI_KEY,"" + mLatitude);
+                    UserDefaults.getInstance().put(LATEST_LONG_KEY,"" + mLongitude);
                 }
             }
 

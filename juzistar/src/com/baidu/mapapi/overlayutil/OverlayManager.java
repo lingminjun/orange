@@ -1,11 +1,8 @@
 package com.baidu.mapapi.overlayutil;
 
-import com.baidu.mapapi.map.BaiduMap;
+import android.util.Log;
+import com.baidu.mapapi.map.*;
 import com.baidu.mapapi.map.BaiduMap.OnPolylineClickListener;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.Overlay;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLngBounds;
 
 import java.util.ArrayList;
@@ -109,8 +106,10 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
                     builder.include(((Marker) overlay).getPosition());
                 }
             }
-            mBaiduMap.setMapStatus(MapStatusUpdateFactory
-                    .newLatLngBounds(builder.build()));
+            LatLngBounds bounds = builder.build();
+//            Log.e("xxxxxxxx",bounds.toString());
+            MapStatusUpdate status = MapStatusUpdateFactory.newLatLngBounds(bounds);
+            mBaiduMap.setMapStatus(status);
         }
     }
 
@@ -118,4 +117,5 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
         return mOverlayList;
     }
 
+    public BaiduMap getBaiduMap() {return mBaiduMap;}
 }

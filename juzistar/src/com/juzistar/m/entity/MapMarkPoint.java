@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class MapMarkPoint implements Serializable {
     public long uid;
-    public float longitude;
-    public float latitude;
+    public double longitude;
+    public double latitude;
     public String message;
 }

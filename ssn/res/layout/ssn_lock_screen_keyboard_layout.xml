@@ -38,7 +38,7 @@
                         android:paddingRight="4dp"
                         android:textSize="@dimen/ssn_normal_font"
                         android:textColor="@color/ssn_normal_text"
-                        android:hint="@string/app_name"
+                        android:hint=""
                         android:background="@drawable/ssn_keyboard_input_bg"
                         android:layout_marginTop="5dp"
                         android:cursorVisible="true"

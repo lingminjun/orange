@@ -2,6 +2,7 @@ package com.juzistar.m.biz;
 
 import com.juzistar.m.net.BaseModel;
 import com.juzistar.m.net.BaseRequest;
+import com.juzistar.m.net.BoolModel;
 import com.ssn.framework.foundation.HTTPAccessor;
 import com.ssn.framework.foundation.RPC;
 
@@ -219,4 +220,33 @@ public final class UserBiz {
 
         return RPC.call(request,response);
     }
+
+    public static RPC.Cancelable feedback(final String content, final RPC.Response<BoolModel> response){
+
+        BaseRequest<BoolModel> request = new BaseRequest<BoolModel>() {
+            @Override
+            public String path() {
+                return "user/feedback";
+            }
+
+            @Override
+            public AUTH_LEVEL authLevel() {
+                return AUTH_LEVEL.TOKEN;
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.POST;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                params.put("text",content);
+            }
+        };
+
+        return RPC.call(request,response);
+    }
+
+
 }

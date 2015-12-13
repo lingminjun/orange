@@ -162,6 +162,11 @@ public class PopViewController extends BaseTableViewController {
     public void onViewDidAppear() {
         super.onViewDidAppear();
 
+        String addr = BarrageCenter.shareInstance().getLocation().getSimpleAddress();//
+        if (!TextUtils.isEmpty(addr)) {
+            navigationItem().setTitle(addr);
+        }
+
         //进入时不展示键盘
         Keyboard.barrageKeyboard().dismiss(false);
     }
@@ -349,8 +354,8 @@ public class PopViewController extends BaseTableViewController {
 
                         MapMarkPoint point = new MapMarkPoint();
                         point.uid = notice1.creatorId;
-                        point.longitude = Float.parseFloat(notice1.longitude);
-                        point.latitude = Float.parseFloat(notice1.latitude);
+                        point.longitude = Double.parseDouble(notice1.longitude);
+                        point.latitude = Double.parseDouble(notice1.latitude);
                         point.message = notice1.content;
                         bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE,point);
 

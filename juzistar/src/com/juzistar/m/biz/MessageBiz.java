@@ -83,7 +83,7 @@ public final class MessageBiz {
 	private Long toUserId;
 	*/
 
-    public static RPC.Cancelable send(final String content, final long toId, final float longitude,final float latitude, final RPC.Response<Message> response){
+    public static RPC.Cancelable send(final String content, final long toId, final double longitude,final double latitude, final RPC.Response<Message> response){
 
         BaseRequest<Message> request = new BaseRequest<Message>() {
             @Override
@@ -105,8 +105,8 @@ public final class MessageBiz {
             public void params(HashMap<String, Object> params) {
                 params.put("content",content);
                 params.put("toUserId",Long.toString(toId));
-                params.put("longitude",Float.toString(longitude));
-                params.put("latitude",Float.toString(latitude));
+                params.put("longitude",Double.toString(longitude));
+                params.put("latitude",Double.toString(latitude));
             }
         };
 

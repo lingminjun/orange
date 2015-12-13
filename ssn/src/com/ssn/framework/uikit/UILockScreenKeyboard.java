@@ -34,6 +34,9 @@ public class UILockScreenKeyboard extends Activity {
     private static final int INPUT_EDIT_HINT_MAX_LINES = 1;//hint最多输入行数
 
     private static final String HIDE_RIGHT_BTN_KEY = "hideRightButton";
+    private static final String HIDE_LIMIT_WORD_KEY = "hideLimitWord";
+    private static final String LIMIT_WORD_COUNT_KEY = "limitWordCount";
+    private static final String DISABLED_SCOPE_KEY = "disabledScope";
 
     private LinearLayout _wrapperView;
     private FrameLayout _keyboardPanel;
@@ -83,18 +86,34 @@ public class UILockScreenKeyboard extends Activity {
          * @param oldHeight
          */
         public void onKeyboardChanged(UILockScreenKeyboard keyboard, int newHeight,int oldHeight);
+
+        /**
+         * 键盘状态改变
+         * @param keyboard
+         * @param isShow
+         */
+        public void onKeyboardStatusChanged(UILockScreenKeyboard keyboard, boolean isShow);
     }
 
     private static KeyboardListener listener;
     private static UILockScreenKeyboard keyboard;
+    private static View _customView;
     public static void show(Activity activity,KeyboardListener listener) {
         show(activity,listener,false);
     }
 
+
     public static void show(Activity activity,KeyboardListener alistener,boolean hideRightButton) {
+        show(activity,alistener,INPUT_MAX_LENGTH,hideRightButton,true,false);
+    }
+
+    public static void show(Activity activity,KeyboardListener alistener, int wordLimit, boolean hideRightButton, boolean hideLimit, boolean disabledScope) {
         listener = alistener;
         Intent intent = new Intent(activity,UILockScreenKeyboard.class);
         intent.putExtra(HIDE_RIGHT_BTN_KEY,hideRightButton);
+        intent.putExtra(HIDE_LIMIT_WORD_KEY,hideLimit);
+        intent.putExtra(LIMIT_WORD_COUNT_KEY,wordLimit);
+        intent.putExtra(DISABLED_SCOPE_KEY,disabledScope);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.ssn_push_bottom_in, R.anim.ssn_stay_put);
     }
@@ -124,7 +143,6 @@ public class UILockScreenKeyboard extends Activity {
         _scopePanel = findViewById(R.id.ssn_scope_panel);
         _boardPanel = (ViewGroup)findViewById(R.id.ssn_board_panel);
         _wordLimitText = (TextView)findViewById(R.id.ssn_word_limit_label);
-        _wordLimitText.setText(String.format("%d/%d", 0, INPUT_MAX_LENGTH));
         _rightButton = (TextView)findViewById(R.id.ssn_keyboard_right_button);
         _rightMargin = (TextView)findViewById(R.id.ssn_margin_label);
         _input = (EditText)findViewById(R.id.ssn_input_text);
@@ -133,7 +151,6 @@ public class UILockScreenKeyboard extends Activity {
         _input.setOnEditorActionListener(editorListener);
         _input.addTextChangedListener(UIEvent.watcher(watcher));
         _input.addOnLayoutChangeListener(changeListener);//高度随之改变
-        _input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(INPUT_MAX_LENGTH)});
 
         _rightButton.setOnClickListener(UIEvent.click(_rightBtnAction));
         _scopePanel.setOnClickListener(UIEvent.click(_scopeAction));
@@ -142,6 +159,22 @@ public class UILockScreenKeyboard extends Activity {
         boolean hideRightButton = intent.getBooleanExtra(HIDE_RIGHT_BTN_KEY,false);
         if (hideRightButton) {
             hideRightButton();
+        }
+
+        boolean hideLimit = intent.getBooleanExtra(HIDE_LIMIT_WORD_KEY,false);
+        if (hideLimit) {
+            _wordLimitText.setVisibility(View.GONE);
+        }
+
+        int limitWord = intent.getIntExtra(LIMIT_WORD_COUNT_KEY, INPUT_MAX_LENGTH);
+        _wordLimitText.setText(String.format("%d/%d", 0, limitWord));
+        _input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(limitWord)});
+
+        boolean disabledScope = intent.getBooleanExtra(DISABLED_SCOPE_KEY, false);
+        if (disabledScope) {
+            _scopePanel.setVisibility(View.GONE);
+        } else {
+            _scopePanel.setVisibility(View.VISIBLE);
         }
     }
 
@@ -154,16 +187,24 @@ public class UILockScreenKeyboard extends Activity {
 
     @Override
     public void finish() {
+        innerHideSystemKeyboard(false);
         listener = null;
         keyboard = null;
         super.finish();
         overridePendingTransition(R.anim.ssn_stay_put, R.anim.ssn_push_bottom_out);
     }
 
+    private static int keyboard_min_height = 100;
     private View.OnLayoutChangeListener layoutChangeListener = new View.OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-
+            if (listener != null && oldBottom != 0) {
+                if (oldBottom - bottom > keyboard_min_height) {
+                    listener.onKeyboardStatusChanged(UILockScreenKeyboard.this, true);
+                } else if (bottom - oldBottom > keyboard_min_height) {
+                    listener.onKeyboardStatusChanged(UILockScreenKeyboard.this, false);
+                }
+            }
         }
     };
 
@@ -190,8 +231,6 @@ public class UILockScreenKeyboard extends Activity {
             }
         }
     };
-
-    private View _customView;
 
     private TextView.OnEditorActionListener editorListener = new TextView.OnEditorActionListener() {
         @Override
@@ -335,14 +374,6 @@ public class UILockScreenKeyboard extends Activity {
     public void showSystemKeyboard() {
         //切换键盘状态
         switchKeyboardStatus();
-    }
-
-    public void setEnableScopeView(boolean enabled) {
-        if (enabled) {
-            _scopePanel.setVisibility(View.VISIBLE);
-        } else {
-            _scopePanel.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void switchKeyboardStatus() {

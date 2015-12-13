@@ -334,8 +334,8 @@ public final class MessageCenter {
         message.toUserId = to;
         message.content = msg;
         message.timestamp = Utils.getServerTime();
-        message.latitude = Float.toString((float)(LBService.shareInstance().getLatestLatitude()));
-        message.longitude = Float.toString((float)(LBService.shareInstance().getLatestLongitude()));
+        message.latitude = Double.toString(LBService.shareInstance().getLatestLatitude());
+        message.longitude = Double.toString(LBService.shareInstance().getLatestLongitude());
 
         RPC.Response<MessageBiz.Message> res = new RPC.Response<MessageBiz.Message>() {
             @Override
@@ -366,7 +366,7 @@ public final class MessageCenter {
                 }
             }
         };
-        MessageBiz.send(msg, to, (float)LBService.shareInstance().getLatestLatitude(), (float)LBService.shareInstance().getLatestLongitude(), res);
+        MessageBiz.send(msg, to, LBService.shareInstance().getLatestLatitude(), LBService.shareInstance().getLatestLongitude(), res);
     }
 
 

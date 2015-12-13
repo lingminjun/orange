@@ -71,4 +71,6 @@
     <string name="input_nick_length_tip">请输入1~10位的昵称</string>
     <string name="modify_failed">修改失败！</string>
     <string name="modify_success">修改成功！</string>
+    <string name="feedback_error">提交失败！</string>
+    <string name="feedback_success">提交成功！</string>
 </resources>
