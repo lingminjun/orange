@@ -39,43 +39,43 @@ public class UIWrapperView extends LinearLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        int changed = oldh - h;
-        if (changed >= getKeyboardMinHeight() && changed < oldh) {
-            _showingKeyboard = true;
-
-            if (_bottomView != null) {//键盘弹出将tool bar弹出问题修改
-                TaskQueue.mainQueue().executeDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (_showingKeyboard) {
-                            _bottomView.onKeyboardStatusChanged(true);
-                        }
-                    }
-                }, 100);
-            }
-
-            Intent intent = new Intent(UIEvent.UIKeyboardWillShowNotification);
-            intent.putExtra(UIEvent.UIKeyboardHeightKey,changed);
-            BroadcastCenter.shareInstance().postBroadcast(intent);
-
-            int height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
-            if (height <= 0) {
-                UserDefaults.getInstance().put(UIEvent.UIKeyboardHeightKey,changed);//存储起来备用
-            }
-            Log.e("keyboard", "height="+changed);
-        }
-        else if (changed <= getKeyboardMinHeight() && -changed < h) {
-            _showingKeyboard = false;
-
-            if (_bottomView != null) {
-                _bottomView.onKeyboardStatusChanged(false);
-
-            }
-
-            Intent intent = new Intent(UIEvent.UIKeyboardWillHideNotification);
-            intent.putExtra(UIEvent.UIKeyboardHeightKey,-changed);
-            BroadcastCenter.shareInstance().postBroadcast(intent);
-        }
+//        int changed = oldh - h;
+//        if (changed >= getKeyboardMinHeight() && changed < oldh) {
+//            _showingKeyboard = true;
+//
+//            if (_bottomView != null) {//键盘弹出将tool bar弹出问题修改
+//                TaskQueue.mainQueue().executeDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (_showingKeyboard) {
+//                            _bottomView.onKeyboardStatusChanged(true);
+//                        }
+//                    }
+//                }, 100);
+//            }
+//
+//            Intent intent = new Intent(UIEvent.UIKeyboardWillShowNotification);
+//            intent.putExtra(UIEvent.UIKeyboardHeightKey,changed);
+//            BroadcastCenter.shareInstance().postBroadcast(intent);
+//
+//            int height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
+//            if (height <= 0) {
+//                UserDefaults.getInstance().put(UIEvent.UIKeyboardHeightKey,changed);//存储起来备用
+//            }
+//            Log.e("keyboard", "height="+changed);
+//        }
+//        else if (changed <= getKeyboardMinHeight() && -changed < h) {
+//            _showingKeyboard = false;
+//
+//            if (_bottomView != null) {
+//                _bottomView.onKeyboardStatusChanged(false);
+//
+//            }
+//
+//            Intent intent = new Intent(UIEvent.UIKeyboardWillHideNotification);
+//            intent.putExtra(UIEvent.UIKeyboardHeightKey,-changed);
+//            BroadcastCenter.shareInstance().postBroadcast(intent);
+//        }
 
 //        1860-1080=780
 

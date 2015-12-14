@@ -52,8 +52,8 @@ public final class BarrageCenter {
         mCity = UserDefaults.getInstance().get(BARRAGE_LB_CITY_KEY, "");
         mCountry = UserDefaults.getInstance().get(BARRAGE_LB_STAT_KEY, "");
         mProvince = UserDefaults.getInstance().get(BARRAGE_LB_PROV_KEY, "");
-        mLongitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LAT_KEY, "0.0"));
-        mLatitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LON_KEY, "0.0"));
+        mLatitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LAT_KEY, "0.0"));
+        mLongitude = Double.parseDouble(UserDefaults.getInstance().get(BARRAGE_LB_LON_KEY, "0.0"));
     }
 
 
