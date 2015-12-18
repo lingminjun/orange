@@ -163,7 +163,7 @@ public final class Clock {
             Map.Entry<String,Listener> entry = (Map.Entry<String,Listener>) iter.next();
             String key = entry.getKey();
             if (key.startsWith(hasPrefix)) {
-                _fires.remove(key);
+                iter.remove();
             }
         }
     }

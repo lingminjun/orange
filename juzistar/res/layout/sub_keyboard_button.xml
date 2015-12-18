@@ -10,8 +10,9 @@
               android:paddingRight="10dp"
               android:paddingTop="4dp"
               android:paddingBottom="4dp"
-              android:background="@drawable/gray_strock_white_bg"
+              android:background="@drawable/grey_strock_white_bg"
               android:orientation="horizontal"
+              android:id="@+id/button_panel"
               android:gravity="center">
     <TextView android:layout_width="16dp"
               android:layout_height="16dp"

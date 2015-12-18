@@ -173,8 +173,8 @@ public final class UIDisplayLink {
             Map.Entry<String,Listener> entry = (Map.Entry<String,Listener>) iter.next();
             String key = entry.getKey();
             if (key.startsWith(hasPrefix)) {
-                Object o = _fires.remove(key);
-                Log.i("UIDisplayLink","remove:" + o);
+                Log.i("UIDisplayLink","remove:" + entry.getValue());
+                iter.remove();
             }
         }
     }

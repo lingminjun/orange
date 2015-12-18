@@ -24,6 +24,7 @@ import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
+import com.juzistar.m.view.com.KeyboardButton;
 import com.juzistar.m.view.com.UIDic;
 import com.juzistar.m.view.pop.BubbleCellModel;
 import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
@@ -40,6 +41,7 @@ import java.util.Set;
  * Created by lingminjun on 15/9/26.
  */
 public class PopViewController extends BaseTableViewController {
+    static String TAG_NOTICE_LIMIT_CLOCK = "TAG_NOTICE_LIMIT_CLOCK";
 
     LinearLayout bottom;
     LinearLayout topHintBar;
@@ -181,6 +183,7 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onDestroyController() {
         super.onDestroyController();
+        Clock.shareInstance().removeListener(TAG_NOTICE_LIMIT_CLOCK);
         UIDisplayLink.shareInstance().removeListeners(UIDISPLAYLINK_PREFIX);
     }
 
@@ -282,6 +285,46 @@ public class PopViewController extends BaseTableViewController {
         public void auth(String account) {
 //            Keyboard.barrageKeyboard().show(PopViewController.this);
             UILockScreenKeyboard.show(getActivity(),keyboardListener,Keyboard.barrageCustomView());
+
+            //需要计时读秒
+            if (BarrageCenter.shareInstance().isLimitSendingTagNotice()) {
+                limit_time = BarrageCenter.shareInstance().limitSendingTagNoticeTime();
+                Clock.shareInstance().addListener(limitClock,TAG_NOTICE_LIMIT_CLOCK);
+            }
+        }
+    };
+
+    //限制发送时效
+    private long limit_time;
+    private Clock.Listener limitClock = new Clock.Listener() {
+        @Override
+        public void fire(String flag) {
+
+            UILockScreenKeyboard keyboard = UILockScreenKeyboard.keyboard();
+            if (keyboard == null) {
+                Clock.shareInstance().removeListener(TAG_NOTICE_LIMIT_CLOCK);
+                return;
+            }
+
+            limit_time -= 1000;
+            if (limit_time <= 0) {
+
+                keyboard.setRightButtonTitle("");
+                keyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+
+                Clock.shareInstance().removeListener(TAG_NOTICE_LIMIT_CLOCK);
+                return;
+            }
+
+            //设置键盘文案
+            int sec = (int)(limit_time / 1000);
+            int min = sec / 60;
+            sec = sec % 60;
+
+            String str = String.format("%02d:%02d",min,sec);
+            keyboard.setRightButtonTitle(str);
+            //设置键盘右按钮背景图标
+            keyboard.setRightButtonResourceId(R.drawable.tag_icon_bg);
         }
     };
 
@@ -299,6 +342,9 @@ public class PopViewController extends BaseTableViewController {
 
         @Override
         public boolean onRightButtonClick(UILockScreenKeyboard keyboard, View sender) {
+            if (BarrageCenter.shareInstance().isLimitSendingTagNotice()) {
+                return true;
+            }
             return false;
         }
 
@@ -315,6 +361,10 @@ public class PopViewController extends BaseTableViewController {
                 keyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
             } else {
                 customButtonKey = buttonKey;
+
+                if (sender instanceof KeyboardButton) {
+                    sender.setSelected(true);
+                }
 
                 //设置键盘文案
                 String keyName = UIDic.bubbleTagResourceId(Convert.noticeCategory(buttonKey));

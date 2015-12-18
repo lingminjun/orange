@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
@@ -273,6 +274,10 @@ public final class BarrageCenter {
             public void onSuccess(NoticeBiz.Notice notice) {
                 if (response != null) {
                     response.onSuccess(notice);
+
+                    if (notice.category != NoticeBiz.NoticeCategory.NAN) {
+                        UserDefaults.getInstance().put(LAST_SEND_TAG_NOTICE_TIME,TAG_NOTICE_INTERVAL + HTTPAccessor.getNetTime());
+                    }
                 }
             }
 
@@ -294,5 +299,23 @@ public final class BarrageCenter {
 
     public List<NoticeBiz.Notice> getAllTabNotice() {
         return new ArrayList<>(tagNotice);
+    }
+
+
+    private static final long TAG_NOTICE_INTERVAL = 30 * 60 * 1000;//30分钟
+    private static final String LAST_SEND_TAG_NOTICE_TIME = "barrage_last_send_tag_notice_key";
+    public boolean isLimitSendingTagNotice() {
+        long expired = UserDefaults.getInstance().get(LAST_SEND_TAG_NOTICE_TIME,0L);
+        long now = HTTPAccessor.getNetTime();
+        return now <= expired;
+    }
+
+    public long limitSendingTagNoticeTime() {
+        long expired = UserDefaults.getInstance().get(LAST_SEND_TAG_NOTICE_TIME,0L);
+        long now = HTTPAccessor.getNetTime();
+        if (now <= expired) {
+            return expired - now;
+        }
+        return 0;
     }
 }

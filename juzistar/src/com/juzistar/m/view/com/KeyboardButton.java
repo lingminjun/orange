@@ -2,14 +2,12 @@ package com.juzistar.m.view.com;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
@@ -39,13 +37,16 @@ public class KeyboardButton extends LinearLayout {
         init(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    private View _buttonPanel;
     private TextView _icon;
     private TextView _title;
+
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         this.setOrientation(LinearLayout.HORIZONTAL);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.sub_keyboard_button, this);
 
+        _buttonPanel = findViewById(R.id.button_panel);
         _icon = (TextView)findViewById(R.id.icon_image);
         _title = (TextView)findViewById(R.id.tag_name);
 
@@ -59,6 +60,9 @@ public class KeyboardButton extends LinearLayout {
         if (!TextUtils.isEmpty(title)) {
             _title.setText(title);
         }
+
+        boolean selected = super.isSelected();
+        _buttonPanel.setBackgroundResource(selected ? R.drawable.green_strock_white_bg : R.drawable.grey_strock_white_bg);
     }
 
     private int key;
@@ -66,4 +70,12 @@ public class KeyboardButton extends LinearLayout {
         this.key = key;
     }
     public int key() {return key;}
+
+    @Override
+    public void setSelected(boolean selected) {
+        super.setSelected(selected);
+        if (_buttonPanel != null) {
+            _buttonPanel.setBackgroundResource(selected ? R.drawable.green_strock_white_bg : R.drawable.grey_strock_white_bg);
+        }
+    }
 }

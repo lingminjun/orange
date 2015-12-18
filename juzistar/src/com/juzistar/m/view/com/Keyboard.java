@@ -7,6 +7,9 @@ import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UILockScreenKeyboard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lingminjun on 15/11/25.
  */
@@ -41,9 +44,15 @@ public final class Keyboard {
         LayoutInflater inflater = LayoutInflater.from(Res.context());
         View barrageCustomView = inflater.inflate(R.layout.sub_keyboard_layout, null);
 
+        final List<KeyboardButton> btns = new ArrayList<>();
         View.OnClickListener click = UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                for (KeyboardButton btn : btns) {
+                    btn.setSelected(false);
+                }
+
                 if (view instanceof KeyboardButton) {
                     UILockScreenKeyboard.KeyboardListener keyboardListener = UILockScreenKeyboard.keyboardListener();
                     if (keyboardListener != null) {
@@ -62,24 +71,28 @@ public final class Keyboard {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_00);
             btn.setKey(KEY.LOVE);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_01);
             btn.setKey(KEY.BOOK);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_02);
             btn.setKey(KEY.EAT);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_03);
             btn.setKey(KEY.TEST);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         //10~13
@@ -87,24 +100,28 @@ public final class Keyboard {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_10);
             btn.setKey(KEY.HOME);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_11);
             btn.setKey(KEY.FLOWER);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_12);
             btn.setKey(KEY.HELP);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_13);
             btn.setKey(KEY.DATING);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         //20~23
@@ -112,136 +129,31 @@ public final class Keyboard {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_20);
             btn.setKey(KEY.CAR);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_21);
             btn.setKey(KEY.WEAR);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_22);
             btn.setKey(KEY.SPORT);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         {
             KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_23);
             btn.setKey(KEY.MOVIE);
             btn.setOnClickListener(click);
+            btns.add(btn);
         }
 
         return barrageCustomView;
     }
 
-    /**
-     * 弹幕输入键盘
-     * @return
-     */
-//    public static UILockScreenKeyboard barrageKeyboard() {
-//        if (barrageKeyboard == null) {
-//            barrageKeyboard = newKeyboard();
-//
-//            LayoutInflater inflater = LayoutInflater.from(Res.context());
-//            View barrageCustomView = inflater.inflate(R.layout.sub_keyboard_layout, null);
-//
-//            barrageKeyboard.setKeyboardBody(barrageCustomView);
-//            barrageKeyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
-//            barrageKeyboard.setEnableScopeView(true);
-//
-//            View.OnClickListener click = UIEvent.click(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (view instanceof KeyboardButton) {
-//                        UIKeyboard.KeyboardListener keyboardListener = barrageKeyboard.keyboardListener();
-//                        if (keyboardListener != null) {
-//                            keyboardListener.onCustomButtonClick(barrageKeyboard,view,((KeyboardButton) view).key());
-//                        }
-//                    }
-//
-//                    //弹起键盘
-//                    barrageKeyboard.showSystemKeyboard();
-//                }
-//            });
-//
-//            //添加事件
-//            //00~03
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_00);
-//                btn.setKey(KEY.LOVE);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_01);
-//                btn.setKey(KEY.BOOK);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_02);
-//                btn.setKey(KEY.EAT);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_03);
-//                btn.setKey(KEY.TEST);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            //10~13
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_10);
-//                btn.setKey(KEY.HOME);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_11);
-//                btn.setKey(KEY.FLOWER);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_12);
-//                btn.setKey(KEY.HELP);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_13);
-//                btn.setKey(KEY.DATING);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            //20~23
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_20);
-//                btn.setKey(KEY.CAR);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_21);
-//                btn.setKey(KEY.WEAR);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_22);
-//                btn.setKey(KEY.SPORT);
-//                btn.setOnClickListener(click);
-//            }
-//
-//            {
-//                KeyboardButton btn = (KeyboardButton) barrageCustomView.findViewById(R.id.button_23);
-//                btn.setKey(KEY.MOVIE);
-//                btn.setOnClickListener(click);
-//            }
-//        }
-//
-//        return barrageKeyboard;
-//    }
 }
