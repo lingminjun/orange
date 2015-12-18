@@ -433,7 +433,7 @@ public class MapChatViewController extends BaseViewController {
             return marks;
         }
 
-        private static float LNG_OFFSET_1 = 0.050000f;
+        private static float LNG_OFFSET_1 = 0.015000f;
         private static float LNG_OFFSET_2 = 0.150000f;
         @Override
         public void zoomToSpan() {
