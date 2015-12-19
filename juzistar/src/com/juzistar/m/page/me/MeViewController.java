@@ -29,6 +29,7 @@ public class MeViewController extends BaseTableViewController {
         tabItem().setTabName(Res.localized(R.string.me));
         navigationItem().setHidden(true);
         tabItem().setTabImage(R.drawable.tab_selector_me);
+        tabItem().setTabNameColor(Res.colorState(R.color.tab_selector_color));
 
         navigationItem().backItem().setHidden(true);
     }

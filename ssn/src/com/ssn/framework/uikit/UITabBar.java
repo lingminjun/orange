@@ -60,7 +60,7 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         public boolean isHiddenTabName() {return hiddenTabName;}
         public void setHiddenTabName(boolean hidden) {hiddenTabName = hidden; displayTabName();}
 
-        public void setTabNameColor(int color) {this.textColor = color;displayTabName();}
+        public void setTabNameColor(ColorStateList colors) {this.textColor = colors;displayTabName();}
 
         public void setTabNameFontSize(int size) {this.textSize = size;displayTabName();}
 
@@ -89,7 +89,7 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         private String tabName;
         private int tabImage;
         private int textSize;
-        private int textColor;
+        private ColorStateList textColor;
         private String badgeValue;
         private boolean hiddenTabName;
 
@@ -108,7 +108,7 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
                     textView.setText(tabName);
 
                     //颜色设置
-                    if (textColor != 0) {
+                    if (textColor != null) {
                         textView.setTextColor(getColor(isSelected, textColor));
                     }
 
@@ -143,6 +143,10 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         private void displayTabImage() {
             if (imageView != null && tabImage > 0) {
                 imageView.setImageDrawable(getDrawable(isSelected, tabImage));
+            }
+
+            if (textView != null && textColor != null) {
+                textView.setTextColor(getColor(isSelected, textColor));
             }
         }
         private ImageView imageView;
@@ -207,8 +211,8 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
             return listDrawable.getCurrent();
         }
 
-        private static int getColor(boolean isSelected, int colorId) {
-            ColorStateList list = Res.resources().getColorStateList(colorId);
+        private static int getColor(boolean isSelected, ColorStateList stateList) {
+            ColorStateList list = stateList;
             int defaultColor = list.getDefaultColor();
             int color = defaultColor;
             if (isSelected) {

@@ -28,7 +28,6 @@ public class MainTabActivity extends BaseTabActivity {
         setBackgroundDrawable(R.drawable.page_background_bitmap);
 
         tabBar().setBackgroundResource(R.color.black_0_5_alpha);
-
         tabBar().setSeparateLineHide(true);
 
 

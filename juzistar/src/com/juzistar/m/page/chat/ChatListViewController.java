@@ -33,6 +33,7 @@ public class ChatListViewController extends BaseTableViewController {
         navigationItem().setTitle(Res.localized(R.string.encounters));
         tabItem().setTabName(Res.localized(R.string.encounters));
         tabItem().setTabImage(R.drawable.tab_selector_chat);
+        tabItem().setTabNameColor(Res.colorState(R.color.tab_selector_color));
 
         navigationItem().setBottomLineHidden(false);
         navigationItem().setTitleColor(Res.color(R.color.ssn_normal_text));

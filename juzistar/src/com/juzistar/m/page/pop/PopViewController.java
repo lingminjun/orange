@@ -61,6 +61,7 @@ public class PopViewController extends BaseTableViewController {
         navigationItem().setTitle(title);
         tabItem().setTabName(title);
         tabItem().setTabImage(R.drawable.tab_selector_pop);
+        tabItem().setTabNameColor(Res.colorState(R.color.tab_selector_color));
 
         navigationItem().setBottomLineHidden(true);
         navigationItem().backItem().setHidden(true);
