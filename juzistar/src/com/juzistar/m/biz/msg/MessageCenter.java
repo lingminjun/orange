@@ -253,7 +253,7 @@ public final class MessageCenter {
 //                    }
 
                     //查看session是否已经存在
-                    String sid = Session.composedSessionID(message.toUserId,UserCenter.shareInstance().UID());
+                    String sid = Session.composedSessionID(message.fromUserId,UserCenter.shareInstance().UID());
                     Session session = snMap.get(sid);
                     if (session == null) {
                         session = new Session();
@@ -443,8 +443,8 @@ public final class MessageCenter {
     private int count;
     private boolean _open;
     private boolean _high;//是否为高频
-    private static final int HIGH_PULL_INTERVAL = 5;//秒
-    private static final int NORMAL_PULL_INTERVAL = 60;//一分钟拉取一次足够了
+    private static final int HIGH_PULL_INTERVAL = 1;//秒
+    private static final int NORMAL_PULL_INTERVAL = 5;//一分钟拉取一次足够了
     private static final String CLOCK_KEY = "pull_message";
     private static final String LATEST_PULL_KEY = "message_latest_pull_at";
 }

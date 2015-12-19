@@ -165,7 +165,7 @@ public final class BarrageCenter {
     private int count;
     private List<NoticeBiz.Notice> tagNotice = new ArrayList<>();
 
-    private static final int PULL_INTERVAL = 15;//秒
+    private static final int PULL_INTERVAL = 5;//秒
     private static final String CLOCK_KEY = "pull_barrage";
     private static final String LATEST_PULL_KEY = "barrage_latest_pull_at";
 
