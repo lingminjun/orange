@@ -28,6 +28,7 @@ import com.juzistar.m.biz.msg.MessageCenter;
 import com.juzistar.m.biz.pop.BarrageCenter;
 import com.juzistar.m.constants.Constants;
 import com.juzistar.m.entity.MapMarkPoint;
+import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseViewController;
 import com.juzistar.m.view.com.UIDic;
 import com.ssn.framework.foundation.*;
@@ -164,6 +165,12 @@ public class MapChatViewController extends BaseViewController {
         refreshMapZoom();
 
         return view;
+    }
+
+    @Override
+    protected boolean onBackEvent() {
+        PageCenter.goChat();
+        return true;
     }
 
     private void refreshMapZoom() {

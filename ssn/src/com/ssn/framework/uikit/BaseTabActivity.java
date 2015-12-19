@@ -194,6 +194,7 @@ public class BaseTabActivity extends BaseActivity {
         if (isActive()) {
             _selectedVC = _vcs.get(index);
             displayFragment(_selectedVC);
+            tabBar().checkIndex(_selectedIndex);
         }
     }
 

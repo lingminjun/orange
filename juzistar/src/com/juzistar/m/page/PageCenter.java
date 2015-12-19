@@ -3,6 +3,7 @@ package com.juzistar.m.page;
 import android.app.Activity;
 import android.os.Bundle;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.page.main.MainTabActivity;
 import com.ssn.framework.uikit.BaseTabActivity;
 import com.ssn.framework.uikit.Navigator;
 
@@ -48,6 +49,12 @@ public final class PageCenter {
 
             Navigator.shareInstance().openURL(PageURLs.MAIN_URL, args);
         }
+    }
+
+    public static void goChat() {
+        Activity mainActivity = Navigator.shareInstance().getExistActivity(PageURLs.MAIN_URL);
+        Navigator.shareInstance().finishToActivity(mainActivity);
+        ((MainTabActivity)mainActivity).selectViewControllerAtIndex(1);
     }
 
     public static interface AuthCallBack {
