@@ -318,10 +318,10 @@ public class PopViewController extends BaseTableViewController {
 
             //设置键盘文案
             int sec = (int)(limit_time / 1000);
-            int min = sec / 60;
-            sec = sec % 60;
+//            int min = sec / 60;
+//            sec = sec % 60;
 
-            String str = String.format("%02d:%02d",min,sec);
+            String str = String.format("%ds",sec);
             keyboard.setRightButtonTitle(str);
             //设置键盘右按钮背景图标
             keyboard.setRightButtonResourceId(R.drawable.tag_icon_bg);

@@ -39,6 +39,7 @@
               android:layout_gravity="center"
               android:layout_centerHorizontal="true"
               android:layout_alignParentBottom="true"
+              android:textColor="@color/ssn_tab_text"
               android:textSize="10sp"
               android:text="标题"
               android:id="@+id/ssn_tab_name"/>

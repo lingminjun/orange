@@ -29,6 +29,8 @@ public class MainTabActivity extends BaseTabActivity {
 
         tabBar().setBackgroundResource(R.color.black_0_5_alpha);
 
+        tabBar().setSeparateLineHide(true);
+
 
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
 

@@ -5,7 +5,8 @@
               android:background="@android:color/transparent"
               android:layout_width="match_parent"
               android:layout_height="@dimen/ssn_tab_bar_height">
-    <include layout="@layout/ssn_horizontal_line"/>
+    <include layout="@layout/ssn_horizontal_line"
+             android:id="@+id/ssn_separate_line"/>
     <LinearLayout android:background="@android:color/transparent"
                   android:layout_gravity="center"
                   android:orientation="horizontal"

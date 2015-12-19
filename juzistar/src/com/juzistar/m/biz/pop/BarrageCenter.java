@@ -302,7 +302,7 @@ public final class BarrageCenter {
     }
 
 
-    private static final long TAG_NOTICE_INTERVAL = 30 * 60 * 1000;//30分钟
+    private static final long TAG_NOTICE_INTERVAL = 5 * 60 * 1000;//30分钟
     private static final String LAST_SEND_TAG_NOTICE_TIME = "barrage_last_send_tag_notice_key";
     public boolean isLimitSendingTagNotice() {
         long expired = UserDefaults.getInstance().get(LAST_SEND_TAG_NOTICE_TIME,0L);

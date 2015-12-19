@@ -4,6 +4,9 @@
     <color name="ssn_assist_text">#989898</color>
     <color name="ssn_hint_text">#C9C9C9</color>
 
+    <color name="ssn_tab_text">#999999</color>
+    <color name="ssn_tab_selected_text">#24cf5f</color>
+
     <color name="ssn_link_text">#4bb8e4</color>
     <color name="ssn_error_text">#FF4E44</color>
 

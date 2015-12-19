@@ -218,6 +218,7 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         }
     }
 
+    private View _separateLine;
     private LinearLayout _container;
 
     private int selectedIndex = -1;
@@ -257,6 +258,7 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.ssn_tab, this);
 
+        _separateLine = findViewById(R.id.ssn_separate_line);
         _container = (LinearLayout)findViewById(R.id.ssn_tab_container);
     }
 
@@ -387,5 +389,9 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
             this.setVisibility(VISIBLE);
             this.refresh();
         }
+    }
+
+    public void setSeparateLineHide(boolean hide) {
+        _separateLine.setVisibility(hide?View.INVISIBLE:View.VISIBLE);
     }
 }

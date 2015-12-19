@@ -255,9 +255,10 @@ public final class MessageCenter {
                 for (final MessageBiz.Message message : list.list) {
 
                     //不是发送给自己的先过滤掉
-                    if (message.toUserId != UserCenter.shareInstance().UID()) {
-                        continue;
-                    }
+                    message.toUserId = UserCenter.shareInstance().UID();
+//                    if () {
+//                        continue;
+//                    }
 
                     //查看session是否已经存在
                     String sid = Session.composedSessionID(message.toUserId,UserCenter.shareInstance().UID());
