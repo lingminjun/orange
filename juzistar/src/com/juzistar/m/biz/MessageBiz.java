@@ -26,7 +26,7 @@ public final class MessageBiz {
         public long toUserId;
 
         public long fromUserId;
-        public String fromName;
+        public String fromUserName;
 
         public long timestamp;
 

@@ -1,23 +1,15 @@
 package com.juzistar.m.biz.msg;
 
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.MessageBiz;
-import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.entity.MapMarkPoint;
 import com.ssn.framework.foundation.*;
-import org.json.JSONArray;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.*;
 
 /**
@@ -268,7 +260,7 @@ public final class MessageCenter {
                         session.sid = sid;
                         session.unreadCount++;
                         session.other = message.fromUserId;
-                        session.otherName = message.fromName;
+                        session.otherName = message.fromUserName;
 
                         snMap.put(sid,session);
                         snlist.add(0,session);
@@ -315,7 +307,7 @@ public final class MessageCenter {
 
         UserCenter.User user = UserCenter.shareInstance().user();
         MessageBiz.Message message = new MessageBiz.Message();
-        message.fromName = user.nick;
+        message.fromUserName = user.nick;
         message.fromUserId = user.uid;
         message.toUserId = to;
         message.content = msg;
@@ -373,7 +365,7 @@ public final class MessageCenter {
                 }
             }
         };
-        MessageBiz.send(msg, to, LBService.shareInstance().getLatestLatitude(), LBService.shareInstance().getLatestLongitude(), res);
+        MessageBiz.send(msg, to, Double.parseDouble(message.longitude), Double.parseDouble(message.latitude), res);
     }
 
     public Session getSession(long otherId) {
