@@ -80,7 +80,7 @@ public final class Store {
 
 
     public Store(String finder) {
-        this.finder = finder;
+        this.finder = Res.context().getFilesDir() + STORE_FINDER + finder + "/";
     }
 
     /**
@@ -251,7 +251,7 @@ public final class Store {
 
         String sub = md5.substring(0,2);
 
-        String finder = Res.context().getFilesDir() + STORE_FINDER + sub;
+        String finder = this.finder + sub;
 
         File file = new File(finder);
         if (!file.exists()) {//判断文件夹是否存在,如果不存在则创建文件夹

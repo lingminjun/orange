@@ -108,7 +108,7 @@ public class UIViewController extends Fragment implements ViewController {
     protected View containerView() {
         if (_containerView == null) {
             try {
-                LayoutInflater inflater = LayoutInflater.from(Res.context());
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
                 _containerView = loadView(inflater);
             }
             catch (Throwable e) {}
