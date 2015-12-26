@@ -7,6 +7,7 @@ import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
+import com.juzistar.m.constants.Constants;
 import com.juzistar.m.entity.MapMarkPoint;
 import com.ssn.framework.foundation.*;
 
@@ -292,6 +293,9 @@ public final class MessageCenter {
                             Intent intent = new Intent(RECEIVED_MSG_NOTIFICATION);
                             intent.putExtra(MSG_KEY, message);
                             BroadcastCenter.shareInstance().postBroadcast(intent);
+                            if (UserDefaults.getInstance().get(Constants.USER_DEFAULTS_MESSAGE_NOTICE_SOUND,true)) {
+                                App.ringtone();
+                            }
                         }
                     }, time);
                     time += 300;

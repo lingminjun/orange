@@ -11,4 +11,7 @@ public final class Constants {
     public static final String PAGE_ARG_OTHER_ID  = "other_id";
     public static final String PAGE_ARG_LATEST_SEND_MESSAGE  = "latest_send_message";
     public static final String PAGE_ARG_LATEST_RECEIVE_MESSAGE  = "latest_receive_message";
+
+    public static final String USER_DEFAULTS_MESSAGE_NOTICE_SOUND = "message_notice_sound";
+    public static final String USER_DEFAULTS_LOCATION_ALLOW = "location_allow";
 }

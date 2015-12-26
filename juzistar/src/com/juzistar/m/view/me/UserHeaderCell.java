@@ -79,24 +79,25 @@ public class UserHeaderCell extends UITableViewCell {
 
         //设置默认头像
         mAvatarImage.setImageResource(R.drawable.default_avatar);
+        mBackgroudImage.setImageResource(R.drawable.header_background);
         mBackgroudImageAlpha.setVisibility(View.GONE);
 
-        TaskQueue.commonQueue().execute(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap bitmap = Res.bitmap(R.drawable.default_avatar);
-                final Bitmap gaussian = Utils.fastblur(bitmap, 50);
-
-                if (gaussian != null) {
-                    TaskQueue.mainQueue().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBackgroudImage.setImageDrawable(new BitmapDrawable(getResources(), gaussian));
-                            mBackgroudImageAlpha.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
-            }
-        });
+//        TaskQueue.commonQueue().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Bitmap bitmap = Res.bitmap(R.drawable.default_avatar);
+//                final Bitmap gaussian = Utils.fastblur(bitmap, 50);
+//
+//                if (gaussian != null) {
+//                    TaskQueue.mainQueue().execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mBackgroudImage.setImageDrawable(new BitmapDrawable(getResources(), gaussian));
+//                            mBackgroudImageAlpha.setVisibility(View.VISIBLE);
+//                        }
+//                    });
+//                }
+//            }
+//        });
     }
 }

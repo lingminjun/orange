@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.juzistar.m.R;
+import com.juzistar.m.constants.Constants;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
@@ -11,6 +12,7 @@ import com.juzistar.m.view.chat.SessionCellModel;
 import com.juzistar.m.view.me.*;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
+import com.ssn.framework.foundation.UserDefaults;
 import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class MeViewController extends BaseTableViewController {
             model.mIconId = R.drawable.setting_message_icon;
             model.mTitle = Res.localized(R.string.setting_message_title);
             model.isSwitch = true;
-            model.switchValue = true;
+            model.switchValue = UserDefaults.getInstance().get(Constants.USER_DEFAULTS_MESSAGE_NOTICE_SOUND,true);
             model.listener = switchListener;
             model.separateLineLeftPadding = 52;
             list.add(model);
@@ -90,7 +92,7 @@ public class MeViewController extends BaseTableViewController {
             model.mIconId = R.drawable.setting_location_icon;
             model.mTitle = Res.localized(R.string.setting_location_title);
             model.isSwitch = true;
-            model.switchValue = true;
+            model.switchValue = UserDefaults.getInstance().get(Constants.USER_DEFAULTS_LOCATION_ALLOW,true);
             model.listener = switchListener;
             list.add(model);
         }
@@ -134,6 +136,12 @@ public class MeViewController extends BaseTableViewController {
         public void onSwitchChanged(SettingCellModel model, boolean switchValue) {
             int row = tableViewAdapter().row(model);
             tableViewAdapter().updateCell(model,row);
+
+            if (model.mTitle.equals(Res.localized(R.string.setting_message_title))) {//消息提示音
+                UserDefaults.getInstance().put(Constants.USER_DEFAULTS_MESSAGE_NOTICE_SOUND, switchValue);
+            } else if (model.mTitle.equals(Res.localized(R.string.setting_location_title))) {//允许获取地理位置
+                UserDefaults.getInstance().put(Constants.USER_DEFAULTS_LOCATION_ALLOW, switchValue);
+            }
         }
     };
 }

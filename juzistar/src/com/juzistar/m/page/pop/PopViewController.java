@@ -117,9 +117,14 @@ public class PopViewController extends BaseTableViewController {
                 if (BarrageCenter.shareInstance().isOpenService()) {
                     BarrageCenter.shareInstance().stopService();
                     switchBtn.setSelected(true);
+                    sendBtnPanel.setVisibility(View.INVISIBLE);
+
+                    //清空table
+                    tableViewAdapter().removeAll();
                 } else {
                     BarrageCenter.shareInstance().startService();
                     switchBtn.setSelected(false);
+                    sendBtnPanel.setVisibility(View.VISIBLE);
                 }
             }
         }));
@@ -137,29 +142,29 @@ public class PopViewController extends BaseTableViewController {
         //默认打开
         BarrageCenter.shareInstance().startService();
 
-//        Clock.shareInstance().addListener(new Clock.Listener() {
-//            @Override
-//            public void fire(String flag) {
-//                {
-//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-//                    notice.type = NoticeBiz.NoticeType.NORMAL;
-//                    notice.category = Convert.noticeCategory(Keyboard.KEY.NAN);
-//                    notice.content = "这仅仅只为测试"+test_count;
-//                    notice.creator = "xxxx";
-//                    notice.creatorId = test_count+101;
-//                    notice.longitude = Double.toString(121.4596178033);
-//                    notice.latitude = Double.toString(31.2117411154);
-//                    notice.id = "" + Utils.getServerTime();
-//
-//                    appendNoticeCellModel(notice);
-//                    test_count++;
-//
-//                    if (test_count > 20) {
-//                        Clock.shareInstance().removeListener("dd");
-//                    }
-//                }
-//            }
-//        },"dd");
+        Clock.shareInstance().addListener(new Clock.Listener() {
+            @Override
+            public void fire(String flag) {
+                {
+                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+                    notice.type = NoticeBiz.NoticeType.NORMAL;
+                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
+                    notice.content = "这仅仅只为测试"+test_count;
+                    notice.creator = "xxxx";
+                    notice.creatorId = test_count+101;
+                    notice.longitude = Double.toString(121.4596178033);
+                    notice.latitude = Double.toString(31.2117411154);
+                    notice.id = "" + Utils.getServerTime();
+
+                    appendNoticeCellModel(notice);
+                    test_count++;
+
+                    if (test_count > 20) {
+                        Clock.shareInstance().removeListener("dd");
+                    }
+                }
+            }
+        },"dd");
     }
 
     @Override
@@ -460,16 +465,9 @@ public class PopViewController extends BaseTableViewController {
         tableViewAdapter().appendCell(model);
 
         //添加ui刷新器
-        if (notice.category == NoticeBiz.NoticeCategory.NAN) {
-            if (model.notice.id.startsWith("sending:") || TextUtils.isEmpty(model.notice.id)) {
-                model.autoDisappear = false;
-            } else {
-                model.autoDisappear = true;
-            }
-        } else {
-            if (tableViewAdapter().getCount() > 20) {
-                tableViewAdapter().removeCells(0,10);//太多时删除一部分
-            }
+        model.autoDisappear = true;
+        if (tableViewAdapter().getCount() > 10) {
+            tableViewAdapter().removeCells(0,2);//太多时删除一部分
         }
 
         tableViewAdapter().endUpdate();

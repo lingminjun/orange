@@ -3,6 +3,9 @@ package com.ssn.framework.foundation;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -122,5 +125,16 @@ public final class App {
         TaskQueue.mainQueue().cancel(_runnable);
         _background = false;
         _runnable = null;
+    }
+
+
+    public static void ringtone() {
+        //Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        //alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        //alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone r = RingtoneManager.getRingtone(Res.context(), notification);
+        r.play();
     }
 }
