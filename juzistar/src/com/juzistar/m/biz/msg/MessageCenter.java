@@ -447,7 +447,7 @@ public final class MessageCenter {
     private int count;
     private boolean _open;
     private boolean _high;//是否为高频
-    private static final int HIGH_PULL_INTERVAL = 1;//秒
+    private static final int HIGH_PULL_INTERVAL = 2;//秒
     private static final int NORMAL_PULL_INTERVAL = 5;//一分钟拉取一次足够了
     private static final String CLOCK_KEY = "pull_message";
     private static final String LATEST_PULL_KEY = "message_latest_pull_at";
