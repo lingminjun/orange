@@ -127,7 +127,9 @@ public final class App {
         _runnable = null;
     }
 
-
+    /**
+     * 消息提示音
+     */
     public static void ringtone() {
         //Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         //alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

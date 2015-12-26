@@ -112,7 +112,7 @@ public final class BarrageCenter {
                     }
 
                     //若收到的是标签消息，则将标签消息存储下来
-                    if (notice.category != NoticeBiz.NoticeCategory.NAN) {
+                    if (notice.category != NoticeBiz.NoticeCategory.NAN && notice.creatorId != UserCenter.shareInstance().UID()) {
                         tagNotice.add(notice);//标签消息
                     }
 
@@ -258,9 +258,9 @@ public final class BarrageCenter {
             notice.longitude = Double.toString(mLongitude);
         }
 
-        if (notice.category != NoticeBiz.NoticeCategory.NAN) {
-            tagNotice.add(notice);
-        }
+//        if (notice.category != NoticeBiz.NoticeCategory.NAN &&) {
+//            tagNotice.add(notice);
+//        }
 
         NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
             @Override

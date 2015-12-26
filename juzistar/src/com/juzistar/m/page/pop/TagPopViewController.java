@@ -15,8 +15,11 @@ import com.juzistar.m.biz.Convert;
 import com.juzistar.m.biz.NoticeBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.pop.BarrageCenter;
+import com.juzistar.m.constants.Constants;
+import com.juzistar.m.entity.MapMarkPoint;
 import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
+import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.com.Keyboard;
 import com.juzistar.m.view.com.UIDic;
@@ -109,6 +112,7 @@ public class TagPopViewController extends BaseTableViewController {
                     model = new ReceivedBubbleCellModel();
                 }
                 model.notice = notice;
+                model.cellListener = bubbleCellListener;
                 list.add(model);
             }
         }
@@ -121,4 +125,42 @@ public class TagPopViewController extends BaseTableViewController {
         super.onTableViewCellClick(adapter, cellModel, row);
     }
 
+    private BubbleCellModel.BubbleCellListener bubbleCellListener = new BubbleCellModel.BubbleCellListener() {
+        @Override
+        public void onMessageClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
+
+        }
+
+        @Override
+        public void onHeaderClick(BubbleCellModel cellModel,final NoticeBiz.Notice notice1) {
+            PageCenter.checkAuth(new PageCenter.AuthCallBack() {
+                @Override
+                public void auth(String account) {
+                    Bundle bundle = new Bundle();
+                    if (notice1.creatorId != UserCenter.shareInstance().UID()) {
+                        bundle.putLong(Constants.PAGE_ARG_OTHER_ID,notice1.creatorId);
+
+                        MapMarkPoint point = new MapMarkPoint();
+                        point.uid = notice1.creatorId;
+                        point.nick = notice1.creator;
+                        point.longitude = Double.parseDouble(notice1.longitude);
+                        point.latitude = Double.parseDouble(notice1.latitude);
+                        point.message = notice1.content;
+                        bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE,point);
+
+                        Navigator.shareInstance().openURL(PageURLs.MAP_CHAT_URL,bundle);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onErrorTagClick(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
+        }
+
+        @Override
+        public void onDisappear(BubbleCellModel cellModel, NoticeBiz.Notice notice1) {
+//            tableViewAdapter().removeCell(cellModel);//移除即可
+        }
+    };
 }

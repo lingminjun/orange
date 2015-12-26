@@ -37,6 +37,9 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
         }
     }
 
+    /**
+     * {"errorCode":200,"name":"USER_INFO_LACK","message":"该手机号已注册"}
+     */
     private static class HTTPError extends BaseModel {
         public int errorCode;
         public String name;

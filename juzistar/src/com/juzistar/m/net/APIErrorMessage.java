@@ -1,6 +1,8 @@
 package com.juzistar.m.net;
 
+import android.text.TextUtils;
 import com.juzistar.m.R;
+import com.juzistar.m.Utils.Utils;
 import com.ssn.framework.foundation.Res;
 import org.apache.http.conn.ConnectTimeoutException;
 
@@ -23,6 +25,10 @@ public final class APIErrorMessage {
     public static String message(Exception exe) {
 
         if (exe instanceof BaseRequest.APIException) {
+            String msg = exe.getMessage();
+            if (Utils.isContainChinese(msg)) {
+                return msg;
+            }
             return apiMessage(((BaseRequest.APIException) exe).code);
         } else if (exe instanceof ConnectTimeoutException) {
             return Res.localized(R.string.request_time_out);
