@@ -8,6 +8,7 @@ import android.view.View;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.MessageBiz;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.biz.lbs.LBService;
 import com.juzistar.m.biz.msg.MessageCenter;
 import com.juzistar.m.constants.Constants;
 import com.juzistar.m.entity.MapMarkPoint;
@@ -120,6 +121,17 @@ public class ChatListViewController extends BaseTableViewController {
             point.message = model.session.lastRcvMsg;
             bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE, point);
         }
+
+        if (!TextUtils.isEmpty(model.session.lastSndMsg)) {
+            MapMarkPoint point = new MapMarkPoint();
+            point.uid = UserCenter.shareInstance().UID();
+            point.nick = UserCenter.shareInstance().user().nick;
+            point.longitude = LBService.shareInstance().getLatestLongitude();
+            point.latitude = LBService.shareInstance().getLatestLatitude();
+            point.message = model.session.lastSndMsg;
+            bundle.putSerializable(Constants.PAGE_ARG_LATEST_SEND_MESSAGE, point);
+        }
+
         Navigator.shareInstance().openURL(PageURLs.MAP_CHAT_URL,bundle);
     }
 

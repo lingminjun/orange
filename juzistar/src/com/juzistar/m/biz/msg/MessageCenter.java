@@ -95,13 +95,20 @@ public final class MessageCenter {
      */
     public static class Session {
         public String sid;
+
         public long other;
         public String otherName;
+
+        //session 列表显示数据
         public int unreadCount;//未读数
         public String msg;//最后显示的msg
-        public String lastRcvMsg;//最后一条收到消息
+
         public double lastLng;//最后一条收到消息
         public double lastLat;//最后一条收到消息
+
+        public String lastRcvMsg;//最后一条收到消息（进入地图时展示）
+        public String lastSndMsg;//最后一条发送消息（进入地图时展示）
+
         public List<String> unrdmsgs;//最后三条
 
         @Override
@@ -307,7 +314,7 @@ public final class MessageCenter {
         MessageBiz.fetchMessage(latest_pull_at,res);
     }
 
-    public void sendMessage(final String msg,final long to,final MapMarkPoint point, final RPC.Response<MessageBiz.Message> response) {
+    public void sendMessage(final String msg,final long to,final MapMarkPoint recPoint, final RPC.Response<MessageBiz.Message> response) {
 
         UserCenter.User user = UserCenter.shareInstance().user();
         MessageBiz.Message message = new MessageBiz.Message();
@@ -338,18 +345,20 @@ public final class MessageCenter {
                         session = new Session();
                         session.sid = sid;
                         session.other = to;
-                        session.otherName = point.nick;
+                        session.otherName = recPoint.nick;
 
                         //模拟出一条消息
-                        session.lastLng = point.longitude;
-                        session.lastLat = point.latitude;
-                        session.lastRcvMsg = point.message;
+                        session.lastLng = recPoint.longitude;
+                        session.lastLat = recPoint.latitude;
+                        session.lastRcvMsg = recPoint.message;
 
                         snMap.put(sid,session);
                         snlist.add(0,session);
                     }
+
                     session.unreadCount = 0;
                     session.msg = message1.content;
+                    session.lastSndMsg = message1.content;//用于下次进入时展示
 
                     saveSessions();
                 }
