@@ -41,6 +41,7 @@ public class CheckMobileViewController extends BaseViewController {
 
         navigationItem().setTitle(Res.localized(R.string.origin_star));
         navigationItem().setBottomLineHidden(true);
+        navigationItem().backItem().setImage(R.drawable.nav_left_white_icon);
 
         nextURL = args.getString(Constants.PAGE_ARG_NEXT_URL);
     }

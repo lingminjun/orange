@@ -48,9 +48,6 @@ public final class UINavigationBar extends RelativeLayout {
             public static View createButtonItemView(Context context) {
                 LayoutInflater inflater = LayoutInflater.from(Res.context());
                 View view = inflater.inflate(R.layout.ssn_bar_item,null);
-//                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-//                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-//                params.weight = ViewGroup.LayoutParams.WRAP_CONTENT;
                 return view;
             }
 
@@ -133,9 +130,10 @@ public final class UINavigationBar extends RelativeLayout {
 
                 //设置图片
                 if (imageView != null) {
-                    if (imageID > 0) {
+                    if (imageID != 0) {
                         imageView.setVisibility(VISIBLE);
-                        imageView.setImageDrawable(Res.resources().getDrawable(imageID));
+                        imageView.setImageResource(imageID);
+//                        imageView.setImageDrawable(Res.resources().getDrawable(imageID));
                     }
                     else {
                         imageView.setVisibility(GONE);
@@ -374,7 +372,7 @@ public final class UINavigationBar extends RelativeLayout {
             if (backItem == null) {return;}
             if (backItem.view != null && leftContainer != null) {
                 backItem.loader = null;
-                leftContainer.addView(backItem.view);
+                leftContainer.addView(backItem.view,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
             }
             else {
                 backItem.loader = this;
@@ -395,7 +393,7 @@ public final class UINavigationBar extends RelativeLayout {
                     ButtonItem item = rigthItems.get(i);
                     if (item.view != null && rightContainer != null) {
                         item.loader = null;
-                        rightContainer.addView(item.view);
+                        rightContainer.addView(item.view,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
                     }
                     else {
                         item.loader = this;
@@ -407,7 +405,7 @@ public final class UINavigationBar extends RelativeLayout {
             if (rightItem == null) {return;}
             if (rightItem.view != null && rightContainer != null) {
                 rightItem.loader = null;
-                rightContainer.addView(rightItem.view);
+                rightContainer.addView(rightItem.view,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
             }
             else {
                 rightItem.loader = this;

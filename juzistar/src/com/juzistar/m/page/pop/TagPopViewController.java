@@ -51,6 +51,7 @@ public class TagPopViewController extends BaseTableViewController {
         navigationItem().setTitle(title);
 
         navigationItem().setBottomLineHidden(true);
+        navigationItem().backItem().setImage(R.drawable.nav_left_white_icon);
     }
 
     @Override

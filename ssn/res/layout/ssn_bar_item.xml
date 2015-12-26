@@ -5,12 +5,13 @@
               android:orientation="horizontal"
               android:paddingLeft="15dp"
               android:paddingRight="15dp"
+              android:gravity="center_vertical"
               android:layout_gravity="center"
               android:layout_width="wrap_content"
               android:layout_height="match_parent">
     <ImageView android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:scaleType="fitCenter"
+               android:layout_height="20dp"
+               android:scaleType="centerInside"
                android:src="@drawable/ssn_back_icon"
                android:id="@+id/ssn_item_img"/>
     <LinearLayout android:orientation="horizontal"

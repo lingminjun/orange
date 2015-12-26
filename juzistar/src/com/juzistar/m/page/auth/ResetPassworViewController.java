@@ -37,6 +37,7 @@ public class ResetPassworViewController extends BaseViewController {
 
         navigationItem().setTitle(Res.localized(R.string.origin_star));
         navigationItem().setBottomLineHidden(true);
+        navigationItem().backItem().setImage(R.drawable.nav_left_white_icon);
 
         //获取参数
         Bundle bundle = getArguments();
