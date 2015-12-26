@@ -381,7 +381,7 @@ public final class HTTPAccessor {
             httpRequest.setHeader("Authorization", _auth_token);
         }
 
-        Log.i("HTTP","\nstart:["+request.methodURI()+"]");
+//        Log.i("HTTP","start:["+request.methodURI()+"]");
 
         try {
             response = hClient.execute(httpRequest);
@@ -406,8 +406,11 @@ public final class HTTPAccessor {
         if (response != null) {
             ServerResponse serverResponse = new ServerResponse(response);
 
-            String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
-            Log.i("HTTP","\nreq:["+url+"]\nres:["+serverResponse.toString()+"]");
+            if(Res.metaBoolean("DEBUG")) {
+                String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
+                Log.i("HTTP", "req:[" + url + "]");
+                Log.i("HTTP", "res:[" + serverResponse.toString() + "]");
+            }
 
             return serverResponse;
         }

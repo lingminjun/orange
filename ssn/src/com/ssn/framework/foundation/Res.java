@@ -285,6 +285,19 @@ public class Res {
         return TR.string(null);
     }
 
+    /**
+     * 取meta boolean值
+     * @param key
+     * @return
+     */
+    public static final boolean metaBoolean(final String key) {
+        String string = metaData(key);
+        try {
+            return Boolean.parseBoolean(string);
+        } catch (Throwable e){e.printStackTrace();}
+        return false;
+    }
+
     private static Application application() {
         if (_application == null) {
             Log.e("","必须在 application 启动中初始化Res");

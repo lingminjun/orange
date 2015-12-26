@@ -68,6 +68,7 @@ public final class MessageCenter {
                     for (Session sn : ss) {
                         snlist.add(sn);
                         snMap.put(sn.sid,sn);
+                        unreadCount += sn.unreadCount;
                     }
                 }
             } catch (Throwable e) {}
@@ -267,11 +268,14 @@ public final class MessageCenter {
                         session = new Session();
                         session.sid = sid;
                         session.unreadCount++;
+                        unreadCount++;
                         session.other = message.fromUserId;
                         session.otherName = message.fromUserName;
 
                         snMap.put(sid,session);
                         snlist.add(0,session);
+
+                        checkSessionMaxCount();
                     }
 
                     if(TextUtils.isEmpty(session.lastRcvMsg)) {
@@ -354,9 +358,16 @@ public final class MessageCenter {
 
                         snMap.put(sid,session);
                         snlist.add(0,session);
+
+                        checkSessionMaxCount();
                     }
 
+                    unreadCount -= session.unreadCount;
+                    if (unreadCount <= 0) {
+                        unreadCount = 0;
+                    }
                     session.unreadCount = 0;
+
                     session.msg = message1.content;
                     session.lastSndMsg = message1.content;//用于下次进入时展示
 
@@ -413,10 +424,17 @@ public final class MessageCenter {
             try {
                 session.lastLng = Double.parseDouble(message.longitude);
             } catch (Throwable e){e.printStackTrace();}
-            session.unreadCount = session.unreadCount - dels.size();
-            if (session.unreadCount < 0) {session.unreadCount = 0;}
-            session.msg = message.content;
 
+            if (dels.size() > session.unreadCount) {
+                unreadCount -= session.unreadCount;
+                session.unreadCount = 0;
+            } else {
+                session.unreadCount = session.unreadCount - dels.size();
+                unreadCount -= dels.size();
+            }
+            if (unreadCount < 0) {unreadCount = 0;}
+
+            session.msg = message.content;
             saveSessions();
         }
     }
@@ -437,6 +455,10 @@ public final class MessageCenter {
 
         if (session.unreadCount > 0) {
             session.unreadCount = 0;
+
+            unreadCount -= session.unreadCount;
+            if (unreadCount < 0) {unreadCount = 0;}
+
             saveSessions();
         }
 
@@ -453,7 +475,21 @@ public final class MessageCenter {
         snlist.remove(session);
     }
 
+    //限制session最大数
+    private void checkSessionMaxCount() {
+
+    }
+
+    /**
+     * 未读消息
+     * @return
+     */
+    public int unreadCount() {
+        return unreadCount;
+    }
+
     private int count;
+    private int unreadCount;
     private boolean _open;
     private boolean _high;//是否为高频
     private static final int HIGH_PULL_INTERVAL = 2;//秒

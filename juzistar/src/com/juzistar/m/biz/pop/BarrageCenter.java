@@ -306,7 +306,7 @@ public final class BarrageCenter {
     private static final String LAST_SEND_TAG_NOTICE_TIME = "barrage_last_send_tag_notice_key";
     public boolean isLimitSendingTagNotice() {
         long expired = UserDefaults.getInstance().get(LAST_SEND_TAG_NOTICE_TIME,0L);
-        long now = HTTPAccessor.getNetTime();
+        long now = HTTPAccessor.getNetTime() + 300;//防止界面误差
         return now <= expired;
     }
 

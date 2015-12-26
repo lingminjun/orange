@@ -39,6 +39,10 @@ public class ChatListViewController extends BaseTableViewController {
         navigationItem().setBottomLineHidden(false);
         navigationItem().setTitleColor(Res.color(R.color.ssn_normal_text));
         navigationItem().backItem().setHidden(true);
+
+        if (MessageCenter.shareInstance().unreadCount() > 0) {
+            tabItem().setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
+        }
     }
 
     @Override
@@ -62,6 +66,10 @@ public class ChatListViewController extends BaseTableViewController {
         super.onViewDidAppear();
 
         tableViewAdapter().reload();
+
+        if (MessageCenter.shareInstance().unreadCount() > 0) {
+            tabItem().setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
+        }
     }
 
     UITableViewCell.CellModelLongClick itemLongClick = new UITableViewCell.CellModelLongClick() {

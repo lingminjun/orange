@@ -109,6 +109,8 @@ public class PopViewController extends BaseTableViewController {
         String addr = BarrageCenter.shareInstance().getLocation().getSimpleAddress();//
         if (!TextUtils.isEmpty(addr)) {
             navigationItem().setTitle(addr);
+        } else {
+            navigationItem().setTitle(Res.localized(R.string.please_refresh_location));
         }
 
         switchBtnPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
@@ -174,6 +176,8 @@ public class PopViewController extends BaseTableViewController {
         String addr = BarrageCenter.shareInstance().getLocation().getSimpleAddress();//
         if (!TextUtils.isEmpty(addr)) {
             navigationItem().setTitle(addr);
+        } else {
+            navigationItem().setTitle(Res.localized(R.string.please_refresh_location));
         }
 
         //进入时不展示键盘

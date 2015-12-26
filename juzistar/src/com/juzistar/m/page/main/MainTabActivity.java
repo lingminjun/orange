@@ -16,6 +16,7 @@ import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.uikit.BaseTabActivity;
 import com.ssn.framework.uikit.Navigator;
+import com.ssn.framework.uikit.UITabBar;
 
 /**
  * Created by lingminjun on 15/9/26.
@@ -37,6 +38,7 @@ public class MainTabActivity extends BaseTabActivity {
 
         BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGIN_NOTIFICATION, observerMethod);
         BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGOUT_NOTIFICATION, observerMethod);
+        BroadcastCenter.shareInstance().addObserver(this, MessageCenter.RECEIVED_MSG_NOTIFICATION, observerMethod);
     }
 
     BroadcastCenter.Method<MainTabActivity> observerMethod = new BroadcastCenter.Method<MainTabActivity>() {
@@ -45,8 +47,10 @@ public class MainTabActivity extends BaseTabActivity {
             String action = intent.getAction();
             if (action.equals(UserCenter.USER_LOGIN_NOTIFICATION)) {
                 MessageCenter.shareInstance().start();//开启
-            } else {
-                MessageCenter.shareInstance().stop();//开启
+            } else if (action.equals(UserCenter.USER_LOGOUT_NOTIFICATION)) {
+                MessageCenter.shareInstance().stop();//关闭
+            } else if (action.equals(MessageCenter.RECEIVED_MSG_NOTIFICATION)) {
+                tabBar().tabItemAtIndex(1).setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
             }
         }
     };
@@ -79,5 +83,9 @@ public class MainTabActivity extends BaseTabActivity {
             tabBar().setBackgroundResource(R.color.white);
             tabBar().setSeparateLineHide(false);
         }
+
+//        if (index == 1) {//清空未读数
+//            tabBar().tabItemAtIndex(1).setBadgeValue("");
+//        }
     }
 }
