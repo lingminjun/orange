@@ -295,12 +295,6 @@ public class PopViewController extends BaseTableViewController {
         public void auth(String account) {
 //            Keyboard.barrageKeyboard().show(PopViewController.this);
             UILockScreenKeyboard.show(getActivity(),keyboardListener,Keyboard.barrageCustomView());
-
-            //需要计时读秒
-            if (BarrageCenter.shareInstance().isLimitSendingTagNotice()) {
-                limit_time = BarrageCenter.shareInstance().limitSendingTagNoticeTime();
-                Clock.shareInstance().addListener(limitClock,TAG_NOTICE_LIMIT_CLOCK);
-            }
         }
     };
 
@@ -343,6 +337,12 @@ public class PopViewController extends BaseTableViewController {
         @Override
         public void onKeyboardDidLoad(UILockScreenKeyboard keyboard) {
             keyboard.setRightButtonResourceId(R.drawable.button_keyboard_switch_icon);
+
+            //需要计时读秒
+            if (BarrageCenter.shareInstance().isLimitSendingTagNotice()) {
+                limit_time = BarrageCenter.shareInstance().limitSendingTagNoticeTime();
+                Clock.shareInstance().addListener(limitClock,TAG_NOTICE_LIMIT_CLOCK);
+            }
         }
 
         @Override
@@ -523,13 +523,21 @@ public class PopViewController extends BaseTableViewController {
 
                 model.disabled = true;
                 notice.id = notice1.id;//获取新的id
-                if (notice.category == NoticeBiz.NoticeCategory.NAN) {
-                    model.autoDisappear = true;
-                }
+                model.autoDisappear = true;
+
 
                 int row = tableViewAdapter().row(model);
                 if (row >= 0) {
                     tableViewAdapter().updateCell(model, row);
+                }
+
+                //如果键盘再次弹起，开始计时
+                if (notice.category == NoticeBiz.NoticeCategory.NAN) {
+                    //需要计时读秒
+                    if (BarrageCenter.shareInstance().isLimitSendingTagNotice()) {
+                        limit_time = BarrageCenter.shareInstance().limitSendingTagNoticeTime();
+                        Clock.shareInstance().addListener(limitClock,TAG_NOTICE_LIMIT_CLOCK);
+                    }
                 }
             }
 
