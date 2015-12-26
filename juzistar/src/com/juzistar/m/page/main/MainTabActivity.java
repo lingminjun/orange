@@ -31,17 +31,6 @@ public class MainTabActivity extends BaseTabActivity {
         tabBar().setSeparateLineHide(true);
 
 
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-
-
-//        getRootWrapView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                getKeyboardHeight();
-//            }
-//        });
-
-
         if (UserCenter.shareInstance().isLogin()) {
             MessageCenter.shareInstance().start();//开启
         }
@@ -78,32 +67,17 @@ public class MainTabActivity extends BaseTabActivity {
         return super.dispatchKeyEvent(event);
     }
 
-//    private Rect r = new Rect();
-//    private int mVisibleHeight = 0;
-//    private boolean mIsKeyboardShow = false;
-//    private void getKeyboardHeight() {
-//        getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-//        int visibleHeight = r.height();
-//        if (mVisibleHeight == 0) {
-//            mVisibleHeight = visibleHeight;
-//            return;
-//        }
-//        if (mVisibleHeight == visibleHeight) {
-//            return;
-//        }
-//
-//        int diff = visibleHeight - mVisibleHeight;
-//
-//        if (diff < 0) {
-//            diff = -diff;
-//
-//            mIsKeyboardShow = true;
-//        } else {
-//            mIsKeyboardShow = false;
-//        }
-//
-//        mVisibleHeight = visibleHeight;
-//
-//        Log.e("keyboard:","keybord show="+mIsKeyboardShow+";height="+diff);
-//    }
+
+    @Override
+    protected void onSelectedViewControllerAtIndex(int index) {
+        super.onSelectedViewControllerAtIndex(index);
+
+        if (index == 0) {
+            tabBar().setBackgroundResource(R.color.black_0_5_alpha);
+            tabBar().setSeparateLineHide(true);
+        } else {
+            tabBar().setBackgroundResource(R.color.white);
+            tabBar().setSeparateLineHide(false);
+        }
+    }
 }

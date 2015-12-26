@@ -196,6 +196,18 @@ public class BaseTabActivity extends BaseActivity {
             displayFragment(_selectedVC);
             tabBar().checkIndex(_selectedIndex);
         }
+
+        try {
+            onSelectedViewControllerAtIndex(index);
+        }catch (Throwable throwable) {throwable.printStackTrace();}
+    }
+
+    /**
+     * 当某个tab被选中时回调
+     * @param index
+     */
+    protected void onSelectedViewControllerAtIndex(int index) {
+
     }
 
     @Override
