@@ -40,6 +40,7 @@ public class KeyboardButton extends LinearLayout {
     private View _buttonPanel;
     private TextView _icon;
     private TextView _title;
+    private int _selected_background;
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         this.setOrientation(LinearLayout.HORIZONTAL);
@@ -52,6 +53,7 @@ public class KeyboardButton extends LinearLayout {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.keyboard_button, defStyleAttr, defStyleRes);
         int iconId = a.getResourceId(R.styleable.keyboard_button_icon, 0);
+        _selected_background = a.getResourceId(R.styleable.keyboard_button_select_background,R.drawable.green_strock_white_bg);
         if (iconId != 0) {
             _icon.setBackgroundResource(iconId);
         }
@@ -62,7 +64,7 @@ public class KeyboardButton extends LinearLayout {
         }
 
         boolean selected = super.isSelected();
-        _buttonPanel.setBackgroundResource(selected ? R.drawable.green_strock_white_bg : R.drawable.grey_strock_white_bg);
+        _buttonPanel.setBackgroundResource(selected ? _selected_background : R.drawable.grey_strock_white_bg);
     }
 
     private int key;
@@ -75,7 +77,7 @@ public class KeyboardButton extends LinearLayout {
     public void setSelected(boolean selected) {
         super.setSelected(selected);
         if (_buttonPanel != null) {
-            _buttonPanel.setBackgroundResource(selected ? R.drawable.green_strock_white_bg : R.drawable.grey_strock_white_bg);
+            _buttonPanel.setBackgroundResource(selected ? _selected_background : R.drawable.grey_strock_white_bg);
         }
     }
 }

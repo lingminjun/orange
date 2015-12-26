@@ -77,6 +77,8 @@
     <color name="blue_text">#2790EB</color>
     <color name="btn_red_press">#FF4E44</color>
     <color name="btn_red">#ff5e56</color>
+    <color name="btn_purple_1">#8d84f6</color>
+    <color name="btn_purple_2">#b46dd0</color>
     <color name="btn_green_press">#11E979</color>
     <color name="btn_green">#11D967</color>
     <color name="_orange_press">#B0420D</color>

@@ -18,6 +18,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_red_icon"
                 ht:title="@string/love"
+                ht:select_background="@drawable/red_strock_white_bg"
                 android:id="@+id/button_00" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -25,6 +26,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_green_icon"
                 ht:title="@string/book"
+                ht:select_background="@drawable/green_strock_white_bg"
                 android:id="@+id/button_01" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -32,6 +34,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_yellow_icon"
                 ht:title="@string/eat"
+                ht:select_background="@drawable/yellow_strock_white_bg"
                 android:id="@+id/button_02" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -39,6 +42,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_blue_icon"
                 ht:title="@string/test"
+                ht:select_background="@drawable/blue_strock_white_bg"
                 android:id="@+id/button_03" />
         <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
@@ -53,6 +57,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_blue_icon"
                 ht:title="@string/home"
+                ht:select_background="@drawable/blue_strock_white_bg"
                 android:id="@+id/button_10" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -60,6 +65,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_purple_icon"
                 ht:title="@string/flower"
+                ht:select_background="@drawable/purple_strock_white_bg"
                 android:id="@+id/button_11" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -67,6 +73,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_red_icon"
                 ht:title="@string/help"
+                ht:select_background="@drawable/red_strock_white_bg"
                 android:id="@+id/button_12" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -74,6 +81,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_yellow_icon"
                 ht:title="@string/dating"
+                ht:select_background="@drawable/yellow_strock_white_bg"
                 android:id="@+id/button_13" />
         <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
@@ -88,6 +96,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_green_icon"
                 ht:title="@string/car"
+                ht:select_background="@drawable/green_strock_white_bg"
                 android:id="@+id/button_20" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -95,6 +104,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_yellow_icon"
                 ht:title="@string/wear"
+                ht:select_background="@drawable/yellow_strock_white_bg"
                 android:id="@+id/button_21" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -102,6 +112,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_blue_icon"
                 ht:title="@string/sport"
+                ht:select_background="@drawable/blue_strock_white_bg"
                 android:id="@+id/button_22" />
         <include layout="@layout/ssn_horizontal_fill"/>
         <com.juzistar.m.view.com.KeyboardButton
@@ -109,6 +120,7 @@
                 android:layout_height="wrap_content"
                 ht:icon="@drawable/tag_green_icon"
                 ht:title="@string/movie"
+                ht:select_background="@drawable/green_strock_white_bg"
                 android:id="@+id/button_23" />
         <include layout="@layout/ssn_horizontal_fill"/>
     </LinearLayout>
