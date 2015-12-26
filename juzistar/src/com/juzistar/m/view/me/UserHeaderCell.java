@@ -16,10 +16,14 @@ import android.widget.TextView;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
 import com.juzistar.m.biz.UserCenter;
+import com.juzistar.m.page.PageCenter;
+import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.view.com.RoundAngleImageView;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.foundation.TaskQueue;
+import com.ssn.framework.uikit.Navigator;
+import com.ssn.framework.uikit.UIEvent;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**
@@ -45,6 +49,7 @@ public class UserHeaderCell extends UITableViewCell {
 
     private RoundAngleImageView mAvatarImage;
     private TextView mNickLabel;
+    private TextView mLoginButton;
 
     @Override
     protected View loadCustomDisplayView(LayoutInflater inflate, ViewGroup containerView) {
@@ -53,13 +58,23 @@ public class UserHeaderCell extends UITableViewCell {
         mBackgroudImageAlpha = (ImageView) view.findViewById(R.id.header_backgroud_view_alpha);
         mAvatarImage = (RoundAngleImageView) view.findViewById(R.id.avatar_image);
         mNickLabel = (TextView) view.findViewById(R.id.nick_label);
-
+        mLoginButton = (TextView)view.findViewById(R.id.login_btn);
+        mLoginButton.setOnClickListener(UIEvent.click(loginClick));
         return view;
     }
+
+    OnClickListener loginClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Navigator.shareInstance().openURL(PageURLs.LOGIN_URL, null, true);
+        }
+    };
 
     @Override
     protected void onPrepareForReuse() {
         mNickLabel.setText("");
+        mNickLabel.setVisibility(VISIBLE);
+        mLoginButton.setVisibility(GONE);
     }
 
     private boolean isInit;
@@ -72,6 +87,14 @@ public class UserHeaderCell extends UITableViewCell {
         UserCenter.User user = UserCenter.shareInstance().user();
         if (user.nick != null) {
             mNickLabel.setText(user.nick);
+        }
+
+        if (UserCenter.shareInstance().isLogin()) {
+            mNickLabel.setVisibility(VISIBLE);
+            mLoginButton.setVisibility(GONE);
+        } else {
+            mNickLabel.setVisibility(GONE);
+            mLoginButton.setVisibility(VISIBLE);
         }
 
         if (isInit) {return;}

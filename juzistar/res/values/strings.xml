@@ -75,4 +75,5 @@
     <string name="feedback_success">提交成功！</string>
     <string name="whether_delete_session">确定删除会话？</string>
     <string name="please_refresh_location">请刷新重新定位当前位置</string>
+    <string name="login_or_register">登录/注册</string>
 </resources>
