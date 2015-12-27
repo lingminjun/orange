@@ -9,8 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.juzistar.m.R;
 import com.juzistar.m.Utils.Utils;
+import com.juzistar.m.Utils.cropimg.Util;
 import com.juzistar.m.biz.UserBiz;
 import com.juzistar.m.constants.Constants;
+import com.juzistar.m.net.BoolModel;
 import com.juzistar.m.page.PageCenter;
 import com.juzistar.m.page.base.BaseViewController;
 import com.ssn.framework.foundation.App;
@@ -19,6 +21,7 @@ import com.ssn.framework.foundation.RPC;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
 import com.ssn.framework.uikit.UIEvent;
+import com.ssn.framework.uikit.UILoading;
 import com.ssn.framework.uikit.UIViewController;
 
 import java.util.HashMap;
@@ -32,6 +35,7 @@ public class CheckMobileViewController extends BaseViewController {
     EditText mobileEdit;
     EditText smsCodeEdit;
     TextView sendSMSCode;
+    boolean checkMobile;
 
     String nextURL;
 
@@ -44,6 +48,7 @@ public class CheckMobileViewController extends BaseViewController {
         navigationItem().backItem().setImage(R.drawable.nav_left_white_icon);
 
         nextURL = args.getString(Constants.PAGE_ARG_NEXT_URL);
+        checkMobile = args.getBoolean(Constants.PAGE_ARG_CHECK_MOBILE);
     }
 
     @Override
@@ -62,29 +67,7 @@ public class CheckMobileViewController extends BaseViewController {
 
         setBackgroundDrawable(R.drawable.page_background);
 
-        nexBtn.setOnClickListener(UIEvent.click(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String mobile = Utils.getInputString(mobileEdit);
-                String smsCode = Utils.getInputString(smsCodeEdit);
-
-                if (TextUtils.isEmpty(mobile)) {
-                    App.toast(Res.localized(R.string.please_input_mobile));
-                    return;
-                }
-
-                if (TextUtils.isEmpty(smsCode)) {
-                    App.toast(Res.localized(R.string.please_input_sms_code));
-                    return;
-                }
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Constants.PAGE_ARG_MOBILE, mobile);
-                bundle.putString(Constants.PAGE_ARG_SMS_CODE, smsCode);
-                Navigator.shareInstance().openURL(nextURL,bundle);
-            }
-        }));
+        nexBtn.setOnClickListener(UIEvent.click(nextClick));
 
         sendSMSCode.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
@@ -126,6 +109,71 @@ public class CheckMobileViewController extends BaseViewController {
                 stopTiming();
             }
         });
+    }
+
+    View.OnClickListener nextClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            String mobile = Utils.getInputString(mobileEdit);
+            String smsCode = Utils.getInputString(smsCodeEdit);
+
+            if (TextUtils.isEmpty(mobile)) {
+                App.toast(Res.localized(R.string.please_input_mobile));
+                return;
+            }
+
+            if (checkMobile) {
+                UserBiz.mobileExist(mobile, mobileExistResponse);
+            } else {
+                gotoNextPage(mobile, smsCode);
+            }
+        }
+    };
+
+    RPC.Response<BoolModel> mobileExistResponse = new RPC.Response<BoolModel>() {
+        @Override
+        public void onStart() {
+            super.onStart();
+            UILoading.show(getActivity());
+        }
+
+        @Override
+        public void onSuccess(BoolModel boolModel) {
+            super.onSuccess(boolModel);
+
+            if (boolModel.isTrue()) {
+                Utils.toast(Res.localized(R.string.mobile_exist));
+            } else {
+                String mobile = Utils.getInputString(mobileEdit);
+                String smsCode = Utils.getInputString(smsCodeEdit);
+                gotoNextPage(mobile,smsCode);
+            }
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+            super.onFailure(e);
+            Utils.toastException(e,Res.localized(R.string.request_data_error));
+        }
+
+        @Override
+        public void onFinish() {
+            super.onFinish();
+            UILoading.dismiss(getActivity());
+        }
+    };
+
+    private void gotoNextPage(String mobile, String smsCode) {
+        if (TextUtils.isEmpty(smsCode)) {
+            App.toast(Res.localized(R.string.please_input_sms_code));
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PAGE_ARG_MOBILE, mobile);
+        bundle.putString(Constants.PAGE_ARG_SMS_CODE, smsCode);
+        Navigator.shareInstance().openURL(nextURL, bundle);
     }
 
     private static final int CLOCK_MAX_COUNT = 60;

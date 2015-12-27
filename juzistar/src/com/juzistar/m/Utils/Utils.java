@@ -398,15 +398,9 @@ public final class Utils /*extends CommonUtil*/ {
         return (bitmap);
     }
 
-//    public static void toast(Context context, String content) {
-//        if (context == null) {
-//            return;
-//        }
-//        if (context instanceof Activity && ((Activity) context).isFinishing()) {
-//            return;
-//        }
-//        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
-//    }
+    public static void toast(String content) {
+        App.toast(content);
+    }
 //
 
     public static void toastException(Exception e, String placeholder) {

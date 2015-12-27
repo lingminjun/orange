@@ -480,6 +480,14 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
             //强制刷新界面
             synchronizeToUI();
         }
+
+        /**
+         * 通知界面刷新，不重建数据源
+         */
+        public void refresh() {
+            //强制刷新界面
+            synchronizeToUI();
+        }
     }
 
     public UITableView(Context context) {

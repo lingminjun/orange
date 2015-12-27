@@ -1,5 +1,6 @@
 package com.juzistar.m.net;
 
+import android.text.TextUtils;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.juzistar.m.R;
@@ -119,7 +120,10 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             object = getModel();
 
             if (object instanceof BoolModel) {
-                ((BoolModel) object).success = true;
+                String string = response.getResponseString();
+                if (TextUtils.isEmpty(string)) {//兼容没有值返回时
+                    ((BoolModel) object).success = true;
+                }
             } else {
 
                 JSONObject json = new JSONObject(response.getResponseString());

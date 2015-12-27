@@ -137,19 +137,25 @@ public class TagPopViewController extends BaseTableViewController {
                 @Override
                 public void auth(String account) {
                     Bundle bundle = new Bundle();
-                    if (notice1.creatorId != UserCenter.shareInstance().UID()) {
-                        bundle.putLong(Constants.PAGE_ARG_OTHER_ID,notice1.creatorId);
-
-                        MapMarkPoint point = new MapMarkPoint();
-                        point.uid = notice1.creatorId;
-                        point.nick = notice1.creator;
-                        point.longitude = Double.parseDouble(notice1.longitude);
-                        point.latitude = Double.parseDouble(notice1.latitude);
-                        point.message = notice1.content;
-                        bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE,point);
-
-                        Navigator.shareInstance().openURL(PageURLs.MAP_CHAT_URL,bundle);
+                    if (notice1.creatorId == UserCenter.shareInstance().UID()) {
+                        return;
                     }
+
+                    if (notice1.category == NoticeBiz.NoticeCategory.NAN) {
+                        return;
+                    }
+
+                    bundle.putLong(Constants.PAGE_ARG_OTHER_ID,notice1.creatorId);
+
+                    MapMarkPoint point = new MapMarkPoint();
+                    point.uid = notice1.creatorId;
+                    point.nick = notice1.creator;
+                    point.longitude = Double.parseDouble(notice1.longitude);
+                    point.latitude = Double.parseDouble(notice1.latitude);
+                    point.message = notice1.content;
+                    bundle.putSerializable(Constants.PAGE_ARG_LATEST_RECEIVE_MESSAGE,point);
+
+                    Navigator.shareInstance().openURL(PageURLs.MAP_CHAT_URL,bundle);
                 }
             });
         }

@@ -76,4 +76,5 @@
     <string name="whether_delete_session">确定删除会话？</string>
     <string name="please_refresh_location">请刷新重新定位当前位置</string>
     <string name="login_or_register">登录/注册</string>
+    <string name="mobile_exist">手机号已经注册，请直接登录</string>
 </resources>

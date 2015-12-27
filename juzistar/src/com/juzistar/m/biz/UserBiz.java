@@ -249,4 +249,26 @@ public final class UserBiz {
     }
 
 
+    public static RPC.Cancelable mobileExist(final String mobile, final RPC.Response<BoolModel> response){
+
+        BaseRequest<BoolModel> request = new BaseRequest<BoolModel>() {
+            @Override
+            public String path() {
+                return "user/mobileExist";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                params.put("mobile",mobile);
+            }
+        };
+
+        return RPC.call(request,response);
+    }
+
 }

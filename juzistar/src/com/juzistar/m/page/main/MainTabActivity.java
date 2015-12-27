@@ -38,7 +38,6 @@ public class MainTabActivity extends BaseTabActivity {
 
         BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGIN_NOTIFICATION, observerMethod);
         BroadcastCenter.shareInstance().addObserver(this, UserCenter.USER_LOGOUT_NOTIFICATION, observerMethod);
-        BroadcastCenter.shareInstance().addObserver(this, MessageCenter.RECEIVED_MSG_NOTIFICATION, observerMethod);
     }
 
     BroadcastCenter.Method<MainTabActivity> observerMethod = new BroadcastCenter.Method<MainTabActivity>() {
@@ -83,9 +82,5 @@ public class MainTabActivity extends BaseTabActivity {
             tabBar().setBackgroundResource(R.color.white);
             tabBar().setSeparateLineHide(false);
         }
-
-//        if (index == 1) {//清空未读数
-//            tabBar().tabItemAtIndex(1).setBadgeValue("");
-//        }
     }
 }

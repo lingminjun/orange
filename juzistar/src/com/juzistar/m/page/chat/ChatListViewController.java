@@ -1,6 +1,8 @@
 package com.juzistar.m.page.chat;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.juzistar.m.page.PageURLs;
 import com.juzistar.m.page.base.BaseTableViewController;
 import com.juzistar.m.view.chat.SessionCell;
 import com.juzistar.m.view.chat.SessionCellModel;
+import com.ssn.framework.foundation.BroadcastCenter;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.*;
 
@@ -43,7 +46,26 @@ public class ChatListViewController extends BaseTableViewController {
         if (MessageCenter.shareInstance().unreadCount() > 0) {
             tabItem().setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
         }
+
+        BroadcastCenter.shareInstance().addObserver(this, MessageCenter.RECEIVED_MSG_NOTIFICATION, observerMethod);
     }
+
+    BroadcastCenter.Method<ChatListViewController> observerMethod = new BroadcastCenter.Method<ChatListViewController>() {
+        @Override
+        public void onReceive(ChatListViewController observer, Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(MessageCenter.RECEIVED_MSG_NOTIFICATION)) {
+                if (MessageCenter.shareInstance().unreadCount() > 0) {
+                    observer.tabItem().setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
+                }
+
+                if (observer.tableViewAdapter() != null) {
+                    observer.tableViewAdapter().refresh();
+                }
+            }
+        }
+    };
+
 
     @Override
     public View loadView(LayoutInflater inflater) {
@@ -69,6 +91,8 @@ public class ChatListViewController extends BaseTableViewController {
 
         if (MessageCenter.shareInstance().unreadCount() > 0) {
             tabItem().setBadgeValue(UITabBar.TabItem.BADGE_VALUE_DOT_VALUE);
+        } else {
+            tabItem().setBadgeValue("");
         }
     }
 

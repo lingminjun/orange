@@ -107,6 +107,7 @@ public class LoginViewController extends BaseViewController {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.PAGE_ARG_NEXT_URL, PageURLs.REGISTER_URL);
+                bundle.putBoolean(Constants.PAGE_ARG_CHECK_MOBILE, true);
                 Navigator.shareInstance().openURL(PageURLs.SMS_CODE_URL,bundle);
             }
         }));
