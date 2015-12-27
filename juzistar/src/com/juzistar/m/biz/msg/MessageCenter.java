@@ -264,6 +264,7 @@ public final class MessageCenter {
                     //查看session是否已经存在
                     String sid = Session.composedSessionID(message.fromUserId,UserCenter.shareInstance().UID());
                     Session session = snMap.get(sid);
+                    boolean isNew = false;
                     if (session == null) {
                         session = new Session();
                         session.sid = sid;
@@ -276,6 +277,8 @@ public final class MessageCenter {
                         snlist.add(0,session);
 
                         checkSessionMaxCount();
+
+                        isNew = true;
                     }
 
                     if(TextUtils.isEmpty(session.lastRcvMsg)) {
@@ -293,6 +296,11 @@ public final class MessageCenter {
                         try {
                             String json = MessageBiz.Message.messageToJSON(message);
                             session.unrdmsgs.add(json);
+
+                            if (!isNew) {
+                                session.unreadCount++;
+                                unreadCount++;
+                            }
                         } catch (Throwable e) {e.printStackTrace();}
                     }
 
@@ -408,6 +416,12 @@ public final class MessageCenter {
         Session session = snMap.get(sid);
         if (session != null) {
             List<String> dels = new ArrayList<>();
+
+            int diff = 0;//因为最后一条未读消息，直接记录在session的lastRecMsg上了
+            if (session.unreadCount > session.unrdmsgs.size()) {
+                diff = session.unreadCount - session.unrdmsgs.size();
+            }
+
             for (String msg : session.unrdmsgs) {
                 dels.add(msg);
                 if (msg.contains(message.id)) {
@@ -425,12 +439,12 @@ public final class MessageCenter {
                 session.lastLng = Double.parseDouble(message.longitude);
             } catch (Throwable e){e.printStackTrace();}
 
-            if (dels.size() > session.unreadCount) {
+            if (dels.size() < session.unreadCount) {
                 unreadCount -= session.unreadCount;
                 session.unreadCount = 0;
             } else {
-                session.unreadCount = session.unreadCount - dels.size();
-                unreadCount -= dels.size();
+                session.unreadCount = session.unreadCount - (dels.size() + diff);
+                unreadCount -= (dels.size() + diff);
             }
             if (unreadCount < 0) {unreadCount = 0;}
 
