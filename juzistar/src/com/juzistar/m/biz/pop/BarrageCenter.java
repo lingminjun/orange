@@ -258,9 +258,11 @@ public final class BarrageCenter {
             notice.longitude = Double.toString(mLongitude);
         }
 
-//        if (notice.category != NoticeBiz.NoticeCategory.NAN &&) {
-//            tagNotice.add(notice);
-//        }
+        if (notice.category != NoticeBiz.NoticeCategory.NAN) {
+            notice.type = NoticeBiz.NoticeType.NORMAL;
+        } else {
+            notice.type = NoticeBiz.NoticeType.TEMP;
+        }
 
         NoticeBiz.create(notice,new RPC.Response<NoticeBiz.Notice>(){
             @Override
