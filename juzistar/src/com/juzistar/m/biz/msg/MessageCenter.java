@@ -445,6 +445,9 @@ public final class MessageCenter {
             } else {
                 session.unreadCount = session.unreadCount - (dels.size() + diff);
                 unreadCount -= (dels.size() + diff);
+                if (session.unreadCount < 0) {
+                    session.unreadCount = 0;
+                }
             }
             if (unreadCount < 0) {unreadCount = 0;}
 
