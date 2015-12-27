@@ -27,6 +27,7 @@ import com.juzistar.m.view.com.Keyboard;
 import com.juzistar.m.view.com.KeyboardButton;
 import com.juzistar.m.view.com.UIDic;
 import com.juzistar.m.view.pop.BubbleCellModel;
+import com.juzistar.m.view.pop.PPBlankCellModel;
 import com.juzistar.m.view.pop.ReceivedBubbleCellModel;
 import com.juzistar.m.view.pop.SendBubbleCellModel;
 import com.ssn.framework.foundation.*;
@@ -42,6 +43,7 @@ import java.util.Set;
  */
 public class PopViewController extends BaseTableViewController {
     static String TAG_NOTICE_LIMIT_CLOCK = "TAG_NOTICE_LIMIT_CLOCK";
+    static String TAG_NOTICE_POP_CLOCK = "TAG_NOTICE_POP_CLOCK";//不断推
 
     LinearLayout bottom;
     LinearLayout topHintBar;
@@ -123,6 +125,8 @@ public class PopViewController extends BaseTableViewController {
 
                     //清空table
                     tableViewAdapter().removeAll();
+
+                    Clock.shareInstance().removeListener(TAG_NOTICE_POP_CLOCK);
                 } else {
                     BarrageCenter.shareInstance().startService();
                     switchBtn.setSelected(false);
@@ -144,30 +148,54 @@ public class PopViewController extends BaseTableViewController {
         //默认打开
         BarrageCenter.shareInstance().startService();
 
-        Clock.shareInstance().addListener(new Clock.Listener() {
-            @Override
-            public void fire(String flag) {
-                {
-                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
-                    notice.type = NoticeBiz.NoticeType.NORMAL;
-                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
-                    notice.content = "这仅仅只为测试"+test_count;
-                    notice.creator = "xxxx";
-                    notice.creatorId = test_count+101;
-                    notice.longitude = Double.toString(121.4596178033);
-                    notice.latitude = Double.toString(31.2117411154);
-                    notice.id = "" + Utils.getServerTime();
+//        Clock.shareInstance().addListener(new Clock.Listener() {
+//            @Override
+//            public void fire(String flag) {
+//                {
+//                    final NoticeBiz.Notice notice = new NoticeBiz.Notice();
+//                    notice.type = NoticeBiz.NoticeType.NORMAL;
+//                    notice.category = Convert.noticeCategory(Keyboard.KEY.LOVE);
+//                    notice.content = "这仅仅只为测试"+test_count;
+//                    notice.creator = "xxxx";
+//                    notice.creatorId = test_count+101;
+//                    notice.longitude = Double.toString(121.4596178033);
+//                    notice.latitude = Double.toString(31.2117411154);
+//                    notice.id = "" + Utils.getServerTime();
+//
+//                    appendNoticeCellModel(notice);
+//                    test_count++;
+//
+//                    if (test_count > 20) {
+//                        Clock.shareInstance().removeListener("dd");
+//                    }
+//                }
+//            }
+//        },"dd");
+    }
 
-                    appendNoticeCellModel(notice);
-                    test_count++;
 
-                    if (test_count > 20) {
-                        Clock.shareInstance().removeListener("dd");
-                    }
+    PPBlankCellModel blankCellModel = new PPBlankCellModel();
+
+    Clock.Listener popClock = new Clock.Listener() {
+        @Override
+        public void fire(String flag) {
+
+            boolean hasPop = false;
+            for (int row = 0; row < tableViewAdapter().getCount(); row++) {
+                UITableViewCell.CellModel cellModel = tableViewAdapter().getItem(row);
+                if (cellModel instanceof BubbleCellModel) {
+                    hasPop = true;
+                    break;
                 }
             }
-        },"dd");
-    }
+
+            if (hasPop) {
+                tableViewAdapter().appendCell(blankCellModel);
+            } else {
+                Clock.shareInstance().removeListener(TAG_NOTICE_POP_CLOCK);
+            }
+        }
+    };
 
     @Override
     public void onViewDidAppear() {
@@ -194,6 +222,7 @@ public class PopViewController extends BaseTableViewController {
     public void onDestroyController() {
         super.onDestroyController();
         Clock.shareInstance().removeListener(TAG_NOTICE_LIMIT_CLOCK);
+        Clock.shareInstance().removeListener(TAG_NOTICE_POP_CLOCK);
         UIDisplayLink.shareInstance().removeListeners(UIDISPLAYLINK_PREFIX);
     }
 
@@ -475,6 +504,8 @@ public class PopViewController extends BaseTableViewController {
         }
 
         tableViewAdapter().endUpdate();
+
+        Clock.shareInstance().addListener(popClock,TAG_NOTICE_POP_CLOCK);
 
         return model;
     }
