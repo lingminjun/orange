@@ -111,4 +111,11 @@ public class RegisterViewController extends BaseViewController {
         super.onViewDidAppear();
 
     }
+
+    @Override
+    public void onDestroyController() {
+        super.onDestroyController();
+
+        PageCenter.authComplete(null);
+    }
 }

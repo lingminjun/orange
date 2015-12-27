@@ -118,4 +118,11 @@ public class ResetPassworViewController extends BaseViewController {
         super.onViewDidAppear();
 
     }
+
+    @Override
+    public void onDestroyController() {
+        super.onDestroyController();
+
+        PageCenter.authComplete(null);
+    }
 }
