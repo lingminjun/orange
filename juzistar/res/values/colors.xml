@@ -33,9 +33,9 @@
     <color name="red_btn_press">#FF4E44</color>
     <color name="red_btn_disable">#FFAFAB</color>
     <color name="grey_btn_normal">#F2F2F2</color>
-    <color name="grey_btn_normal_alpha">#40F2F2F2</color>
+    <color name="grey_btn_normal_alpha">#80cccccc</color>
     <color name="grey_btn_press">#cccccc</color>
-    <color name="grey_btn_press_alpha">#40cccccc</color>
+    <color name="grey_btn_press_alpha">#80989898</color>
     <color name="btn_disable">#dcdcdc</color>
     <color name="orange_normal">#ff945a</color>
     <color name="orange_press">#FF823E</color>

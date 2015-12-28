@@ -4,14 +4,14 @@
     <item android:state_pressed="true">
         <shape>
             <solid android:color="@color/grey_btn_press_alpha"/>
-            <corners android:radius="@dimen/big_btn_corner"/>
+            <corners android:radius="5dp"/>
         </shape>
     </item>
 
     <item>
         <shape>
             <solid android:color="@color/grey_btn_normal_alpha"/>
-            <corners android:radius="@dimen/big_btn_corner"/>
+            <corners android:radius="5dp"/>
         </shape>
     </item>
 </selector>
