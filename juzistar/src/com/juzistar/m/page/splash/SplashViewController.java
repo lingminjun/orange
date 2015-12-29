@@ -25,8 +25,8 @@ public class SplashViewController extends UIViewController {
     public void onViewDidLoad() {
         super.onViewDidLoad();
 
-        //是否需要展示引导图
-        final boolean isUpgraded = App.isUpgraded();
+        //是否需要展示引导图（必须排除应用仅仅进入后台，并没有被杀死过，再次打开界面，此时还是原来界面）
+        final boolean isUpgraded = App.isUpgraded() && !App.isStayedBackground();
 
         //展示三秒后消失
         TaskQueue.mainQueue().executeDelayed(new Runnable() {

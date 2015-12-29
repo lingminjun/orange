@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.*;
-import com.ssn.framework.uikit.inc.UIWrapperView;
 
 /**
  * Created by lingminjun on 15/12/12.

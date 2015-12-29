@@ -1,7 +1,6 @@
 package com.juzistar.m.view.setting;
 
 import android.content.Context;
-import com.juzistar.m.view.me.TestCell;
 import com.ssn.framework.uikit.UITableViewCell;
 
 /**

@@ -4,7 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:id="@+id/ssn_root_wrap_view">
-    <com.ssn.framework.uikit.inc.UIWrapperView
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -13,5 +13,5 @@
                      android:layout_width="fill_parent"
                      android:layout_height="0.0dip"
                      android:layout_weight="1.0"/>
-    </com.ssn.framework.uikit.inc.UIWrapperView>
+    </LinearLayout>
 </FrameLayout>

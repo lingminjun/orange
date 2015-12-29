@@ -55,6 +55,7 @@
                   android:textSize="@dimen/ssn_normal_font"
                   android:textColor="@color/ssn_normal_text"
                   android:lines="1"
+                  android:singleLine="true"
                   android:text="明天"
                   android:gravity="left"/>
         <TextView android:id="@+id/message_label"
@@ -63,6 +64,7 @@
                   android:textSize="@dimen/ssn_assist_text"
                   android:textColor="@color/ssn_assist_text"
                   android:lines="1"
+                  android:singleLine="true"
                   android:text="明天"
                   android:gravity="left"/>
     </LinearLayout>
