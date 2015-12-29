@@ -87,8 +87,11 @@ public final class BarrageCenter {
 
     private void pullBarrage() {
         long latest_pull_at = UserDefaults.getInstance().get(LATEST_PULL_KEY,0l);
-        String longitude = Double.toString(LBService.shareInstance().getLatestLongitude());
-        String latitude = Double.toString(LBService.shareInstance().getLatestLatitude());
+
+        //设置用户自己设置的位置
+        String longitude = Double.toString(getLatestLongitude());
+        String latitude = Double.toString(getLatestLatitude());
+
         NoticeBiz.getList(latest_pull_at,longitude,latitude,new RPC.Response<NoticeBiz.NoticeList>(){
             @Override
             public void onSuccess(NoticeBiz.NoticeList list) {
@@ -226,6 +229,22 @@ public final class BarrageCenter {
         return location;
     }
 
+    public double getLatestLatitude() {
+        if (TextUtils.isEmpty(mAddress)) {
+            return LBService.shareInstance().getLatestLatitude();
+        } else {
+            return mLatitude;
+        }
+    }
+
+    public double getLatestLongitude() {
+        if (TextUtils.isEmpty(mAddress)) {
+            return LBService.shareInstance().getLatestLongitude();
+        } else {
+            return mLongitude;
+        }
+    }
+
     public void refreshCurrentLocation(final Runnable callback) {
         LBService.shareInstance().asyncLocation(new BDLocationListener() {
             @Override
@@ -250,13 +269,9 @@ public final class BarrageCenter {
 
     public void publishNotice(final NoticeBiz.Notice notice, final RPC.Response<NoticeBiz.Notice> response) {
 
-        if (TextUtils.isEmpty(mAddress)) {
-            notice.latitude = Double.toString(LBService.shareInstance().getLatestLatitude());
-            notice.longitude = Double.toString(LBService.shareInstance().getLatestLongitude());
-        } else {
-            notice.latitude = Double.toString(mLatitude);
-            notice.longitude = Double.toString(mLongitude);
-        }
+        //设置用户自己设置的位置
+        notice.latitude = Double.toString(getLatestLatitude());
+        notice.longitude = Double.toString(getLatestLongitude());
 
         if (notice.category != NoticeBiz.NoticeCategory.NAN) {
             notice.type = NoticeBiz.NoticeType.NORMAL;
