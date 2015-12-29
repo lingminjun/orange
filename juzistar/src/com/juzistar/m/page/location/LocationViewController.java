@@ -40,6 +40,7 @@ import com.juzistar.m.view.me.BlankCellModel;
 import com.ssn.framework.foundation.App;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.UIEvent;
+import com.ssn.framework.uikit.UILoading;
 import com.ssn.framework.uikit.UITableView;
 import com.ssn.framework.uikit.UITableViewCell;
 
@@ -65,8 +66,8 @@ public class LocationViewController extends BaseTableViewController {
         if (mPoiSearch == null) {
             // 初始化搜索模块，注册搜索事件监听
             mPoiSearch = PoiSearch.newInstance();
-
             mPoiSearch.setOnGetPoiSearchResultListener(onGetPoiSearchResultListener);
+
             mSuggestionSearch = SuggestionSearch.newInstance();
             mSuggestionSearch.setOnGetSuggestionResultListener(onGetSuggestionResultListener);
 
@@ -113,7 +114,7 @@ public class LocationViewController extends BaseTableViewController {
         mCancelPanel.setOnClickListener(UIEvent.click(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancelSearch(true);
+                cancelSearch(true,null);
                 showNoResults();
             }
         }));
@@ -130,7 +131,7 @@ public class LocationViewController extends BaseTableViewController {
 
         loadPoiSevice();//搜索组件加载
 
-        cancelSearch(true);
+        cancelSearch(true,null);
 
         showNoResults();//先显示无结果
     }
@@ -163,7 +164,7 @@ public class LocationViewController extends BaseTableViewController {
 //            list.add(model);
 //        }
 
-        Log.e("dddd","dddddddddddddd"+adapter.getCount());
+//        Log.e("dddd","dddddddddddddd"+adapter.getCount());
 
         return list;
     }
@@ -187,11 +188,20 @@ public class LocationViewController extends BaseTableViewController {
             if (model.data instanceof SuggestionResult.SuggestionInfo) {
                 SuggestionResult.SuggestionInfo data = (SuggestionResult.SuggestionInfo)model.data;
 
-                location.mLatitude = data.pt.latitude;
-                location.mLongitude = data.pt.longitude;
-                location.mCity = data.city;
-                location.mAddress = data.key;
+                searchLocation(data.key);
+                cancelSearch(false,data.key);
+                return;
 
+//                if (data.pt == null) {//并不包含位置信息，需要进一步定位
+//                    searchLocation(data.key);
+//                    cancelSearch(false);
+//                    return;
+//                } else {//可以直接取到位置
+//                    location.mLatitude = data.pt.latitude;
+//                    location.mLongitude = data.pt.longitude;
+//                    location.mCity = data.city;
+//                    location.mAddress = data.key;
+//                }
             } else if (model.data instanceof PoiInfo){
                 PoiInfo poiInfo = (PoiInfo)model.data;
 
@@ -238,7 +248,7 @@ public class LocationViewController extends BaseTableViewController {
                     return false;
                 } else {
                     searchLocation(searchStr);
-                    cancelSearch(false);
+                    cancelSearch(false,null);
                 }
                 return true;
             }
@@ -278,6 +288,7 @@ public class LocationViewController extends BaseTableViewController {
 
     //开始搜索
     private void searchLocation(String string) {
+        UILoading.show(getActivity());
         mPoiSearch.searchInCity(poption.keyword(string));
     }
 
@@ -317,7 +328,7 @@ public class LocationViewController extends BaseTableViewController {
         mSearchRightPadding.setVisibility(View.INVISIBLE);
     }
 
-    private void cancelSearch(boolean clear) {
+    private void cancelSearch(boolean clear,String key) {
 
         if (watcher != null) {
             searchText.removeTextChangedListener(watcher);
@@ -333,6 +344,11 @@ public class LocationViewController extends BaseTableViewController {
         if (clear) {
             searchText.clearFocus();
             searchText.setText("");
+        } else {
+            if (!TextUtils.isEmpty(key)) {
+                searchText.setText(key);
+                searchText.setSelection(key.length());
+            }
         }
 
         if (watcher == null) {
@@ -374,6 +390,8 @@ public class LocationViewController extends BaseTableViewController {
     private OnGetPoiSearchResultListener onGetPoiSearchResultListener = new OnGetPoiSearchResultListener() {
         @Override
         public void onGetPoiResult(PoiResult result) {
+            UILoading.dismiss(getActivity());
+
             if (result == null
                     || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
                 App.toast(Res.localized(R.string.no_search_result));
@@ -421,6 +439,7 @@ public class LocationViewController extends BaseTableViewController {
 
         @Override
         public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+            UILoading.dismiss(getActivity());
             Log.e("d",poiDetailResult.toString());
         }
     };

@@ -27,6 +27,7 @@
               android:gravity="left"
               android:layout_marginRight="@dimen/page_edg_mar"
               android:lines="1"
+              android:singleLine="true"
               android:ellipsize="end"
               android:text="@string/locate_current_location"/>
 </LinearLayout>

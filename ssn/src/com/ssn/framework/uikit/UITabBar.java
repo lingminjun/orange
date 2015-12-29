@@ -19,7 +19,6 @@ import com.ssn.framework.R;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
-import com.ssn.framework.uikit.inc.UIWrapperView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 /**
  * TabBar 实现
  */
-public final class UITabBar extends LinearLayout implements UIWrapperView.UIBottomBarRefreshInterface{
+public final class UITabBar extends LinearLayout {
 
     /**
      * tabItem
@@ -384,16 +383,16 @@ public final class UITabBar extends LinearLayout implements UIWrapperView.UIBott
         public void onSelected(UITabBar tabbar,int index);
     }
 
-    @Override
-    public void onKeyboardStatusChanged(boolean isShow) {
-        if (isShow) {
-            this.setVisibility(GONE);
-        }
-        else {
-            this.setVisibility(VISIBLE);
-            this.refresh();
-        }
-    }
+//    @Override
+//    public void onKeyboardStatusChanged(boolean isShow) {
+//        if (isShow) {
+//            this.setVisibility(GONE);
+//        }
+//        else {
+//            this.setVisibility(VISIBLE);
+//            this.refresh();
+//        }
+//    }
 
     public void setSeparateLineHide(boolean hide) {
         _separateLine.setVisibility(hide?View.INVISIBLE:View.VISIBLE);

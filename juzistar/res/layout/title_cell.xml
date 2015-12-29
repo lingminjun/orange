@@ -27,11 +27,12 @@
               android:gravity="left"
               android:layout_marginRight="@dimen/page_edg_mar"
               android:lines="1"
+              android:singleLine="true"
               android:ellipsize="end"
               android:text=""/>
-    <include layout="@layout/ssn_horizontal_fill"/>
     <TextView android:id="@+id/sub_label"
-              android:layout_width="wrap_content"
+              android:layout_width="0dp"
+              android:layout_weight="1"
               android:layout_height="wrap_content"
               android:textColor="@color/ssn_assist_text"
               android:textSize="@dimen/normal_small_font"
@@ -39,6 +40,7 @@
               android:layout_marginLeft="6dp"
               android:layout_marginRight="20dp"
               android:lines="1"
+              android:singleLine="true"
               android:ellipsize="start"
               android:text=""/>
 </LinearLayout>
