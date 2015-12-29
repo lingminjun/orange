@@ -33,7 +33,7 @@ public final class App {
     }
 
     /**
-     * 是否为首次安装
+     * 是否为首次安装，在app启动之后，此状态一直不变
      * @return
      */
     public static boolean isFirstInstall() {
@@ -42,7 +42,7 @@ public final class App {
     }
 
     /**
-     * 是否为升级版本，首次安装同样被视为升级版本
+     * 是否为升级版本，首次安装同样被视为升级版本，在app启动之后，此状态一直不变
      * @return
      */
     public static boolean isUpgraded() {
@@ -50,13 +50,19 @@ public final class App {
         return _upgraded > 0;
     }
 
+
+    public static boolean isStayedBackground() {
+        return _stayed_background;
+    }
+
+    private static boolean _stayed_background = false;
     private static volatile boolean _checked = false;
     private static int _upgraded = 0;//0表示非更新，1表示升级，2表示首次安装
     private static final String _upgraded_version_key = "_app_upgraded_version_key";
     private static void checkUpgraded() {
         if (_checked) {return;}
 
-        String v1 = UserDefaults.getInstance().get(_upgraded_version_key,null);
+        String v1 = UserDefaults.getInstance().get(_upgraded_version_key,(String)null);
         String v2 = Res.appVersion();
         UserDefaults.getInstance().put(_upgraded_version_key,v2);
 
@@ -70,6 +76,10 @@ public final class App {
         _checked = true;
     }
 
+    /**
+     * 当前应用是否在后台
+     * @return
+     */
     public static boolean isBackground() {
         return _background;
     }
@@ -78,6 +88,7 @@ public final class App {
     public static void terminate() {
         _terminate = true;
         _background = true;
+        _stayed_background = true;
         _checked = false;
 
         //是否需要真的退出引用，最好是启动推送服务的service
@@ -93,7 +104,21 @@ public final class App {
 //        activityMgr.killBackgroundProcesses(Res.packageName());
     }
 
-    private static Runnable _runnable = null;
+    private static Runnable _runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (_runnable == null || _runnable != this) {return;}
+
+            if (_terminate) {
+                terminate();
+            }
+            else {
+                _background = true;
+                _stayed_background = true;
+            }
+        }
+    };
+
     private static boolean _terminate = false;
     public static void checkEnterBackground(final boolean terminate) {
         //三秒后，进入后台，如果没有新的activity出现，将直接进入后台
@@ -101,30 +126,13 @@ public final class App {
             _terminate = terminate;
         }
 
-        if (_runnable != null) {
-            TaskQueue.mainQueue().cancel(_runnable);
-        }
-        _runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (_runnable == null || _runnable != this) {return;}
-
-                if (_terminate) {
-                    terminate();
-                }
-                else {
-                    _background = true;
-                }
-            }
-        };
-
+        TaskQueue.mainQueue().cancel(_runnable);
         TaskQueue.mainQueue().executeDelayed(_runnable,3000);
     }
 
     public static void checkEnterFront() {
         TaskQueue.mainQueue().cancel(_runnable);
         _background = false;
-        _runnable = null;
     }
 
     /**
