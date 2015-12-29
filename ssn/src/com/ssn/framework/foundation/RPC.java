@@ -43,6 +43,8 @@ public class RPC {
      */
     public static abstract class Request<T> implements Cancelable {
         private boolean _cancel;
+        private T _result;
+        private Request<?> _prevReq;
 
         /**
          * 取消请求
@@ -61,6 +63,29 @@ public class RPC {
          * @throws Exception
          */
         public abstract T call(Retry retry) throws Exception;
+
+
+        /**
+         * 链式请求支持
+         */
+        public Request<?> nextRequest;
+
+
+        /**
+         * 获取请求响应值，只有请求完成后才有值
+         * @return
+         */
+        public T getResult() {
+            return _result;
+        }
+
+        /**
+         * 获取前一个请求体，可以获取请求的值，前一个必须成功才能走到当前响应
+         * @return
+         */
+        public Request<?> getPrevRequest() {
+            return _prevReq;
+        }
     }
 
     /**
@@ -74,6 +99,13 @@ public class RPC {
         public void onSuccess(T t){};
         public void onFailure(Exception e){};
         public void onFinish(){};
+
+        /**链式响应回调接口**/
+        public void onStart(final Request<T> req){};
+        public void onCache(final Request<T> req,T t){};
+        public void onSuccess(final Request<T> req,T t, int i){};
+        public void onFailure(final Request<T> req,Exception e, int i){};
+        public void onFinish(final Request<T> req){};
 
         /*
         private Object getHostObject() {

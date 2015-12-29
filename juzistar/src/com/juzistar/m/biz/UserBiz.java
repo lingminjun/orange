@@ -268,6 +268,26 @@ public final class UserBiz {
             }
         };
 
+        /**
+         * 链式请求方式
+         */
+        request.nextRequest = new BaseRequest<BaseModel>() {
+            @Override
+            public String path() {
+                return null;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return null;
+            }
+        };
+
         return RPC.call(request,response);
     }
 
