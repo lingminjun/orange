@@ -37,7 +37,7 @@ public final class HTTPAccessor {
     private static int _so_timeout               = 30000;//数据响应超时时间（毫秒）
     private static String _agent                 = "Android App";
     private static int _keep_alive               = 5000;//小于零禁用
-    private static boolean _gzip                 = false;//是否使用gzip
+    private static boolean _gzip                 = true;//是否使用gzip
 
     private static boolean _debug                = false;//连接超时时间（毫秒）
 

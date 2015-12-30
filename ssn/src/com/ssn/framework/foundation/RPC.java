@@ -97,13 +97,13 @@ public class RPC {
 
     /**
      * 响应回调
-     * @param <Object>
      */
-    public static class Response<Object> {
+    public static class Response<T> {
 
+        /**简单响应**/
         public void onStart(){};
-//        public void onCache(T t){};
-        public void onSuccess(Object t){};
+        public void onCache(T t){};
+        public void onSuccess(T t){};
         public void onFailure(Exception e){};
         public void onFinish(){};
 
@@ -114,30 +114,17 @@ public class RPC {
         public void onFailure(final Request<? extends Object> req,Exception e, int i){};
         public void onFinish(final Request<? extends Object> req){};
 
-        /*
-        private Object getHostObject() {
-            //访问私有属性
-            Class<?> type = this.getClass();
-            Field field = null;
-            try {
-                field = type.getDeclaredField("this$0");
-                field.setAccessible(true);
-                return field.get(this);
-            } catch (Throwable e) {}
-
-            return null;
-        }
-        */
     }
 
     /**
      * 调用过程，调用发生在异步线程，回调在ui线程
      * @param req
      * @param res
-     * @param <T>
+     * @param <T1>
+     * @param <T2>
      * @return
      */
-    public static <T> Cancelable call(final Request<T> req, final Response<T> res) {
+    public static <T1,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res) {
         return call(req,res,false);
     }
 
@@ -145,26 +132,32 @@ public class RPC {
      * 调用过程，调用发生在异步线程，回调在ui线程
      * @param req
      * @param res
-     * @param <T>
+     * @param <T1>
+     * @param <T2>
      * @return
      */
-    public static <T> Cancelable call(final Request<T> req, final Response<T> res, final boolean block) {
+    public static <T1,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res, final boolean block) {
 
         if (req == null || res == null) {
             return null;
         }
 
         if (block) {
-
-            callIMP(req, res);
-
+            if (req.nextRequest != null) {
+                chainCallIMP(req,res);
+            } else {
+                callIMP(req, res);
+            }
         } else {
 
             Runnable reqRun = new Runnable() {
                 @Override
                 public void run() {
-//                    callIMP(req,res);
-                    chainCallIMP(req,res);
+                    if (req.nextRequest != null) {
+                        chainCallIMP(req,res);
+                    } else {
+                        callIMP(req, res);
+                    }
                 }
             };
 
@@ -174,7 +167,7 @@ public class RPC {
         return req;
     }
 
-    public static <T> void callIMP(final Request<T> req, final Response<T> res) {
+    private static <T1,T2 extends Object> void callIMP(final Request<T1> req, final Response<T2> res) {
         //检查是否取消请求
         if (req._cancel) {
             return;
@@ -188,9 +181,23 @@ public class RPC {
             }
         });
 
+        //读取文件缓存
         try {
+            final T1 o = req.cache();
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onCache((T2)o);
+                }
+            });
+        } catch (Throwable e) {//缓存实现失败不做处理
+            e.printStackTrace();
+        }
+
+        try {
+
             Retry retry = new Retry();
-            T o = req.call(retry);
+            T1 o = req.call(retry);
             int times = retry.retryTimes;
 
             //开始重试
@@ -202,11 +209,11 @@ public class RPC {
             }
 
             //成功回调
-            final T t = o;
+            final T1 t = o;
             TaskQueue.mainQueue().execute(new Runnable() {
                 @Override
                 public void run() {
-                    res.onSuccess(t);
+                    res.onSuccess((T2)t);
                 }
             });
         } catch (final Exception e) {
@@ -241,7 +248,7 @@ public class RPC {
         }
     }
 
-    public static  void chainCallIMP(final Request<Object> mainReq, final Response<Object> res) {
+    private static void chainCallIMP(final Request<? extends Object> mainReq, final Response<? extends Object> res) {
         //检查是否取消请求
         if (mainReq._cancel) {
             return;
@@ -276,7 +283,7 @@ public class RPC {
     }
 
 
-    private static void callIMP(final Request<Object> mainReq, final Request<? extends Object> req, final int idx, final Response<Object> res) {
+    private static void callIMP(final Request<? extends Object> mainReq, final Request<? extends Object> req, final int idx, final Response<? extends Object> res) {
         //检查是否取消请求
         if (mainReq._cancel) {
             return;

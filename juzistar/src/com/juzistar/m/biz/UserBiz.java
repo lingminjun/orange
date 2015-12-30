@@ -268,28 +268,52 @@ public final class UserBiz {
             }
         };
 
-        /**
-         * 链式请求方式
-         */
-        request.nextRequest = new BaseRequest<BaseModel>() {
+        return RPC.call(request,response);
+    }
+
+    /**
+     * 链式请求实例，请求注册验证码
+     * @param mobile
+     * @param response
+     * @return
+     */
+    public static RPC.Cancelable sendRegisterSMSCode(final String mobile, final String type,  final RPC.Response<BoolModel> response){
+
+        BaseRequest<BoolModel> request = new BaseRequest<BoolModel>() {
             @Override
             public String path() {
-                return null;
-            }
-
-            @Override
-            public void params(HashMap<String, Object> params) {
-                Object obj = getPrevRequest().getResult();
-
+                return "user/mobileExist";
             }
 
             @Override
             public HTTPAccessor.REST_METHOD method() {
-                return null;
+                return HTTPAccessor.REST_METHOD.GET;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                params.put("mobile",mobile);
+            }
+        };
+
+        request.nextRequest = new BaseRequest<SMSCodeModel>() {
+            @Override
+            public String path() {
+                return "smsAuthCode";
+            }
+
+            @Override
+            public HTTPAccessor.REST_METHOD method() {
+                return HTTPAccessor.REST_METHOD.GET;
+            }
+
+            @Override
+            public void params(HashMap<String, Object> params) {
+                params.put("mobile",mobile);
+                params.put("type",type);
             }
         };
 
         return RPC.call(request,response);
     }
-
 }
