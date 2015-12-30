@@ -216,7 +216,7 @@ public class UILockScreenKeyboard extends Activity {
 
     @Override
     public void finish() {
-        innerHideSystemKeyboard(false);
+//        innerHideSystemKeyboard(false);
         listener = null;
         keyboard = null;
         customKeyboard = null;
