@@ -279,6 +279,7 @@ public final class UserBiz {
 
             @Override
             public void params(HashMap<String, Object> params) {
+                Object obj = getPrevRequest().getResult();
 
             }
 

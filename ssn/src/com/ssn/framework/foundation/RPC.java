@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 /**
  * Created by lingminjun on 15/10/20.
@@ -64,11 +65,17 @@ public class RPC {
          */
         public abstract T call(Retry retry) throws Exception;
 
+        /**
+         * 文件缓存
+         * @return
+         * @throws Exception
+         */
+        public abstract T cache() throws Exception;
 
         /**
          * 链式请求支持
          */
-        public Request<?> nextRequest;
+        public Request<? extends Object> nextRequest;
 
 
         /**
@@ -90,22 +97,22 @@ public class RPC {
 
     /**
      * 响应回调
-     * @param <T>
+     * @param <Object>
      */
-    public static class Response<T> {
+    public static class Response<Object> {
 
         public void onStart(){};
 //        public void onCache(T t){};
-        public void onSuccess(T t){};
+        public void onSuccess(Object t){};
         public void onFailure(Exception e){};
         public void onFinish(){};
 
         /**链式响应回调接口**/
-        public void onStart(final Request<T> req){};
-        public void onCache(final Request<T> req,T t){};
-        public void onSuccess(final Request<T> req,T t, int i){};
-        public void onFailure(final Request<T> req,Exception e, int i){};
-        public void onFinish(final Request<T> req){};
+        public void onStart(final Request<? extends Object> req){};
+        public void onCache(final Request<? extends Object> req,Object t, int i){};
+        public void onSuccess(final Request<? extends Object> req,Object t, int i){};
+        public void onFailure(final Request<? extends Object> req,Exception e, int i){};
+        public void onFinish(final Request<? extends Object> req){};
 
         /*
         private Object getHostObject() {
@@ -156,7 +163,8 @@ public class RPC {
             Runnable reqRun = new Runnable() {
                 @Override
                 public void run() {
-                    callIMP(req,res);
+//                    callIMP(req,res);
+                    chainCallIMP(req,res);
                 }
             };
 
@@ -233,4 +241,102 @@ public class RPC {
         }
     }
 
+    public static  void chainCallIMP(final Request<Object> mainReq, final Response<Object> res) {
+        //检查是否取消请求
+        if (mainReq._cancel) {
+            return;
+        }
+
+        //开始请求
+        TaskQueue.mainQueue().execute(new Runnable() {
+            @Override
+            public void run() {
+                res.onStart(mainReq);
+            }
+        });
+
+        //读取文件缓存
+        int idx = 0;
+        Request<? extends Object> req = mainReq;
+        while (req != null) {
+
+            callIMP(mainReq,req,idx,res);
+
+            //继续下一个响应
+            req = req.nextRequest;
+        }
+
+        //最终回调
+        TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFinish();
+                }
+            });
+    }
+
+
+    private static void callIMP(final Request<Object> mainReq, final Request<? extends Object> req, final int idx, final Response<Object> res) {
+        //检查是否取消请求
+        if (mainReq._cancel) {
+            return;
+        }
+
+        //读取文件缓存
+        try {
+            final Object o = req.cache();
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onCache(req,o,idx);
+                }
+            });
+        } catch (Throwable e) {//缓存实现失败不做处理
+            e.printStackTrace();
+        }
+
+        try {
+            Retry retry = new Retry();
+            Object o = req.call(retry);
+            int times = retry.retryTimes;
+
+            //开始重试
+            while (times > 0 && o == null) {
+                APPLog.error("rpc retry", req.toString());
+                times--;
+                retry.isLast = times == 0;
+                o = req.call(retry);
+            }
+
+            //成功回调
+            final Object t = o;
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onSuccess(req,t,idx);
+                }
+            });
+        } catch (final Exception e) {
+            APPLog.error("rpc error", e.toString());
+
+            //异常回调
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFailure(req,e,idx);
+                }
+            });
+        } catch (Throwable throwable){
+            APPLog.error("rpc error", throwable.toString());
+            final RuntimeException e = new RuntimeException(throwable);
+
+            //异常回调
+            TaskQueue.mainQueue().execute(new Runnable() {
+                @Override
+                public void run() {
+                    res.onFailure(req,e,idx);
+                }
+            });
+        }
+    }
 }

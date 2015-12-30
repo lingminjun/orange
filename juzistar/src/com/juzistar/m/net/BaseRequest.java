@@ -162,6 +162,11 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
         return object;
     }
 
+    @Override
+    public T cache() throws Exception {
+        return null;
+    }
+
     public static <T> T createInstance(Class<T> cls) {
         T obj=null;
         try {
