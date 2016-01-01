@@ -3,7 +3,7 @@ package com.ssn.framework.foundation;
 /**
  * Created by lingminjun on 15/10/20.
  */
-public class RPC {
+public final class RPC {
 
     /**
      * 取消请求
