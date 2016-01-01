@@ -2,9 +2,7 @@ package com.juzistar.m.net;
 
 import android.text.TextUtils;
 import android.util.Log;
-import com.alibaba.fastjson.JSON;
 import com.juzistar.m.R;
-import com.juzistar.m.biz.UserBiz;
 import com.juzistar.m.biz.UserCenter;
 import com.ssn.framework.foundation.*;
 import org.apache.http.HttpStatus;
@@ -105,7 +103,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
             Log.e("res:",content);
         }
         */
-        HTTPAccessor.ServerResponse response = null;
+        HTTPAccessor.HTTPResponse response = null;
         if (isSingleChannel()) {//单通道调用
             response = HTTPAccessor.singleChannelAccess(this);
         } else {
