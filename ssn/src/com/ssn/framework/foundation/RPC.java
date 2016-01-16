@@ -1,5 +1,10 @@
 package com.ssn.framework.foundation;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by lingminjun on 15/10/20.
  */
@@ -125,6 +130,76 @@ public final class RPC {
         public void onFailure(final Request<? extends Object> req,Exception e, int i){};
         public void onFinish(final Request<? extends Object> req){};
 
+        /**
+         * 获取响应持有者
+         * @return
+         */
+        public Object getHostObject() {
+            //访问私有属性
+            Class<?> type = this.getClass();
+            Field field = null;
+//        Field[] fields = null;
+            try {
+//            fields = type.getDeclaredFields();
+                field = type.getDeclaredField("this$0");
+                field.setAccessible(true);
+                return field.get(this);
+            } catch (Throwable e) {}
+
+            return null;
+        }
+    }
+
+    /**
+     * 中断器，注意中断器使用，不要引用activity以及其他ui
+     */
+    public static interface Interceptor {
+        /**
+         * 是否中断，返回true表示中断，返回false表示不中断，若intercept产生异常，则直接中断。
+         * 注意此方法将在线程跨越和网络返回时都会进行检查。
+         * @param req
+         * @param res
+         * @return
+         */
+        public boolean intercept(Request<?> req, Response<?> res);
+    }
+
+    /**
+     * 设置中断器，注意，此方法请在Application初始化时调用，效率考虑，暂时没有加锁处理，请谨慎使用
+     * @param interceptor
+     */
+    public static void setInterceptor(Interceptor interceptor) {
+//        synchronized (RPC.class) {
+            itpt = interceptor;
+//        }
+    }
+
+    /**
+     * 移除拦截器
+     */
+//    public static void removeInterceptor() {
+//        synchronized (RPC.class) {
+//            itpt = null;
+//        }
+//    }
+
+    /**
+     * 是否中断
+     * @param req
+     * @param res
+     * @return
+     */
+    private static boolean checkInterceptor(final Request<?> req, final Response<?> res) {
+        if (itpt != null) {
+            boolean intercept = false;
+            try {
+                intercept = itpt.intercept(req, res);
+            } catch (Throwable e) {
+                intercept = true;
+            }
+            return intercept;
+        }
+        return false;
     }
 
     /**
@@ -164,6 +239,11 @@ public final class RPC {
             Runnable reqRun = new Runnable() {
                 @Override
                 public void run() {
+
+                    if (checkInterceptor(req,res)) {
+                        return;
+                    }
+
                     if (req.isChained) {
                         chainCallIMP(req,res);
                     } else {
@@ -178,6 +258,11 @@ public final class RPC {
         return req;
     }
 
+    /**
+     * 记录Interceptor
+     */
+    private static Interceptor itpt = null;
+
     private static <T1,T2 extends Object> void callIMP(final Request<T1> req, final Response<T2> res) {
         //检查是否取消请求
         if (req._cancel) {
@@ -189,6 +274,9 @@ public final class RPC {
         TaskQueue.mainQueue().execute(new Runnable() {
             @Override
             public void run() {
+                if (checkInterceptor(req,res)) {
+                    return;
+                }
                 res.onStart();
             }
         });
@@ -200,6 +288,9 @@ public final class RPC {
                 TaskQueue.mainQueue().execute(new Runnable() {
                     @Override
                     public void run() {
+                        if (checkInterceptor(req,res)) {
+                            return;
+                        }
                         res.onCache(o);
                     }
                 });
@@ -208,6 +299,7 @@ public final class RPC {
             e.printStackTrace();
         }
 
+        boolean intercept = false;
         try {
 
             Retry retry = new Retry();
@@ -222,41 +314,65 @@ public final class RPC {
                 req._result = req.call(retry);
             }
 
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onSuccess((T2)(req._result));
-                }
-            });
+            intercept = checkInterceptor(req,res);
+            if (!intercept) {
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req,res)) {
+                            return;
+                        }
+                        res.onSuccess((T2)(req._result));
+                    }
+                });
+            }
         } catch (final Exception e) {
             APPLog.error("rpc error", e.toString());
-
-            //异常回调
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onFailure(e);
-                }
-            });
+            //非直接中断
+            intercept = checkInterceptor(req,res);
+            if (!intercept) {
+                //异常回调
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req, res)) {
+                            return;
+                        }
+                        res.onFailure(e);
+                    }
+                });
+            }
         } catch (Throwable throwable){
             APPLog.error("rpc error", throwable.toString());
-            final RuntimeException e = new RuntimeException(throwable);
 
-            //异常回调
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onFailure(e);
-                }
-            });
+            intercept = checkInterceptor(req,res);
+            //非直接中断
+            if (!intercept) {
+                final RuntimeException e = new RuntimeException(throwable);
+                //异常回调
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req, res)) {
+                            return;
+                        }
+                        res.onFailure(e);
+                    }
+                });
+            }
         }finally {
             //最终回调
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onFinish();
-                }
-            });
+            if (!intercept) {
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req, res)) {
+                            return;
+                        }
+                        res.onFinish();
+                    }
+                });
+            }
 
             //重置请求
             req.reset();
@@ -274,6 +390,9 @@ public final class RPC {
         TaskQueue.mainQueue().execute(new Runnable() {
             @Override
             public void run() {
+                if (checkInterceptor(mainReq,res)) {
+                    return;
+                }
                 res.onStart(mainReq);
             }
         });
@@ -283,22 +402,30 @@ public final class RPC {
         Request<? extends Object> req = mainReq;
         while (req != null) {
 
-            //cancel连续性考虑
+            //请求已经取消，cancel连续性考虑
             if (req._cancel) {
+                mainReq.reset();
                 req.reset();
-                break;
+                return;
             }
 
-            //检查是否取消请求
+            //请求已经取消，检查是否取消请求
             if (mainReq._cancel) {
                 mainReq.reset();
-                break;
+                req.reset();
+                return;
             }
 
-            /**
-             * 请求失败时，若标明不忽略错误，则停止继续请求
-             */
-            if (!callIMP(mainReq,req,idx,res) && !req.ignoreError) {
+
+            int st = callIMP(mainReq,req,idx,res);
+            if (st < 0) {//表明已经中断
+                mainReq.reset();
+                req.reset();
+                return;
+            }
+
+            //请求失败时，若标明不忽略错误，则停止继续请求
+            if (st == 0 && !req.ignoreError) {
                 break;
             }
 
@@ -315,9 +442,14 @@ public final class RPC {
         TaskQueue.mainQueue().execute(new Runnable() {
                 @Override
                 public void run() {
+                    if (checkInterceptor(mainReq,res)) {
+                        return;
+                    }
                     res.onFinish();
                 }
             });
+
+        mainReq.reset();
     }
 
     /**
@@ -327,9 +459,9 @@ public final class RPC {
      * @param idx
      * @param res
      * @param <T1,T2>
-     * @return 请求是否成功
+     * @return 请求状态，0：失败；1：成功；-1：中断
      */
-    private static <T1,T2> boolean callIMP(final Request<? extends Object> mainReq, final Request<T1> req, final int idx, final Response<T2> res) {
+    private static <T1,T2> int callIMP(final Request<? extends Object> mainReq, final Request<T1> req, final int idx, final Response<T2> res) {
 
         //读取文件缓存
         try {
@@ -338,6 +470,9 @@ public final class RPC {
                 TaskQueue.mainQueue().execute(new Runnable() {
                     @Override
                     public void run() {
+                        if (checkInterceptor(req,res)) {
+                            return;
+                        }
                         res.onCache(req, o, idx);
                     }
                 });
@@ -346,7 +481,7 @@ public final class RPC {
             e.printStackTrace();
         }
 
-        boolean result = true;
+        int result = 1;
         try {
             Retry retry = new Retry();
             req._result = req.call(retry);
@@ -360,38 +495,60 @@ public final class RPC {
                 req._result = req.call(retry);
             }
 
+            //直接中断
+            if (checkInterceptor(req,res)) {
+                return -1;
+            }
+
             //成功回调
             TaskQueue.mainQueue().execute(new Runnable() {
                 @Override
                 public void run() {
+                    if (checkInterceptor(req,res)) {
+                        return;
+                    }
                     res.onSuccess(req,(T2)(req._result),idx);
                 }
             });
         } catch (final Exception e) {
             APPLog.error("rpc error", e.toString());
 
-            //异常回调
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onFailure(req,e,idx);
-                }
-            });
-
-            result = false;
+            //直接中断
+            if (checkInterceptor(req,res)) {
+                result = -1;
+            } else {
+                //异常回调
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req, res)) {
+                            return;
+                        }
+                        res.onFailure(req, e, idx);
+                    }
+                });
+                result = 0;
+            }
         } catch (Throwable throwable){
             APPLog.error("rpc error", throwable.toString());
-            final RuntimeException e = new RuntimeException(throwable);
+            //直接中断
+            if (checkInterceptor(req,res)) {
+                result = -1;
+            } else {
+                final RuntimeException e = new RuntimeException(throwable);
+                //异常回调
+                TaskQueue.mainQueue().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (checkInterceptor(req, res)) {
+                            return;
+                        }
+                        res.onFailure(req, e, idx);
+                    }
+                });
 
-            //异常回调
-            TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    res.onFailure(req,e,idx);
-                }
-            });
-
-            result = false;
+                result = 0;
+            }
         }
 
         return result;
