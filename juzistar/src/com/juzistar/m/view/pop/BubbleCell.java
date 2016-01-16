@@ -1,6 +1,7 @@
 package com.juzistar.m.view.pop;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public abstract class BubbleCell extends UITableViewCell {
                 if (model != null && model.cellListener != null && model.autoDisappear) {
                     model.cellListener.onDisappear(model,model.notice);
                 }
-
                 return;
             }
 
@@ -70,6 +70,7 @@ public abstract class BubbleCell extends UITableViewCell {
         if (view != null) {
             if (model.autoDisappear) {
                 UIDisplayLink.shareInstance().addListener(timerListener,UIDisplayLinkKey);
+                model.animationDuration = model.animationDuration - BubbleCellModel.DEFAULT_ONCE_DURATION_TIME;
                 view.setAlpha(model.getAlpha());
             } else {
                 view.setAlpha(1.0f);

@@ -215,7 +215,6 @@ public class PopViewController extends BaseTableViewController {
     @Override
     public void onViewDidDisappear() {
         super.onViewDidDisappear();
-//        UIDisplayLink.shareInstance().removeListener(CHECK_POP_TIMER_KEY);
     }
 
     @Override
@@ -506,7 +505,7 @@ public class PopViewController extends BaseTableViewController {
 
         //添加ui刷新器
         model.autoDisappear = true;
-        if (tableViewAdapter().getCount() > 10) {
+        if (tableViewAdapter().getCount() > 40) {
             tableViewAdapter().removeCells(0,2);//太多时删除一部分
         }
 
