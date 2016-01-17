@@ -459,7 +459,8 @@ public class PopViewController extends BaseTableViewController {
                         return;
                     }
 
-                    if (notice1.category == NoticeBiz.NoticeCategory.NAN) {
+                    //若不返回经纬度，则不让聊天
+                    if (TextUtils.isEmpty(notice1.longitude) || TextUtils.isEmpty(notice1.latitude)) {
                         return;
                     }
 
