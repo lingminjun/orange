@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.juzistar.m"
-      android:versionCode="1"
-      android:versionName="1.0">
+      android:versionCode="2"
+      android:versionName="1.1">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="21" />
 
 
@@ -81,7 +81,7 @@
         <activity android:name="com.ssn.framework.uikit.BaseActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustNothing|stateHidden">
+                  android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -89,13 +89,13 @@
         <activity android:name="com.ssn.framework.uikit.BaseNavActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"
                   android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustNothing|stateHidden">
+                  android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity android:name="com.ssn.framework.uikit.UILockScreenKeyboard"
+         <activity android:name="com.ssn.framework.uikit.UILockScreenKeyboard"
                   android:configChanges="keyboard|orientation|screenSize"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="adjustResize|stateVisible"

@@ -12,7 +12,7 @@ public class PPBlankCellModel extends UITableViewCell.CellModel {
     public PPBlankCellModel() {
         hiddenSeparateLine = true;
         hiddenRightArrow = true;
-        height = 40;
+        height = 30;
     }
 
     @Override

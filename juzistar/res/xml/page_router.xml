@@ -47,7 +47,7 @@
           description="编辑头像"/>
 
     <item url="http://m.juzistar.com/modify_nick.html"
-          fragmentclass="com.juzistar.m.page.setting.EditNickViewController"
+          fragmentclass="com.juzistar.m.page.setting.XEditNickViewController"
           activityclass="com.ssn.framework.uikit.BaseNavActivity"
           description="修改昵称"/>
 
