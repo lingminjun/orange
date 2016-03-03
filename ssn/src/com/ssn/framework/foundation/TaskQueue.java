@@ -163,7 +163,7 @@ public final class TaskQueue {
             }
         }
         else {
-            Log.i("RR","s what="+code);
+//            Log.i("RR","s what="+code);
             mainHandler.sendMessageDelayed(Message.obtain(mainHandler,code,r),(delayMillis < 0 ? delayMillis : 0));
         }
     }
@@ -174,7 +174,7 @@ public final class TaskQueue {
             rrs.remove(code);
         }
         else {
-            Log.i("RR","c what="+code);
+//            Log.i("RR","c what="+code);
             mainHandler.removeMessages(code);
         }
     }
@@ -188,7 +188,7 @@ public final class TaskQueue {
             @Override
             public void handleMessage(Message msg) {
                 Runnable r = (Runnable)msg.obj;
-                Log.i("RR","e what="+msg.what);
+//                Log.i("RR","e what="+msg.what);
                 if (r != null) {
                     try {
                         r.run();
