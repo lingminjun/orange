@@ -2,12 +2,10 @@ package com.ssn.framework.foundation;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,16 +78,11 @@ public final class TaskQueue {
 
     /**
      * 异步执行事件方法
-     * @param var1
+     * @param r
      */
-    public void execute(Runnable var1) {
-        if (var1 != null) {
-            if (pool != null) {
-                pool.execute(var1);
-            }
-            else {
-                mainHandler.post(var1);
-            }
+    public void execute(Runnable r) {
+        if (r != null) {
+            _execute(r);
         }
     }
 
@@ -100,34 +93,7 @@ public final class TaskQueue {
      */
     public void executeDelayed(final Runnable r, final long delayMillis) {
         if (r != null) {
-            if (pool != null) {
-                if (delayMillis <= 0) {
-                    pool.execute(r);
-                }
-                else {
-
-                    final Integer code = r.hashCode();
-                    _dRuns.add(code);
-
-                    pool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(delayMillis);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            if (_dRuns.contains(code)) {
-                                r.run();
-                            }
-                            _dRuns.remove(code);
-                        }
-                    });
-                }
-            }
-            else {
-                mainHandler.postDelayed(r, delayMillis);
-            }
+            _executeDelayed(r,delayMillis);
         }
     }
 
@@ -137,22 +103,99 @@ public final class TaskQueue {
      */
     public void cancel(final Runnable r) {
         if (r != null) {
-            if (pool != null) {
-                _dRuns.remove(r.hashCode());
-            }
-            else {
-                mainHandler.removeCallbacks(r);
-            }
+            _cancel(r);
         }
     }
 
     /*****************一下为私有实现*******************/
+    static class SaftyRunnable implements Runnable {
+        public SaftyRunnable(Runnable runnable) {
+            if (runnable == null) {throw new RuntimeException("Please make sure that the incoming effective Runnable");}
+            _run = runnable;
+        }
+
+        private Runnable _run;
+
+        @Override
+        public void run() {
+            try {
+                _run.run();
+            } catch (Throwable e) {}
+        }
+    }
+
+    private void _execute(Runnable r) {
+        SaftyRunnable rr = new SaftyRunnable(r);
+        if (pool != null) {
+            pool.execute(rr);
+        }
+        else {
+            mainHandler.post(rr);
+        }
+    }
+
+    private void _executeDelayed(final Runnable r, final long delayMillis) {
+        final Integer code = r.hashCode();
+        if (pool != null) {
+            if (delayMillis <= 0) {
+                pool.execute(new SaftyRunnable(r));
+            }
+            else {
+                rrs.put(code,r);
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(delayMillis);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        Runnable rr = rrs.remove(code);
+
+                        if (rr != null) {
+                            try {
+                                rr.run();
+                            } catch (Throwable e) {}
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            Log.i("RR","s what="+code);
+            mainHandler.sendMessageDelayed(Message.obtain(mainHandler,code,r),(delayMillis < 0 ? delayMillis : 0));
+        }
+    }
+
+    private void _cancel(final Runnable r) {
+        final Integer code = r.hashCode();
+        if (pool != null) {
+            rrs.remove(code);
+        }
+        else {
+            Log.i("RR","c what="+code);
+            mainHandler.removeMessages(code);
+        }
+    }
+
     private static TaskQueue newTaskQueue(int concurrenceCount, int taskSize,String name) {
         return new TaskQueue(concurrenceCount,taskSize,name);
     }
 
-    private TaskQueue(boolean main) {
-        mainHandler = new Handler(Looper.getMainLooper());
+    private TaskQueue(final boolean main) {
+        mainHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Runnable r = (Runnable)msg.obj;
+                Log.i("RR","e what="+msg.what);
+                if (r != null) {
+                    try {
+                        r.run();
+                    } catch (Throwable e) {}
+                }
+            }
+        };
     }
 
     private static TaskQueue newMainQueue() {
@@ -192,8 +235,8 @@ public final class TaskQueue {
 
     private BlockingQueue<Runnable> queue;
     private RejectedExecutionHandler rejectedHanlder;
+    private Map<Integer,Runnable> rrs = new ConcurrentHashMap<>();
     private ThreadPoolExecutor pool;
-    private Set<Integer> _dRuns = Collections.synchronizedSet(new HashSet<Integer>());
 
     private Handler mainHandler;
 }
