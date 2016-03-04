@@ -164,7 +164,7 @@ public final class TaskQueue {
         }
         else {
 //            Log.i("RR","s what="+code);
-            mainHandler.sendMessageDelayed(Message.obtain(mainHandler,code,r),(delayMillis < 0 ? delayMillis : 0));
+            mainHandler.sendMessageDelayed(Message.obtain(mainHandler,code,r),(delayMillis < 0 ? 0 : delayMillis));
         }
     }
 
