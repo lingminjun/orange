@@ -277,7 +277,7 @@ public final class UserBiz {
      * @param response 链式回调中无法特指某一返回值
      * @return
      */
-    public static RPC.Cancelable sendRegisterSMSCode(final String mobile, final String type,  final RPC.Response<Object> response){
+    public static RPC.Cancelable sendRegisterSMSCode(final String mobile, final String type,  final RPC.Response<BaseModel> response){
 
         BaseRequest<BoolModel> request = new BaseRequest<BoolModel>() {
             @Override

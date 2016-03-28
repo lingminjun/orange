@@ -89,6 +89,12 @@
             <artifactId>location</artifactId>
             <version>6.13</version>
         </dependency>
+        <dependency>
+            <groupId>org.xwalk.core</groupId>
+            <artifactId>crosswalk</artifactId>
+            <version>17.46.448.10</version>
+            <type>aar</type>
+        </dependency>
     </dependencies>
 
     <build>

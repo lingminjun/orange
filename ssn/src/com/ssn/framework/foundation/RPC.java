@@ -40,7 +40,7 @@ public final class RPC {
     public static abstract class Request<T> implements Cancelable {
         private boolean _cancel;
         private T _result;
-        private Request<? extends Object> _nextReq;
+        private Request<?> _nextReq;
         private Request<?> _prevReq;
 
         /**
@@ -52,6 +52,16 @@ public final class RPC {
          * 忽略失败，主要用于链式响应参数，默认前一个失败
          */
         public boolean ignoreError;//
+
+        /**
+         * 缓存有效时长，小于或者等于零表示无缓存，默认值30分钟
+         */
+        public long maxAge = 30*6000;//30分钟
+
+        /**
+         * 使用缓存数据，缓存数据一旦取到，则停止请求，maxAge必须大于零
+         */
+        public boolean usedCache;
 
         /**
          * 取消请求
@@ -76,12 +86,12 @@ public final class RPC {
          * @return
          * @throws Exception
          */
-        public abstract T cache() throws Exception;
+        public abstract T cache(long max_age) throws Exception;
 
         /**
          * 链式请求支持
          */
-        public Request<? extends Object> nextRequest(Request<? extends Object> req) {
+        public Request<?> nextRequest(Request<?> req) {
             _nextReq = req;
             return req;
         }
@@ -123,18 +133,20 @@ public final class RPC {
         public void onFailure(Exception e){};
         public void onFinish(){};
 
-        /**链式响应回调接口，没有特定返回值类型**/
-        public void onStart(final Request<? extends Object> req){};
-        public void onCache(final Request<? extends Object> req,T t, int i){};
-        public void onSuccess(final Request<? extends Object> req,T t, int i){};
-        public void onFailure(final Request<? extends Object> req,Exception e, int i){};
-        public void onFinish(final Request<? extends Object> req){};
+        /**链式响应回调接口，没有特定返回值类型，请求则建议更加具体**/
+        public void onStart(final Request<? extends T> req){};
+        public void onCache(final Request<? extends T> req,T t, int i){};
+        public void onSuccess(final Request<? extends T> req,T t, int i){};
+        public void onFailure(final Request<? extends T> req,Exception e, int i){};
+        public void onFinish(final Request<? extends T> req){};
 
         /**
          * 获取响应持有者
          * @return
          */
         public Object getHostObject() {
+
+
             //访问私有属性
             Class<?> type = this.getClass();
             Field field = null;
@@ -210,7 +222,7 @@ public final class RPC {
      * @param <T2>
      * @return
      */
-    public static <T1,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res) {
+    public static <T1 extends T2,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res) {
         return call(req,res,false);
     }
 
@@ -222,7 +234,7 @@ public final class RPC {
      * @param <T2>
      * @return
      */
-    public static <T1,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res, final boolean block) {
+    public static <T1 extends T2,T2 extends Object> Cancelable call(final Request<T1> req, final Response<T2> res, final boolean block) {
 
         if (req == null || res == null) {
             return null;
@@ -263,7 +275,14 @@ public final class RPC {
      */
     private static Interceptor itpt = null;
 
-    private static <T1,T2 extends Object> void callIMP(final Request<T1> req, final Response<T2> res) {
+    /**
+     * 要求 T1 extends T2
+     * @param req
+     * @param res
+     * @param <T1>
+     * @param <T2>
+     */
+    private static <T1 extends T2,T2 extends Object> void callIMP(final Request<T1> req, final Response<T2> res) {
         //检查是否取消请求
         if (req._cancel) {
             req.reset();
@@ -282,47 +301,60 @@ public final class RPC {
         });
 
         //读取文件缓存
-        try {
-            final T2 o = (T2)(req.cache());
-            if (o != null) {//确实取到缓存数据
-                TaskQueue.mainQueue().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (checkInterceptor(req,res)) {
-                            return;
+        boolean needReq = true;
+        if (req.maxAge > 0) {
+            try {
+                final T1 o =  req.cache(req.maxAge);
+                if (o != null) {//确实取到缓存数据
+                    TaskQueue.mainQueue().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (checkInterceptor(req, res)) {
+                                return;
+                            }
+                            res.onCache((T2) o);
                         }
-                        res.onCache(o);
+                    });
+
+                    //直接使用缓存数据
+                    if (req.usedCache) {
+                        req._result = (T1) o;
+                        needReq = false;
                     }
-                });
+                }
+
+            } catch (Throwable e) {//缓存实现失败不做处理
+                e.printStackTrace();
             }
-        } catch (Throwable e) {//缓存实现失败不做处理
-            e.printStackTrace();
         }
 
         boolean intercept = false;
         try {
+            if (needReq) {//需要发起请求
 
-            Retry retry = new Retry();
-            req._result = req.call(retry);
-            int times = retry.retryTimes;
-
-            //开始重试
-            while (times > 0 && req._result == null) {
-                APPLog.error("rpc retry", req.toString());
-                times--;
-                retry.isLast = times == 0;
+                Retry retry = new Retry();
                 req._result = req.call(retry);
+                int times = retry.retryTimes;
+
+                //开始重试
+                while (times > 0 && req._result == null) {
+                    APPLog.error("rpc retry", req.toString());
+                    times--;
+                    retry.isLast = times == 0;
+                    req._result = req.call(retry);
+                }
+
+                intercept = checkInterceptor(req, res);
             }
 
-            intercept = checkInterceptor(req,res);
             if (!intercept) {
                 TaskQueue.mainQueue().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (checkInterceptor(req,res)) {
+                        if (checkInterceptor(req, res)) {
                             return;
                         }
-                        res.onSuccess((T2)(req._result));
+                        res.onSuccess(req._result);
                     }
                 });
             }
@@ -379,7 +411,7 @@ public final class RPC {
         }
     }
 
-    private static void chainCallIMP(final Request<? extends Object> mainReq, final Response<? extends Object> res) {
+    private static <T1 extends T2,T2 extends Object> void chainCallIMP(final Request<T1> mainReq, final Response<T2> res) {
         //检查是否取消请求
         if (mainReq._cancel) {
             mainReq.reset();
@@ -399,7 +431,7 @@ public final class RPC {
 
         //读取文件缓存
         int idx = 0;
-        Request<? extends Object> req = mainReq;
+        Request<? extends T2> req = mainReq;
         while (req != null) {
 
             //请求已经取消，cancel连续性考虑
@@ -417,7 +449,7 @@ public final class RPC {
             }
 
 
-            int st = callIMP(mainReq,req,idx,res);
+            int st = callIMP(req,idx,res);
             if (st < 0) {//表明已经中断
                 mainReq.reset();
                 req.reset();
@@ -434,8 +466,11 @@ public final class RPC {
                 req._nextReq._prevReq = req;
             }
 
-            //继续下一个响应
-            req = req._nextReq;
+            //继续下一个响应，向基类转换，若转换失败，则此处不符合链式请求条件
+            try {
+                req = (Request<T2>)(req._nextReq);
+            } catch (Throwable e) {e.printStackTrace();}
+
         }
 
         //最终回调
@@ -454,50 +489,61 @@ public final class RPC {
 
     /**
      * 链式响应请求体
-     * @param mainReq
      * @param req
      * @param idx
      * @param res
      * @param <T1,T2>
      * @return 请求状态，0：失败；1：成功；-1：中断
      */
-    private static <T1,T2> int callIMP(final Request<? extends Object> mainReq, final Request<T1> req, final int idx, final Response<T2> res) {
+    private static <T1 extends T2,T2 extends Object> int callIMP(final Request<T1> req, final int idx, final Response<T2> res) {
 
         //读取文件缓存
-        try {
-            final T2 o = (T2)(req.cache());
-            if (o != null) {//确实取到缓存数据
-                TaskQueue.mainQueue().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (checkInterceptor(req,res)) {
-                            return;
+        boolean needReq = true;
+        if (req.maxAge > 0) {
+            try {
+                final T1 o = req.cache(req.maxAge);
+                if (o != null) {//确实取到缓存数据
+                    TaskQueue.mainQueue().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (checkInterceptor(req, res)) {
+                                return;
+                            }
+                            res.onCache(req, o, idx);
                         }
-                        res.onCache(req, o, idx);
+                    });
+
+                    //直接使用缓存数据
+                    if (req.usedCache) {
+                        req._result = o;
+                        needReq = false;
                     }
-                });
+                }
+            } catch (Throwable e) {//缓存实现失败不做处理
+                e.printStackTrace();
             }
-        } catch (Throwable e) {//缓存实现失败不做处理
-            e.printStackTrace();
         }
 
         int result = 1;
         try {
-            Retry retry = new Retry();
-            req._result = req.call(retry);
-            int times = retry.retryTimes;
 
-            //开始重试
-            while (times > 0 && req._result == null) {
-                APPLog.error("rpc retry", req.toString());
-                times--;
-                retry.isLast = times == 0;
+            if (needReq) {
+                Retry retry = new Retry();
                 req._result = req.call(retry);
-            }
+                int times = retry.retryTimes;
 
-            //直接中断
-            if (checkInterceptor(req,res)) {
-                return -1;
+                //开始重试
+                while (times > 0 && req._result == null) {
+                    APPLog.error("rpc retry", req.toString());
+                    times--;
+                    retry.isLast = times == 0;
+                    req._result = req.call(retry);
+                }
+
+                //直接中断
+                if (checkInterceptor(req, res)) {
+                    return -1;
+                }
             }
 
             //成功回调
@@ -507,7 +553,7 @@ public final class RPC {
                     if (checkInterceptor(req,res)) {
                         return;
                     }
-                    res.onSuccess(req,(T2)(req._result),idx);
+                    res.onSuccess(req,req._result,idx);
                 }
             });
         } catch (final Exception e) {

@@ -161,7 +161,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     }
 
     @Override
-    public T cache() throws Exception {
+    public T cache(long maxAge) throws Exception {
         return null;
     }
 
