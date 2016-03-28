@@ -64,6 +64,11 @@ public final class RPC {
         public boolean usedCache;
 
         /**
+         * 用于请求体标记，你可以使用tag携带一些信息
+         */
+        public Object tag;
+
+        /**
          * 取消请求
          * @return
          */
