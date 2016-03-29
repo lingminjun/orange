@@ -1,9 +1,6 @@
 package com.ssn.framework.foundation;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by lingminjun on 15/10/20.
@@ -49,7 +46,7 @@ public final class RPC {
         public boolean isChained;//
 
         /**
-         * 忽略失败，主要用于链式响应参数，默认前一个失败
+         * 忽略失败，主要用于链式响应参数，默认不忽略前一个失败
          */
         public boolean ignoreError;//
 
@@ -84,14 +81,20 @@ public final class RPC {
          * @return
          * @throws Exception
          */
-        public abstract T call(Retry retry) throws Exception;
+        protected abstract T call(Retry retry) throws Exception;
 
         /**
          * 文件缓存
          * @return
          * @throws Exception
          */
-        public abstract T cache(long max_age) throws Exception;
+        protected abstract T cache(long max_age) throws Exception;
+
+        /**
+         * 询问是否继续发起请求，主要用于链式请求，当前一个请求完成后，后一个请求将会询问是否继续
+         * @return
+         */
+        protected boolean shouldContinue() {return true;}
 
         /**
          * 链式请求支持
@@ -439,6 +442,19 @@ public final class RPC {
         Request<? extends T2> req = mainReq;
         while (req != null) {
 
+            //询问是否继续
+            if (idx > 0) {
+                boolean isContinue = true;
+                try {
+                    isContinue = req.shouldContinue();
+                } catch (Throwable e) {e.printStackTrace();}
+
+                //不需要继续，直接跳出循环
+                if (!isContinue) {
+                    break;
+                }
+            }
+
             //请求已经取消，cancel连续性考虑
             if (req._cancel) {
                 mainReq.reset();
@@ -454,7 +470,7 @@ public final class RPC {
             }
 
 
-            int st = callIMP(req,idx,res);
+            int st = callIMP(req,idx++,res);
             if (st < 0) {//表明已经中断
                 mainReq.reset();
                 req.reset();

@@ -78,7 +78,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
 
 
     @Override
-    public T call(RPC.Retry retry) throws Exception {
+    protected T call(RPC.Retry retry) throws Exception {
 
 
 //        System.out.println("\ntestGetByJSON\n-----------------------------");
@@ -161,7 +161,7 @@ public abstract class BaseRequest<T extends BaseModel> extends RPC.Request<T> im
     }
 
     @Override
-    public T cache(long maxAge) throws Exception {
+    protected T cache(long maxAge) throws Exception {
         return null;
     }
 
