@@ -101,6 +101,9 @@ public final class RPC {
          */
         public Request<?> nextRequest(Request<?> req) {
             _nextReq = req;
+            if (req != null) {//若设置nextRequest则添加链式请求
+                isChained = true;
+            }
             return req;
         }
 
@@ -190,7 +193,7 @@ public final class RPC {
      */
     public static void setInterceptor(Interceptor interceptor) {
 //        synchronized (RPC.class) {
-            itpt = interceptor;
+        itpt = interceptor;
 //        }
     }
 
@@ -496,14 +499,14 @@ public final class RPC {
 
         //最终回调
         TaskQueue.mainQueue().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (checkInterceptor(mainReq,res)) {
-                        return;
-                    }
-                    res.onFinish();
+            @Override
+            public void run() {
+                if (checkInterceptor(mainReq,res)) {
+                    return;
                 }
-            });
+                res.onFinish(mainReq);
+            }
+        });
 
         mainReq.reset();
     }
