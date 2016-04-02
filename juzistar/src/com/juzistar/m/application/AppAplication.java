@@ -8,6 +8,7 @@ import com.baidu.location.BDLocationListener;
 import com.juzistar.m.R;
 import com.juzistar.m.biz.UserCenter;
 import com.juzistar.m.biz.lbs.LBService;
+import com.ssn.framework.coredata.EntityGenerator;
 import com.ssn.framework.foundation.APPLog;
 import com.ssn.framework.foundation.Res;
 import com.ssn.framework.uikit.Navigator;
