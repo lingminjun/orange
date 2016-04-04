@@ -56,7 +56,7 @@ public final class EntityGenerator {
         public abstract String gen_uuid();
 
         /**
-         * 从另外一个对象填充数据
+         * 从另外一个对象填充数据，重载者务必先调用super.gen_fill(other);方法
          * @param other 其他数据类型，仅仅填充属性
          */
         public void gen_fill(Object other) {
@@ -401,30 +401,59 @@ public final class EntityGenerator {
             return null;
         }
 
-        //3、填充基本属性，获取uuid
-        fillEntity(entity,other,1);
+        boolean quiet = false;
+        if (quiet) {
+            //3、填充基本属性，获取uuid
+            fillEntity(entity, other, 1);
 
-        //4、获取uuid
-        String uuid = entity.gen_uuid();
-        if (TextUtils.isEmpty(uuid)) {
-            Log.e("GEN","get entity uuid failed! please implement the gen_uuid method.");
-            return null;
+            //4、获取uuid
+            String uuid = entity.gen_uuid();
+            if (TextUtils.isEmpty(uuid)) {
+                Log.e("GEN", "get entity uuid failed! please implement the gen_uuid method.");
+                return null;
+            }
+
+            //5、取得新的Entity实例，数据已经存在，则有新数据填充
+            Entity dist = getInstance().getEntity(uuid);
+            if (dist != null) {//数据已经存在，不需要clone
+                try {
+                    dist.gen_fill(other);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+                return dist;
+            }
+
+            //6、数据不存在，则注册数据
+            getInstance().registerEntity(entity);
+
+            //7、填充复杂属性
+            fillEntity(entity, other, 2);
+        } else {
+            //直接填充属性
+            entity.gen_fill(other);
+
+            //4、获取uuid
+            String uuid = entity.gen_uuid();
+            if (TextUtils.isEmpty(uuid)) {
+                Log.e("GEN", "get entity uuid failed! please implement the gen_uuid method.");
+                return null;
+            }
+
+            //5、取得新的Entity实例，数据已经存在，则有新数据填充
+            Entity dist = getInstance().getEntity(uuid);
+            if (dist != null) {//数据已经存在，不需要clone
+                try {
+                    dist.gen_fill(other);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+                return dist;
+            }
+
+            //6、数据不存在，则注册数据
+            getInstance().registerEntity(entity);
         }
-
-        //5、取得新的Entity实例，数据已经存在，则有新数据填充
-        Entity dist = getInstance().getEntity(uuid);
-        if (dist != null) {//数据已经存在，不需要clone
-            try {
-                dist.gen_fill(other);
-            } catch (Throwable e) {e.printStackTrace();}
-            return dist;
-        }
-
-        //6、数据不存在，则注册数据
-        getInstance().registerEntity(entity);
-
-        //7、填充复杂属性
-        fillEntity(entity,other,2);
 
         //8、返回entity
         return entity;
@@ -443,9 +472,10 @@ public final class EntityGenerator {
         }
 
         //1、若来源对象本身是Entity类型，则以other数据来取值，效率更高
-        if (other instanceof Entity) {
-            return;
-        }
+//        if (other instanceof Entity) {
+//            //TODO :
+//            return;
+//        }
 
         //
         Class entityClass = entity.getClass();
@@ -883,14 +913,14 @@ public final class EntityGenerator {
             return genUUID("" + itemId, TItem.class);
         }
 
-        @Override
-        public void gen_fill(Object other) {
-            if (other instanceof TItem) {
-                itemId = ((TItem) other).itemId;
-                name = ((TItem) other).name;
-                des = ((TItem) other).des;
-            }
-        }
+//        @Override
+//        public void gen_fill(Object other) {
+//            if (other instanceof TItem) {
+//                itemId = ((TItem) other).itemId;
+//                name = ((TItem) other).name;
+//                des = ((TItem) other).des;
+//            }
+//        }
     }
 
     public static class XPriceInfo {
@@ -911,14 +941,14 @@ public final class EntityGenerator {
             return genUUID("" + packageId, TPriceInfo.class);
         }
 
-        @Override
-        public void gen_fill(Object other) {
-            if (other instanceof TPriceInfo) {
-                packageId = ((TPriceInfo) other).packageId;
-                price = ((TPriceInfo) other).price;
-                origin = ((TPriceInfo) other).origin;
-            }
-        }
+//        @Override
+//        public void gen_fill(Object other) {
+//            if (other instanceof TPriceInfo) {
+//                packageId = ((TPriceInfo) other).packageId;
+//                price = ((TPriceInfo) other).price;
+//                origin = ((TPriceInfo) other).origin;
+//            }
+//        }
     }
 
     public static class XPackage {
@@ -940,15 +970,16 @@ public final class EntityGenerator {
             return genUUID("" + packageId, TPackage.class);
         }
 
-        @Override
-        public void gen_fill(Object other) {
-            if (other instanceof TPackage) {
-                packageId = ((TPackage) other).packageId;
-                name = ((TPackage) other).name;
-                items = ((TPackage) other).items;
-                priceInfo = ((TPackage) other).priceInfo;
-            }
-        }
+//        @Override
+//        public void gen_fill(Object other) {
+//            super.gen_fill(other);
+//            if (other instanceof TPackage) {
+//                packageId = ((TPackage) other).packageId;
+//                name = ((TPackage) other).name;
+//                items = ((TPackage) other).items;
+//                priceInfo = ((TPackage) other).priceInfo;
+//            }
+//        }
     }
 
     public static void test_main(String arg[]) {
