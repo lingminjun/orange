@@ -39,6 +39,7 @@ public final class RPC {
         private T _result;
         private Request<?> _nextReq;
         private Request<?> _prevReq;
+        private Request<?> _mainReq;
 
         /**
          * 是否为链式请求
@@ -122,6 +123,14 @@ public final class RPC {
          */
         public Request<?> getPrevRequest() {
             return _prevReq;
+        }
+
+        /**
+         * 获取主请求，整个链式请求的第一个请求
+         * @return
+         */
+        public Request<?> getMainRequest() {
+            return _mainReq;
         }
 
         /**
@@ -444,6 +453,8 @@ public final class RPC {
         int idx = 0;
         Request<? extends T2> req = mainReq;
         while (req != null) {
+
+            req._mainReq = mainReq;
 
             //询问是否继续
             if (idx > 0) {
