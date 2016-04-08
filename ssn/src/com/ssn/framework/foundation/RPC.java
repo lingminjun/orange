@@ -98,9 +98,18 @@ public final class RPC {
         protected boolean shouldContinue() {return true;}
 
         /**
+         * 链式请求使用的方法，当获得本请求数据时，你可以在此方法中组装数据【main thread】
+         * @param mainReq
+         * @param prevReq
+         * @param result
+         * @param isCache 为true时表示缓存数据，当cache()数据有返回时将触发此回调
+         */
+        protected void onAssembly(Request<?> mainReq, Request<?> prevReq, T result, boolean isCache) {}
+
+        /**
          * 链式请求支持
          */
-        public Request<?> nextRequest(Request<?> req) {
+        public final Request<?> nextRequest(Request<?> req) {
             _nextReq = req;
             if (req != null) {//若设置nextRequest则添加链式请求
                 isChained = true;
@@ -113,7 +122,7 @@ public final class RPC {
          * 获取请求响应值，只有请求完成后才有值
          * @return
          */
-        public T getResult() {
+        public final T getResult() {
             return _result;
         }
 
@@ -121,7 +130,7 @@ public final class RPC {
          * 获取前一个请求体，可以获取请求的值，前一个必须成功才能走到当前响应
          * @return
          */
-        public Request<?> getPrevRequest() {
+        public final Request<?> getPrevRequest() {
             return _prevReq;
         }
 
@@ -129,14 +138,14 @@ public final class RPC {
          * 获取主请求，整个链式请求的第一个请求
          * @return
          */
-        public Request<?> getMainRequest() {
+        public final Request<?> getMainRequest() {
             return _mainReq;
         }
 
         /**
          * 重置请求状态，复用请求体，若一个请求cancel后需要重新被发起，需要调用此方法重置
          */
-        public void reset() {
+        public final void reset() {
             _cancel = true;
         }
     }
@@ -544,6 +553,12 @@ public final class RPC {
                             if (checkInterceptor(req, res)) {
                                 return;
                             }
+
+                            //组合数据
+                            try {
+                                req.onAssembly(req._mainReq,req._prevReq,o,true);
+                            } catch (Throwable e) {}
+
                             res.onCache(req, o, idx);
                         }
                     });
@@ -588,6 +603,12 @@ public final class RPC {
                     if (checkInterceptor(req,res)) {
                         return;
                     }
+
+                    //组合数据
+                    try {
+                        req.onAssembly(req._mainReq,req._prevReq,req._result,false);
+                    } catch (Throwable e) {}
+
                     res.onSuccess(req,req._result,idx);
                 }
             });
