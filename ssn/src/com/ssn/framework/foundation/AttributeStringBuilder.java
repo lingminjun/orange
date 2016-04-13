@@ -56,7 +56,7 @@ public class AttributeStringBuilder {
             states[0] = new int[] {};
             ColorStateList colorList = new ColorStateList(states, colors);
 
-            builder.setSpan(new TextAppearanceSpan("monospace", android.graphics.Typeface.BOLD_ITALIC, Density.spTopx(fontSize), colorList, colorList), start,end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new TextAppearanceSpan("monospace", android.graphics.Typeface.BOLD_ITALIC, Density.sp2px(fontSize), colorList, colorList), start,end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 

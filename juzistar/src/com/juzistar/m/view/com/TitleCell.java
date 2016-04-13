@@ -78,7 +78,7 @@ public class TitleCell extends UITableViewCell {
         if (model.hiddenRightArrow) {
             params.rightMargin = 0;
         } else {
-            params.rightMargin = Density.dipTopx(20);
+            params.rightMargin = Density.dip2px(20);
         }
 
     }

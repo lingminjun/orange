@@ -56,7 +56,7 @@ public class Density {
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    public static int dipTopx(float dpValue) {
+    public static int dip2px(float dpValue) {
         final float scale = Res.resources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -64,7 +64,7 @@ public class Density {
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
-    public static int pxTodip(float pxValue) {
+    public static int px2dip(float pxValue) {
         final float scale = Res.resources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
@@ -76,7 +76,7 @@ public class Density {
      * （DisplayMetrics类中属性scaledDensity）
      * @return
      */
-    public static int spTopx(int spValue) {
+    public static int sp2px(int spValue) {
         float fontScale = Res.resources().getDisplayMetrics().scaledDensity;
         return (int)(spValue * fontScale + 0.5f);
     }

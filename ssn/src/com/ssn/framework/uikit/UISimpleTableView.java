@@ -16,8 +16,6 @@ import android.widget.*;
 import com.ssn.framework.R;
 import com.ssn.framework.foundation.Density;
 import com.ssn.framework.foundation.Res;
-import com.ssn.framework.uikit.pullview.PullToRefreshBase;
-import com.ssn.framework.uikit.pullview.PullToRefreshListView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -558,7 +556,7 @@ public class UISimpleTableView extends RelativeLayout /*PullToRefreshListView*/ 
          */
         try {
             int changed = oldh - h;
-            if (changed >= Density.dipTopx(100) && changed < oldh) {
+            if (changed >= Density.dip2px(100) && changed < oldh) {
                 InputMethodManager imm = (InputMethodManager)Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
                 View txt = this.findFocus();
                 if (imm != null && imm.isAcceptingText() && txt != null) {

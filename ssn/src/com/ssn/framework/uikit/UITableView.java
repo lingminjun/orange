@@ -568,7 +568,7 @@ public class UITableView extends RelativeLayout /*PullToRefreshListView*/ {
          */
         try {
             int changed = oldh - h;
-            if (changed >= Density.dipTopx(100) && changed < oldh) {
+            if (changed >= Density.dip2px(100) && changed < oldh) {
                 InputMethodManager imm = (InputMethodManager)Res.context().getSystemService(Context.INPUT_METHOD_SERVICE);
                 View txt = this.findFocus();
                 if (imm != null && imm.isAcceptingText() && txt != null) {
