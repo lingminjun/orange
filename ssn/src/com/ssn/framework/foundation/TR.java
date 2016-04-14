@@ -71,14 +71,24 @@ public class TR {
      * @return
      */
     public final static boolean bool(String v) {
-        if (TextUtils.isEmpty(v)) {return false;}
+        return bool(v,false);
+    }
+
+    /**
+     * 取字符串中的bool值，取不到时返回默认值
+     * @param v
+     * @param defaultValue
+     * @return
+     */
+    public final static boolean bool(String v, boolean defaultValue) {
+        if (TextUtils.isEmpty(v)) {return defaultValue;}
         if ("1".equalsIgnoreCase(v)
                 || "yes".equalsIgnoreCase(v)
                 || "true".equalsIgnoreCase(v)
                 || "on".equalsIgnoreCase(v)) {
             return true;
         }
-        return false;
+        return defaultValue;
     }
 
     /**
@@ -120,6 +130,10 @@ public class TR {
         return def;
     }
 
+//    public final static Value<? extends Object> value(Object value) {return }
+//    private class Value<T extends Object>{
+//        private T v(T v) {return v != null ? v : new T();}
+//    }
 
     /**
      * 从intent中取字数字，兼容字符串方式，主要兼容h5传参
@@ -128,15 +142,16 @@ public class TR {
         if (intent == null || TextUtils.isEmpty(name) || !intent.hasExtra(name)) {return defaultValue;}
 
         try {
-            return intent.getIntExtra(name, defaultValue);
-        } catch (Throwable e) {
-            try {
-                String obj  = intent.getStringExtra(name);//兼容h5
+            int v = intent.getIntExtra(name, defaultValue);
+            if (v != defaultValue) { return v; }
+
+            String str = intent.getStringExtra(name);
+            if (!TextUtils.isEmpty(str)) {
                 try {
-                    return Integer.parseInt(obj);
+                    return Integer.parseInt(str);
                 } catch (Throwable eee) {}
-            } catch (Throwable ee) {}
-        }
+            }
+        } catch (Throwable e) {}
         return defaultValue;
     }
 
@@ -152,23 +167,18 @@ public class TR {
 
         try {
             long num = intent.getLongExtra(name, defaultValue);
-            if (num == defaultValue) {
-                try {
-                    int i = intent.getIntExtra(name,(int)defaultValue);
-                    if (i != defaultValue) {
-                        num = i;
-                    }
-                } catch (Throwable e) {}
-            }
-            return num;
-        } catch (Throwable e) {
-            try {
-                String obj  = intent.getStringExtra(name);//兼容h5
+            if (num != defaultValue) {return num;}
+
+            int v = intent.getIntExtra(name,(int)defaultValue);
+            if (v != defaultValue) {return v;}
+
+            String obj  = intent.getStringExtra(name);//兼容h5
+            if (!TextUtils.isEmpty(obj)) {
                 try {
                     return Long.parseLong(obj);
                 } catch (Throwable eee) {}
-            } catch (Throwable ee) {}
-        }
+            }
+        } catch (Throwable e) {}
         return defaultValue;
     }
 
@@ -183,12 +193,18 @@ public class TR {
         if (intent == null || TextUtils.isEmpty(name) || !intent.hasExtra(name)) {return defaultValue;}
 
         try {
-            return intent.getBooleanExtra(name, defaultValue);
-        } catch (Throwable e) {
-            try {
-                return bool(intent.getStringExtra(name));//做字符串兼容
-            } catch (Throwable ee) {}
-        }
+            boolean v = intent.getBooleanExtra(name, defaultValue);
+            if (v != defaultValue) {
+                return v;
+            }
+
+            String str = intent.getStringExtra(name);
+            if (!TextUtils.isEmpty(str)) {
+                try {
+                    return bool(str, defaultValue);//做字符串兼容
+                } catch (Throwable ee) {}
+            }
+        } catch (Throwable e) {}
         return defaultValue;
     }
 
@@ -197,19 +213,13 @@ public class TR {
      * 从intent中取字数字，兼容字符串方式，主要兼容h5传参
      */
     public final static int intExtra(Bundle bundle, String name, int defaultValue) {
-        if (bundle == null || TextUtils.isEmpty(name)) {return defaultValue;}
-
+        if (bundle == null || TextUtils.isEmpty(name) || !bundle.containsKey(name)) {return defaultValue;}
+        Object obj = bundle.get(name);
         try {
-            return bundle.getInt(name, defaultValue);
-        } catch (Throwable e) {
-            try {
-                String obj  = bundle.getString(name);//兼容h5
-                try {
-                    return Integer.parseInt(obj);
-                } catch (Throwable eee) {}
-            } catch (Throwable ee) {}
+            return Integer.parseInt(obj.toString());
+        }catch (Exception e){
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     /**
@@ -220,19 +230,13 @@ public class TR {
      * @return
      */
     public final static long longExtra(Bundle bundle, String name, long defaultValue) {
-        if (bundle == null || TextUtils.isEmpty(name)) {return defaultValue;}
-
+        if (bundle == null || TextUtils.isEmpty(name) || !bundle.containsKey(name)) {return defaultValue;}
+        Object obj = bundle.get(name);
         try {
-            return bundle.getLong(name, defaultValue);
-        } catch (Throwable e) {
-            try {
-                String obj  = bundle.getString(name);//兼容h5
-                try {
-                    return Long.parseLong(obj);
-                } catch (Throwable eee) {}
-            } catch (Throwable ee) {}
+            return Long.parseLong(obj.toString());
+        }catch (Exception e){
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     /**
@@ -243,16 +247,13 @@ public class TR {
      * @return
      */
     public final static boolean boolExtra(Bundle bundle, String name, boolean defaultValue) {
-        if (bundle == null || TextUtils.isEmpty(name)) {return defaultValue;}
-
+        if (bundle == null || TextUtils.isEmpty(name) || !bundle.containsKey(name)) {return defaultValue;}
+        Object obj = bundle.get(name);
         try {
-            return bundle.getBoolean(name, defaultValue);
-        } catch (Throwable e) {
-            try {
-                return bool(bundle.getString(name));//做字符串兼容
-            } catch (Throwable ee) {}
+            return bool(obj.toString(),defaultValue);
+        }catch (Exception e){
+            return defaultValue;
         }
-        return defaultValue;
     }
 
 }
