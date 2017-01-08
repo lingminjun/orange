@@ -9,4 +9,10 @@
 **/target
 **/*.properties
 **/build.xml
-out
+**/out
+**/.gradle
+**/build
+**/gradlew
+**/gradlew.bat
+**/gradle
+**/gen
