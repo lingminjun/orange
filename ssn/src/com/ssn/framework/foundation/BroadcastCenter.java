@@ -15,23 +15,18 @@ import java.util.*;
  * Created by lingminjun on 15/7/5.
  */
 public class BroadcastCenter {
-    private static BroadcastCenter _instance = null;
-    /**
-     * 用户中心
-     * @return 唯一实例
-     */
-    static public BroadcastCenter shareInstance() {
-        if (_instance != null) return _instance;
-        synchronized(BroadcastCenter.class){
-            if (_instance != null) return _instance;
-            _instance = newInstance();
-            return _instance;
-        }
+    private static class Singleton {
+        private static final BroadcastCenter INSTANCE = new BroadcastCenter();
     }
 
-    private static BroadcastCenter newInstance() {
-        return new BroadcastCenter();
+    /**
+     * 唯一实例
+     * @return
+     */
+    public static final BroadcastCenter shareInstance() {
+        return Singleton.INSTANCE;
     }
+
 
     /**
      * 防止构造实例

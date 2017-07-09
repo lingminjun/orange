@@ -20,29 +20,22 @@ public final class UserDefaults {
     SharedPreferences.Editor editor;
     private Context mContext = null;
 
-    private static UserDefaults manager = null;
-
     private UserDefaults(Context context) {
         mContext = context.getApplicationContext();
         sp = mContext.getSharedPreferences("app_defaults", 0);
         editor = sp.edit();
     }
 
-    public static UserDefaults getInstance() {
-        if (manager != null) {
-            return manager;
-        }
-        synchronized (UserDefaults.class) {
-            if (manager != null) {
-                return manager;
-            }
-            manager = newInstance();
-            return manager;
-        }
+    private static class Singleton {
+        private static final UserDefaults INSTANCE = new UserDefaults(Res.context());
     }
 
-    private static UserDefaults newInstance() {
-        return new UserDefaults(Res.context());
+    /**
+     * 唯一实例
+     * @return
+     */
+    public static final UserDefaults getInstance() {
+        return Singleton.INSTANCE;
     }
 
     /**

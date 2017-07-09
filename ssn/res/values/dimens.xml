@@ -12,6 +12,7 @@
     <dimen name="ssn_normal_font">14sp</dimen>
     <dimen name="ssn_assist_text">12sp</dimen>
     <dimen name="ssn_hint_text">10sp</dimen>
+    <dimen name="ssn_big_font">16sp</dimen>
 
 
     <dimen name="indicator_right_padding">10dp</dimen>

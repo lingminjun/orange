@@ -318,9 +318,9 @@ public abstract class UITableViewCell extends RelativeLayout {
         if (_container != null) {
             LayoutParams params = (LayoutParams) _container.getLayoutParams();
             if (cellModel.height > 0 && cellModel.height < TABLE_VIEW_CELL_MIN_HEIGHT) {
-                params.height = Density.dipTopx(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
+                params.height = Density.dip2px(TABLE_VIEW_CELL_DEFAULT_HEIGHT);
             } else if (cellModel.height >= TABLE_VIEW_CELL_MIN_HEIGHT) {
-                params.height = Density.dipTopx(cellModel.height);
+                params.height = Density.dip2px(cellModel.height);
             }
             else {
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -334,7 +334,7 @@ public abstract class UITableViewCell extends RelativeLayout {
                 //设置边距
                 LayoutParams separate_params = (LayoutParams) _separateLine.getLayoutParams();
                 if (cellModel.separateLineLeftPadding > 0) {
-                    separate_params.leftMargin = Density.dipTopx(cellModel.separateLineLeftPadding);
+                    separate_params.leftMargin = Density.dip2px(cellModel.separateLineLeftPadding);
                 } else {
                     separate_params.leftMargin = 0;
                 }
@@ -352,9 +352,9 @@ public abstract class UITableViewCell extends RelativeLayout {
             //设置默认高度
             LayoutParams params = (LayoutParams) _separateLine.getLayoutParams();
             if (cellModel.separateLineHeight <= 0) {
-                params.height = Density.dipTopx(1);
+                params.height = Density.dip2px(1);
             } else {
-                params.height = Density.dipTopx(cellModel.separateLineHeight);
+                params.height = Density.dip2px(cellModel.separateLineHeight);
             }
         }
 

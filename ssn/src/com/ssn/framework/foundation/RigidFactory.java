@@ -1,6 +1,5 @@
 package com.ssn.framework.foundation;
 
-import android.text.TextUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public final class RigidFactory<T> {
      * @return
      */
     public synchronized T get(String key,Map<String,Object> params) {
-        if (TextUtils.isEmpty(key)) {return null;}
+        if (key == null || key.length() == 0) {return null;}
 
         WeakReference<T> weak = _cache.get(key);
         if (weak != null) {

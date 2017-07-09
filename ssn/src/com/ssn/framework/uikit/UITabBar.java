@@ -154,7 +154,7 @@ public final class UITabBar extends LinearLayout {
             tv.setBackgroundResource(R.drawable.white_stroke_red_bg);
             ViewGroup.LayoutParams params = tv.getLayoutParams();
             tv.setText("");
-            int size = Density.dipTopx(10);
+            int size = Density.dip2px(10);
             params.height = size;
             params.width = size;
             if (params instanceof ViewGroup.MarginLayoutParams) {
@@ -192,7 +192,7 @@ public final class UITabBar extends LinearLayout {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             if (params instanceof ViewGroup.MarginLayoutParams) {
-                ((MarginLayoutParams) params).topMargin = Density.dipTopx(-2);
+                ((MarginLayoutParams) params).topMargin = Density.dip2px(-2);
             }
             tv.setLayoutParams(params);
         }

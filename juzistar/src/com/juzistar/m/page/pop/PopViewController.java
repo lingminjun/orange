@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.juzistar.m.R;
@@ -34,9 +33,7 @@ import com.ssn.framework.foundation.*;
 import com.ssn.framework.uikit.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by lingminjun on 15/9/26.
@@ -269,7 +266,7 @@ public class PopViewController extends BaseTableViewController {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         boolean bool = super.dispatchTouchEvent(ev);
         float y = ev.getY();
-        if (y - move_y > Density.dipTopx(100) && move_y != 0) {//往下滑动一个阀值
+        if (y - move_y > Density.dip2px(100) && move_y != 0) {//往下滑动一个阀值
             topHintBar.setVisibility(View.VISIBLE);
             TaskQueue.mainQueue().cancel(hideTopHintBar);
             TaskQueue.mainQueue().executeDelayed(hideTopHintBar,3000);

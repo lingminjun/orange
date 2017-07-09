@@ -15,7 +15,7 @@ public class URLHelper {
     public static final String URI_SPLIT = "/";
 
     /**
-     * 将params key value编码，其中Object 只能是String，或者是List<String>
+     * 将params key value编码，其中Object 只能是String，或者是List<String>以及基本数据类型
      * @param params
      * @return URL Query string , values url encode(UTF-8)
      */
@@ -71,6 +71,17 @@ public class URLHelper {
                             query = query + "&" + key + "=" + Uri.encode(value, ALLOWED_URI_CHARS);//RFC-2396
 //                            query = query + "&" + key + "=" + URLEncoder.encode(value, "UTF-8");//RFC-1738
                         }
+                    }
+                } else if (obj.getClass().isPrimitive()) {
+                    String value = obj.toString();
+                    if (first) {
+                        first = false;
+                        query = query + key + "=" + Uri.encode(value, ALLOWED_URI_CHARS);//RFC-2396
+//                        query = query + key + "=" + URLEncoder.encode((String)obj, "UTF-8");//RFC-1738
+                    }
+                    else  {
+                        query = query + "&" + key + "=" + Uri.encode(value, ALLOWED_URI_CHARS);//RFC-2396
+//                        query = query + "&" + key + "=" + URLEncoder.encode((String)obj, "UTF-8");//RFC-1738
                     }
                 }
             }

@@ -4,12 +4,10 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import org.apache.http.*;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
@@ -37,7 +35,7 @@ public final class HTTPAccessor {
     private static int _so_timeout               = 30000;//数据响应超时时间（毫秒）
     private static String _agent                 = "Android App";
     private static int _keep_alive               = 5000;//小于零禁用
-    private static boolean _gzip                 = false;//是否使用gzip
+    private static boolean _gzip                 = true;//是否使用gzip
 
     private static boolean _debug                = false;//连接超时时间（毫秒）
 
@@ -50,14 +48,14 @@ public final class HTTPAccessor {
     /**
      * 服务器返回的响应数据
      */
-    public static final class ServerResponse {
+    public static final class HTTPResponse {
 
         private int statusCode = 500;
         private Header[] responseHeaders;
         private String contentString;
         private long contentLength;
 
-        public ServerResponse(HttpResponse response) {
+        public HTTPResponse(HttpResponse response) {
 
             assert response!=null:"HttpResponse should not be null";
             try {
@@ -266,8 +264,8 @@ public final class HTTPAccessor {
      * @return
      * @throws Exception
      */
-    public static ServerResponse singleChannelAccess(HTTPRequest request) throws Exception {
-        ServerResponse response = null;
+    public static HTTPResponse singleChannelAccess(HTTPRequest request) throws Exception {
+        HTTPResponse response = null;
         try {
             isSingleChannel = true;
 
@@ -286,7 +284,7 @@ public final class HTTPAccessor {
      * @return
      * @throws Exception
      */
-    public static ServerResponse access(HTTPRequest request) throws Exception {
+    public static HTTPResponse access(HTTPRequest request) throws Exception {
         return _access(request);
     }
 
@@ -296,7 +294,7 @@ public final class HTTPAccessor {
      * @return
      * @throws Exception
      */
-    public static ServerResponse _access(HTTPRequest request) throws Exception {
+    private static HTTPResponse _access(HTTPRequest request) throws Exception {
         if (isSingleChannel) {
             synchronized (HTTPAccessor.class) {
                 return _accessIMP(request);
@@ -306,7 +304,7 @@ public final class HTTPAccessor {
         }
     }
 
-    public static ServerResponse _accessIMP(HTTPRequest request) throws Exception {
+    private static HTTPResponse _accessIMP(HTTPRequest request) throws Exception {
         if (_debug) {
             if (Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper()) {
                 System.exit(-1);
@@ -339,9 +337,9 @@ public final class HTTPAccessor {
 
                 StringEntity se = encodeParam(parameter,request.encode());
                 if (request.encode() == PARAM_ENCODE_TYPE.JSON) {
-                    se.setContentType("application/json");
+                    se.setContentType(CONTENT_TYPE_JSON_STRING);
                 } else {
-                    se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+                    se.setContentType(CONTENT_TYPE_QUERY_STRING);
                 }
 
                 ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
@@ -353,20 +351,20 @@ public final class HTTPAccessor {
 
                 StringEntity se = encodeParam(parameter,request.encode());
                 if (request.encode() == PARAM_ENCODE_TYPE.JSON) {
-                    se.setContentType("application/json");
+                    se.setContentType(CONTENT_TYPE_JSON_STRING);
                 } else {
-                    se.setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+                    se.setContentType(CONTENT_TYPE_QUERY_STRING);
                 }
 
                 ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(se);
             } catch (Throwable e) { }
-        } else if (request.method() == REST_METHOD.PUT) {
+        } else if (request.method() == REST_METHOD.DELETE) {
             String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
             httpRequest = new HttpDelete(url);
         }
 
         //设置接收数据为json
-        httpRequest.setHeader("Accept", "application/json");
+        httpRequest.setHeader("Accept", CONTENT_TYPE_JSON_STRING);
 
         if (_keep_alive < 0) {
             httpRequest.setHeader("Connection", "close");
@@ -404,7 +402,7 @@ public final class HTTPAccessor {
 
         //返回响应
         if (response != null) {
-            ServerResponse serverResponse = new ServerResponse(response);
+            HTTPResponse serverResponse = new HTTPResponse(response);
 
             if(Res.metaBoolean("DEBUG")) {
                 String url = URLHelper.URLResetQuery(request.methodURI(), parameter);
@@ -418,6 +416,12 @@ public final class HTTPAccessor {
         return null;
     }
 
+    /**
+     * Content type 定义
+     */
+    private static final String CONTENT_TYPE_JSON_STRING = "application/json;charset=utf-8";//json
+    private static final String CONTENT_TYPE_QUERY_STRING = "application/x-www-form-urlencoded;charset=utf-8";//表单
+//    private static final String CONTENT_TYPE_XML_STRING = "application/xml;charset=utf-8";//xml
 
     private static StringEntity encodeParam(HashMap<String,Object> params,PARAM_ENCODE_TYPE type) throws Exception {
         if (type == PARAM_ENCODE_TYPE.JSON) {

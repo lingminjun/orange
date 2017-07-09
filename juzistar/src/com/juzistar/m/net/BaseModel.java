@@ -25,7 +25,7 @@ public abstract class BaseModel implements Serializable {
         Class<?> objC = null;//
 
         try {
-            objC = Class.forName(obj.getClass().getName());
+            objC = obj.getClass();
         } catch (Throwable e) {
             objC = null;
             e.printStackTrace();

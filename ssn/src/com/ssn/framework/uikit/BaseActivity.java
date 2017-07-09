@@ -316,7 +316,6 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
         transitionToFragment(sec,false);
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && _vcs.size() > 0) {
@@ -339,7 +338,9 @@ public class BaseActivity extends FragmentActivity implements ViewController.Con
                 result = ((UIViewController) _tvc).dispatchTouchEvent(ev);
             }catch (Throwable e){APPLog.error(e);}
         }
-        return result ? true : super.dispatchTouchEvent(ev);
+        result = result ? true : super.dispatchTouchEvent(ev);
+        UTCenter.getInstance().pushEvent(this,ev);
+        return result;
     }
 
     @Override

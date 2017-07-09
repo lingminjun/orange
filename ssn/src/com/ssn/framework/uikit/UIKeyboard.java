@@ -404,9 +404,9 @@ public final class UIKeyboard extends LinearLayout {
 //        if (_showSystemKeyboard) {
         int sys_height = UserDefaults.getInstance().get(UIEvent.UIKeyboardHeightKey,(int)0);
         if (sys_height <= 0) {
-            sys_height = Density.dipTopx(_keyboard_height);
+            sys_height = Density.dip2px(_keyboard_height);
         }
-            params.height = sys_height;//Density.dipTopx(_keyboard_height);
+            params.height = sys_height;//Density.dip2px(_keyboard_height);
 //        } else {
 //            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
 //        }

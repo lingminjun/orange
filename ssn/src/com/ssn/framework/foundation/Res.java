@@ -17,7 +17,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 
 /**
  * Created by lingminjun on 15/7/11.
@@ -364,5 +366,33 @@ public class Res {
         if(appCacheDir.exists()){
             context.deleteFile(appCacheDir.getAbsolutePath());
         }
+    }
+
+    /**
+     * 资源目录
+     * @return
+     */
+    public static String resourceDirectory() {
+        return "/android_asset/";
+    }
+
+    /**
+     * 返回资源的json文件
+     * @param jsonFileName
+     * @return
+     */
+    public static String jsonResource(String jsonFileName) {
+        String resultString="";
+        try {
+            String jsonString="";
+            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(
+                    Res.resources().getAssets().open(jsonFileName)));
+            while ((jsonString=bufferedReader.readLine())!=null) {
+                resultString+=jsonString;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultString;
     }
 }
