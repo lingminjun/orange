@@ -1,7 +1,5 @@
 package com.ssn.framework.foundation;
 
-import android.text.TextUtils;
-
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -103,7 +101,7 @@ public final class Store {
         if (data == null) {return;}
 
         String path = path(key);
-        if (TextUtils.isEmpty(path)) {return;}
+        if (path == null || path.length() == 0) {return;}
 
         try {
             _store(path,data,expire);
@@ -116,7 +114,7 @@ public final class Store {
      * @return
      */
     public byte[] data(String key) {
-        return accessData(key,true);
+        return accessData(key,false);
     }
 
     /**
@@ -125,7 +123,7 @@ public final class Store {
      * @return
      */
     public byte[] accessData(String key) {
-        return accessData(key,false);
+        return accessData(key,true);
     }
 
 
@@ -135,7 +133,7 @@ public final class Store {
      */
     public void remove(String key) {
         String path = path(key);
-        if (TextUtils.isEmpty(path)) {return;}
+        if (path == null || path.length() == 0) {return;}
         _remove(path);
     }
 
@@ -144,14 +142,14 @@ public final class Store {
     /*********************私有实现******************************/
     ////////////////////////////////////////////////////////////
 
-    private byte[] accessData(String key,boolean checkExpire) {
+    private byte[] accessData(String key,boolean readonly) {
 
         String path = path(key);
-        if (TextUtils.isEmpty(path)) {return null;}
+        if (path == null || path.length() == 0) {return null;}
 
         byte[] data = null;
         try {
-            data = _accessData(path,checkExpire);
+            data = _accessData(path,readonly);
         } catch (Throwable e) {}
 
         return data;
@@ -164,16 +162,21 @@ public final class Store {
             file.delete();
         }
 
-        RandomAccessFile out = new RandomAccessFile(path, STORE_READ_WRITE);
+        RandomAccessFile out = new RandomAccessFile(file, STORE_READ_WRITE);
         out.write(data);
         out.close();
 
+        String tail = path + STORE_TAIL;
         if (expire > 0) {
-            String tail = path + STORE_TAIL;
             RandomAccessFile exp = new RandomAccessFile(tail, STORE_READ_WRITE);
             exp.writeLong(now());//存储访问时间
             exp.writeLong(expire);//过期时长
             exp.close();
+        } else {//方式包含隐私访问日志文件,存在时序和线程问题
+            File tailFile = new File(tail);
+            if (tailFile.exists()) {//存在tail文件
+                tailFile.delete();
+            }
         }
     }
 
@@ -190,41 +193,35 @@ public final class Store {
         }
     }
 
-    private byte[] _accessData(String path,boolean checkExpire) throws Exception {
+    private byte[] _accessData(String path,boolean readonly) throws Exception {
         byte[] data = null;
 
         boolean isExpire = false;
 
-        if (checkExpire) {
+        String tail = path + STORE_TAIL;
+        File tailFile = new File(tail);
 
-            String tail = path + STORE_TAIL;
-            File file = new File(tail);
+        if (tailFile.exists()) {//存在tail文件
+            long now = now();
+            RandomAccessFile exp = new RandomAccessFile(tailFile, (readonly?STORE_READ_ONLY:STORE_READ_WRITE));
+            long latest = exp.readLong();//存储上次访问时间
+            long expire = exp.readLong();//过期时长
 
-            if (file.exists()) {//存在tail文件
-                long now = now();
-                RandomAccessFile exp = new RandomAccessFile(tail, STORE_READ_WRITE);
-                long latest = exp.readLong();//存储上次访问时间
-                long expire = exp.readLong();//过期时长
-
-                if (now >= latest + expire) {//过期，删除文件
-                    exp.close();
-                    isExpire = true;
-
-                    //删除tail
-                    file.delete();
-                } else {
-                    exp.seek(0);//回到其实位置
-                    exp.writeLong(now);
-                    exp.close();
-                }
+            if (expire > 0 && now >= latest + expire) {//过期，删除文件
+                exp.close();
+                tailFile.delete();//删除tail
+                isExpire = true;
+            } else if (!readonly) {//更新访问时间
+                exp.seek(0);//回到其实位置
+                exp.writeLong(now);
+                exp.close();
             }
         }
 
         File file = new File(path);
-
         if(file.exists()) {//文件存在再进行操作
 
-            RandomAccessFile in = new RandomAccessFile(path, STORE_READ_ONLY);
+            RandomAccessFile in = new RandomAccessFile(file, STORE_READ_ONLY);
             long len = in.length();
             data = new byte[(int) len];
             in.read(data);
@@ -233,8 +230,7 @@ public final class Store {
             //删除原始数据
             if (isExpire) {//删除文件
                 file.delete();
-
-                if (checkExpire) {//过期不再返回数据
+                if (!readonly) {//过期不再返回数据
                     data = null;
                 }
             }
@@ -244,10 +240,10 @@ public final class Store {
     }
 
     private String path(String key) {
-        if (TextUtils.isEmpty(key)) {return null;}
+        if (key == null || key.length() == 0) {return null;}
 
         String md5 = md5(key);
-        if (TextUtils.isEmpty(md5)) {return null;}
+        if (md5 == null || md5.length() == 0) {return null;}
 
         String sub = md5.substring(0,2);
 
@@ -283,4 +279,92 @@ public final class Store {
     private static long now() {
         return System.currentTimeMillis();
     }
+
+    /*
+    public static void main(String var[]) {
+        Store.caches().store("aaaa","dssssddss".getBytes(),1000);
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        {//还能取到
+            byte[] data = Store.caches().accessData("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        {//任然能取到，但是过期
+            byte[] data = Store.caches().accessData("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+
+        {//取不到
+            byte[] data = Store.caches().accessData("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+
+        System.out.println("====================================");
+
+        Store.caches().store("aaaa","dssssddss".getBytes(),1000);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        {//取到并更新时间
+            byte[] data = Store.caches().data("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        {//取到并更新时间
+            byte[] data = Store.caches().data("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        {//取不到
+            byte[] data = Store.caches().data("aaaa");
+            if (data != null) {
+                System.out.println("取到：" + new String(data));
+            } else {
+                System.out.println("没取到");
+            }
+        }
+    }
+    */
 }
